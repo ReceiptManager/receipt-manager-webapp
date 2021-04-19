@@ -1,0 +1,9 @@
+backendIP: 192.168.50.59 #Server IP
+backendPort: 5558        #Server Port
+parserIP: 192.168.50.6   #Receipt parser IP
+parserPort: 8721         #Receipt parser Port
+parserToken: dEkYyxgqVHRqV #Receipt parser Token
+sqlServerIP: 192.168.50.6  #MSSQL IP
+sqlDatabase: reciptData    #MSSQL Database
+sqlUsername: receiptParser #MSSQL Username
+sqlPassword: receiptParser2021! #MSSQL User Password
