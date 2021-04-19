@@ -130,7 +130,8 @@ class MainElement extends LitElement {
 
         .appToolbar {
           font-family: Roboto;
-          background-color: dimgrey;
+          background-color: midnightblue;
+          border-radius: 0px 0px 20px 20px;      
           color: white;
         }
 
