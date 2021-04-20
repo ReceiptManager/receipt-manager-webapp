@@ -1,14 +1,12 @@
 ﻿from datetime import datetime
 from flask_cors import CORS, cross_origin
-from flask import Flask, request
+from flask import Flask, request, send_from_directory
 import requests
 import json
 import uuid
-
-from requests import api
 from util import check_existing_token, create_db_SQLite_conn, delete_from_DB, init_db, create_ms_db_conn,get_data_from_db, add_or_update_to_db, delete_from_DB, load_conf_from_file
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='', static_folder='../webroot',)
 cors = CORS(app, resources={r"/api/upload/*": {"origins": "*"}})
 app.config['CORS_HEADERS'] = 'Content-Type'
 
@@ -26,6 +24,9 @@ def first():
     init_db(sql_lite_con)
     sql_lite_con.close()
 
+@app.route('/', methods=["GET"])
+def index():
+    return send_from_directory(app.static_folder, 'index.html')
 
 @app.route('/api/upload', methods=["POST","OPTIONS"])
 @cross_origin(origin='*', headers=['Content-Type'])
