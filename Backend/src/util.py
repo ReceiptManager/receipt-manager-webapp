@@ -107,7 +107,7 @@ def get_data_from_db(tableName):
 def create_ms_db_conn():
         global cfg
         if not cfg:
-            cfg = load_conf_from_file()
+            cfg = load_conf()
 
         conn = pyodbc.connect(Driver="{SQL Server}", Server=cfg['sqlServerIP'],Database=cfg['sqlDatabase'], user=cfg['sqlUsername'], password=cfg['sqlPassword'])
         cursor = conn.cursor()
