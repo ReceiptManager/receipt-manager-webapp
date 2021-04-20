@@ -1,11 +1,60 @@
-var backendIP = "192.168.50.59" //Backend IP
-var backendPort = "5558"        //Backend Port
-var backendToken = '9b089407'   //Token generated from backend
-var language = 'de-DE'
-
+var backendIP
+var backendPort
+var backendToken
+var language
+var settingsLoaded
 var menuIcon
 var openPage
 var translated
+
+function loadSettings(t, origin) 
+{
+  if (!settingsLoaded)
+  {
+      let xhr = new XMLHttpRequest();
+      xhr.open("GET", "./settings/settings.json");
+    
+      xhr.onload = function () 
+      {
+        if (this.status >= 200 && this.status < 300) 
+        {
+          var settings = JSON.parse(xhr.response);
+          backendIP = settings['backendIP']
+          backendPort = settings['backendPort']
+          backendToken = settings['backendToken']
+          language = settings['language']
+          settingsLoaded = true
+    
+          loadPageData(t, origin)
+        } 
+      }
+
+      xhr.send()
+  }
+  else
+  {
+    loadPageData(t, origin)
+  }
+}
+
+function loadPageData(t, origin) 
+{
+    if (origin == "historyPage")
+    {
+      t.getStaticData("categories")
+      t.getStaticData("stores")
+      t.getHistoryPurchases()
+    }
+    else if (origin == "scan")
+    {
+      t.getStaticData("categories")
+      t.getStaticData("stores")
+    }
+    else if (origin == "addCategory")
+    {
+      t.getStaticData("categories")
+    }
+}
 
 function loadTranslations() {
   let xhr = new XMLHttpRequest();
@@ -463,4 +512,4 @@ function closeMobileKeyboard (event, t, id)
 }
 
 export {showReceipt, responseChanged, storesChanged, addItem, addStoreFromScan, updateItemIDs, deleteItem, activateDeleteMode, validateCategories, validateStore, validateDate, validateTotal, validateArticles, updateResponseJson, closeDrawer, openDrawer, calcDifference, assumeArticleSum, openSpinner, closeSpinner, setMenuIcon, chooseAddMode, setOpenPage, 
-        addCategory, getSelectedCategoryId, manualInput, loadTranslations, resetForm, closeMobileKeyboard, menuIcon, language,backendIP, backendPort, translated, backendToken}
+        addCategory, getSelectedCategoryId, manualInput, loadTranslations, resetForm, closeMobileKeyboard, loadSettings, menuIcon, language,backendIP, backendPort, translated, backendToken}

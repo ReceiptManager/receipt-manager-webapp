@@ -4,7 +4,7 @@ import "./node_modules/@polymer/paper-input/paper-input.js";
 import './node_modules/@polymer/paper-listbox/paper-listbox.js';
 import './node_modules/@polymer/paper-dialog/paper-dialog.js';
 import './node_modules/@polymer/paper-toast/paper-toast.js';
-import {backendIP, backendPort, addCategory, openSpinner, closeSpinner, translated, backendToken}  from './functions.js';
+import {backendIP, backendPort, addCategory, openSpinner, closeSpinner, loadSettings, translated, backendToken}  from './functions.js';
 
 class MainElement extends LitElement {
   static get properties() {
@@ -83,7 +83,7 @@ class MainElement extends LitElement {
   constructor() {
     super();
     setPassiveTouchGestures(true);
-    this.getStaticData("categories")
+    loadSettings(this, "addCategory")
   }
 
   static get styles() {
@@ -101,7 +101,7 @@ class MainElement extends LitElement {
       }
 
       .mainContainer {
-        width: calc(100% - 20px);
+        width: calc(100% - 25px);
         padding-left: 25px;
         padding-bottom: 10px;
         margin-top: 70px;

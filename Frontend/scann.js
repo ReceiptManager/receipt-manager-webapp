@@ -9,7 +9,7 @@ import './node_modules/@polymer/paper-toast/paper-toast.js';
 import './node_modules/@polymer/paper-icon-button/paper-icon-button.js';
 import './node_modules/@polymer/iron-icon/iron-icon.js';
 import './node_modules/@polymer/iron-icons/iron-icons.js';
-import {showReceipt, addItem, addStoreFromScan, deleteItem, activateDeleteMode, validateCategories, validateStore, validateDate, validateTotal, validateArticles, updateResponseJson, calcDifference, assumeArticleSum, backendIP, backendPort, openSpinner, closeSpinner, getSelectedCategoryId, closeMobileKeyboard, resetForm, manualInput, translated, backendToken} from './functions.js';
+import {showReceipt, addItem, addStoreFromScan, deleteItem, activateDeleteMode, validateCategories, validateStore, validateDate, validateTotal, validateArticles, updateResponseJson, calcDifference, assumeArticleSum, backendIP, backendPort, openSpinner, closeSpinner, getSelectedCategoryId, closeMobileKeyboard, loadSettings, resetForm, manualInput, translated, backendToken} from './functions.js';
 
 class ScanElement extends LitElement {
   static get properties() {
@@ -334,8 +334,7 @@ checkValidAndSave(e)
   constructor() {
     super();
     setPassiveTouchGestures(true);
-    this.getStaticData("categories")
-    this.getStaticData("stores")
+    loadSettings(this, "scan")
     this.receiptSum = 0
   }
 

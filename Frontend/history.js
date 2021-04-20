@@ -10,8 +10,7 @@ import './node_modules/@polymer/paper-toast/paper-toast.js';
 import './node_modules/@polymer/paper-icon-button/paper-icon-button.js';
 import './node_modules/@polymer/iron-icon/iron-icon.js';
 import './node_modules/@polymer/iron-icons/iron-icons.js';
-import {repeat} from 'lit-html/directives/repeat.js';
-import {updateResponseJson, addItem, deleteItem, activateDeleteMode, calcDifference, validateStore, validateDate, validateArticles, validateCategories, validateTotal, backendIP, backendPort, responseChanged, assumeArticleSum, openSpinner, closeSpinner, setMenuIcon, getSelectedCategoryId, closeMobileKeyboard, language, translated, backendToken}  from './functions.js';
+import {updateResponseJson, addItem, deleteItem, activateDeleteMode, calcDifference, validateStore, validateDate, validateArticles, validateCategories, validateTotal, backendIP, backendPort, responseChanged, assumeArticleSum, openSpinner, closeSpinner, setMenuIcon, getSelectedCategoryId, closeMobileKeyboard, loadSettings,language, translated, backendToken}  from './functions.js';
 
 class MainElement extends LitElement {
   static get properties() {
@@ -308,12 +307,10 @@ class MainElement extends LitElement {
   constructor() {
     super();
     setPassiveTouchGestures(true);
+    loadSettings(this, "historyPage")
 
     this.articleSum = 0
     this.receiptSum = 0
-    this.getStaticData("categories")
-    this.getStaticData("stores")
-    this.getHistoryPurchases()
   }
 
   static get styles() {
@@ -321,7 +318,7 @@ class MainElement extends LitElement {
 
     .mainContainer
     {
-      width: calc(100% - 20px);
+      width: calc(100% - 25px);
       padding-left: 25px;
       padding-bottom: 10px;
       margin-top: 70px;
