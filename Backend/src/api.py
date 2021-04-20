@@ -20,10 +20,6 @@ def first():
     cfg = load_conf_from_file()
     api_token = check_existing_token()
 
-    sql_lite_con = create_db_SQLite_conn()
-    init_db(sql_lite_con)
-    sql_lite_con.close()
-
 @app.route('/', methods=["GET"])
 def index():
     return send_from_directory(app.static_folder, 'index.html')

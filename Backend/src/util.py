@@ -9,6 +9,13 @@ import os.path
 cfg = None
 api_token = None
 
+def create_web_config():
+    web_json = "../webroot/settings/settings.json"
+    web_cfg = {"backendIP": cfg['backendIP'], "backendPort": cfg['backendPort'], "backendToken": api_token, "language": cfg['backendLanguage']}
+    f = open(web_json, "w")
+    f.write(json.dumps(web_cfg))
+    f.close()    
+
 def check_existing_token():
     if not os.path.isfile(r'.api_token'):
         create_token()
@@ -26,14 +33,16 @@ def read_token():
 def create_token():
     global api_token
     new_token = str(uuid.uuid4())[:8]
-    f = open(".api_token", "a")
+    f = open(".api_token", "w")
     f.write(new_token)
     api_token = new_token
     f.close()    
 
 def load_conf_from_file():
-    with open("../config.yaml", "r") as ymlfile:
-        cfg = yaml.load(ymlfile, Loader=yaml.FullLoader)
+    global cfg
+    if not cfg:
+        with open("../config.yaml", "r") as ymlfile:
+            cfg = yaml.load(ymlfile, Loader=yaml.FullLoader)
     return cfg
 
 def delete_from_DB(table_name, id):
