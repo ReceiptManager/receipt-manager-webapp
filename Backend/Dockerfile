@@ -10,7 +10,12 @@ ENV RUN_IN_DOCKER Yes
 # copy the dependencies file to the working directory
 COPY requirements.txt .
 
+# install odbc driver
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
+    curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list
+
 RUN apt-get update && apt-get install -y unzip unixodbc-dev
+RUN ACCEPT_EULA=Y apt-get install -y msodbcsql17
 
 # install dependencies
 RUN pip install -r requirements.txt
@@ -19,6 +24,7 @@ RUN pip install -r requirements.txt
 COPY src/ ./src
 COPY config.yaml .
 
+# load compiled frontend from last release
 RUN mkdir -p /app/unrar && \
     cd /app/unrar && \
     wget https://github.com/ReceiptManager/receipt-manager-webapp/releases/latest/download/receipt-parser-webapp.zip && \

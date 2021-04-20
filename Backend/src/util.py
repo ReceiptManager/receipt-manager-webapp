@@ -109,7 +109,7 @@ def create_ms_db_conn():
         if not cfg:
             cfg = load_conf()
 
-        conn = pyodbc.connect(Driver="{SQL Server}", Server=cfg['sqlServerIP'],Database=cfg['sqlDatabase'], user=cfg['sqlUsername'], password=cfg['sqlPassword'])
+        conn = pyodbc.connect(Driver="{ODBC Driver 17 for SQL Server}", Server=cfg['sqlServerIP'],Database=cfg['sqlDatabase'], user=cfg['sqlUsername'], password=cfg['sqlPassword'])
         cursor = conn.cursor()
 
         return conn, cursor
