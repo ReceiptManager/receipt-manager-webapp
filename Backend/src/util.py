@@ -123,7 +123,24 @@ def create_db_SQLite_conn():
         
         return conn
 
-def init_db (conn):
+def init_mssql_db (conn):
+    create_purchases_table = """ IF object_id('purchaseDataLocal', 'U') is null
+                                    CREATE TABLE [dbo].[purchaseDataLocal](
+                                    [article_name] [varchar](100) NULL,
+                                    [amount] [int] NULL,
+                                    [total] [decimal](15, 2) NULL,
+                                    [category] [varchar](100) NULL,
+                                    [location] [varchar](100) NULL,
+                                    [timestamp] [datetime] NULL,
+                                    [id] [varchar](50) NULL
+                                ) ON [PRIMARY] """
+    if conn:
+        create_table(conn, create_purchases_table)
+    else:
+        print ("Error! cannot create the database connection.")
+
+
+def init_sqlite_db (conn):
     create_categories_table = """CREATE TABLE IF NOT EXISTS categories 
         (
             name varchar(100),
@@ -136,7 +153,7 @@ def init_db (conn):
             id varchar(20)
         )"""
 
-    if conn is not None:
+    if conn:
         create_table(conn, create_categories_table)
         create_table(conn, create_stores_table)
     else:
