@@ -3,10 +3,10 @@ monkey.patch_all()
 
 from gevent.pywsgi import WSGIServer
 from api import app
-from util import load_conf_from_file, check_existing_token
+from util import load_conf, check_existing_token
 
 def server():
-    cfg = load_conf_from_file()
+    cfg = load_conf()
     api_token = check_existing_token()
 
     http_server = WSGIServer((cfg['backendIP'], int(cfg['backendPort'])), app)

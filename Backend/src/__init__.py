@@ -1,5 +1,5 @@
 from server import server
-from util import create_db_SQLite_conn, init_db, load_conf_from_file, create_web_config, check_existing_token
+from util import create_db_SQLite_conn, init_db, load_conf, create_web_config, check_existing_token
 
 
 def main():
@@ -8,7 +8,7 @@ def main():
     conn.close()
 
     check_existing_token()
-    load_conf_from_file()
+    load_conf()
     create_web_config()
     server()
 

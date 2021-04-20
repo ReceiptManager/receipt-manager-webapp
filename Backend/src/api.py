@@ -4,7 +4,7 @@ from flask import Flask, request, send_from_directory
 import requests
 import json
 import uuid
-from util import check_existing_token, create_db_SQLite_conn, delete_from_DB, init_db, create_ms_db_conn,get_data_from_db, add_or_update_to_db, delete_from_DB, load_conf_from_file
+from util import check_existing_token, delete_from_DB, create_ms_db_conn,get_data_from_db, add_or_update_to_db, delete_from_DB, load_conf
 
 app = Flask(__name__, static_url_path='', static_folder='../webroot',)
 cors = CORS(app, resources={r"/api/upload/*": {"origins": "*"}})
@@ -17,7 +17,7 @@ api_token = None
 def first():
     global cfg
     global api_token
-    cfg = load_conf_from_file()
+    cfg = load_conf()
     api_token = check_existing_token()
 
 @app.route('/', methods=["GET"])
