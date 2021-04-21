@@ -123,19 +123,20 @@ def create_mysql_db_conn():
         cfg = load_conf()
 
     try:
-        with connect(
+        conn = connect(
             host=cfg['sqlServerIP'],
             user=cfg['sqlUsername'],
             password=cfg['sqlPassword'],
-            database=cfg['sqlDatabase']
-        ) as connection:
-            conn = connection
+            database=cfg['sqlDatabase'])
     except Error as e:
         print(e)
 
     cur = conn.cursor()
 
     return conn, cur
+
+def init_mysql_db (conn):
+    None
 
 def init_mssql_db (conn):
     create_receipts_tables = """ IF object_id('tags', 'U') is null
@@ -168,7 +169,8 @@ def init_mssql_db (conn):
 
 def create_table(conn, sql_query):
     try:
-        conn.execute(sql_query)
+        cur = conn.cursor()
+        cur.execute(sql_query)
         conn.commit()
 
     except pyodbc.Error as e:

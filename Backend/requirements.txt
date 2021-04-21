@@ -5,3 +5,4 @@ Flask-Cors==3.0.10
 pyodbc==4.0.30
 requests==2.25.1
 uuid==1.30
+mysql-connector-python==8.0.24
