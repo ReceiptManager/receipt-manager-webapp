@@ -3,11 +3,11 @@ from util import init_mssql_db,create_ms_db_conn,load_conf, create_web_config, c
 
 
 def main():
+    load_conf()
     conn = create_ms_db_conn()[0]
     init_mssql_db(conn)
 
     check_existing_token()
-    load_conf()
     create_web_config()
     server()
 

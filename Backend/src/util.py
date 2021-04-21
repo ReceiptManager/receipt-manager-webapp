@@ -3,7 +3,7 @@ import uuid
 import json
 import yaml
 import os
-from mysqldb_wrapper import Base, Id
+from mysql.connector import connect, Error
 
 cfg = None
 api_token = None
@@ -113,9 +113,29 @@ def create_ms_db_conn():
             cfg = load_conf()
 
         conn = pyodbc.connect(Driver="{ODBC Driver 17 for SQL Server}", Server=cfg['sqlServerIP'],Database=cfg['sqlDatabase'], user=cfg['sqlUsername'], password=cfg['sqlPassword'])
-        cursor = conn.cursor()
+        cur = conn.cursor()
 
-        return conn, cursor
+        return conn, cur
+
+def create_mysql_db_conn():
+    global cfg
+    if not cfg:
+        cfg = load_conf()
+
+    try:
+        with connect(
+            host=cfg['sqlServerIP'],
+            user=cfg['sqlUsername'],
+            password=cfg['sqlPassword'],
+            database=cfg['sqlDatabase']
+        ) as connection:
+            conn = connection
+    except Error as e:
+        print(e)
+
+    cur = conn.cursor()
+
+    return conn, cur
 
 def init_mssql_db (conn):
     create_receipts_tables = """ IF object_id('tags', 'U') is null
@@ -130,24 +150,26 @@ def init_mssql_db (conn):
                                     CREATE TABLE purchasesArticles (id int, itemid int FOREIGN KEY REFERENCES items(id))
                                 IF object_id('receipts', 'U') is null
                                     CREATE TABLE receipts (id int PRIMARY KEY, storeId int, [date] date, total decimal(15,2), tagId int FOREIGN KEY REFERENCES tags(id), purchaseId int) 
-                                IF object_id('purchaseData', 'V') is null
-                                    CREATE VIEW purchaseData AS
-                                        select i.itemName article_name, 1 amount, itemTotal total, c.categoryName, storeName location, date timestamp, CONVERT(varchar, r.id) id from receipts r
-                                            JOIN stores s ON r.storeId = s.id
-                                            JOIN purchasesArticles pa ON r.purchaseId = pa.id
-                                            JOIN items i on pa.itemid = i.id
-                                            JOIN categories c on c.id = i.categoryId """
+                           """
+    create_receipts_view = """  IF object_id('purchaseData', 'V') is null
+                                EXEC('CREATE VIEW purchaseData AS
+                                    select i.itemName article_name, 1 amount, itemTotal total, c.categoryName, storeName location, date timestamp, CONVERT(varchar, r.id) id from receipts r
+                                        JOIN stores s ON r.storeId = s.id
+                                        JOIN purchasesArticles pa ON r.purchaseId = pa.id
+                                        JOIN items i on pa.itemid = i.id
+                                        JOIN categories c on c.id = i.categoryId')
+                            """
     if conn:
         create_table(conn, create_receipts_tables)
+        create_table(conn, create_receipts_view)
+        conn.close()
     else:
         print ("Error! cannot create the database connection.")
 
-    
 def create_table(conn, sql_query):
     try:
         conn.execute(sql_query)
         conn.commit()
-        conn.close()
 
     except pyodbc.Error as e:
         print(e)
