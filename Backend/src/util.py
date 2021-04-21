@@ -1,10 +1,9 @@
-import sqlite3
-from sqlite3 import Error
 import pyodbc
 import uuid
 import json
 import yaml
 import os
+from mysqldb_wrapper import Base, Id
 
 cfg = None
 api_token = None
@@ -132,11 +131,12 @@ def init_mssql_db (conn):
                                 IF object_id('receipts', 'U') is null
                                     CREATE TABLE receipts (id int PRIMARY KEY, storeId int, [date] date, total decimal(15,2), tagId int FOREIGN KEY REFERENCES tags(id), purchaseId int) 
                                 IF object_id('purchaseData', 'V') is null
-                                    select i.itemName article_name, 1 amount, itemTotal total, c.categoryName, storeName location, date timestamp, CONVERT(varchar, r.id) id from receipts r
-                                        JOIN stores s ON r.storeId = s.id
-                                        JOIN purchasesArticles pa ON r.purchaseId = pa.id
-                                        JOIN items i on pa.itemid = i.id
-                                        JOIN categories c on c.id = i.categoryId """
+                                    CREATE VIEW purchaseData AS
+                                        select i.itemName article_name, 1 amount, itemTotal total, c.categoryName, storeName location, date timestamp, CONVERT(varchar, r.id) id from receipts r
+                                            JOIN stores s ON r.storeId = s.id
+                                            JOIN purchasesArticles pa ON r.purchaseId = pa.id
+                                            JOIN items i on pa.itemid = i.id
+                                            JOIN categories c on c.id = i.categoryId """
     if conn:
         create_table(conn, create_receipts_tables)
     else:
@@ -149,7 +149,7 @@ def create_table(conn, sql_query):
         conn.commit()
         conn.close()
 
-    except Error as e:
+    except pyodbc.Error as e:
         print(e)
 
 def get_category_id(category_name):
