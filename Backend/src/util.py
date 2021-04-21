@@ -67,39 +67,43 @@ def load_conf():
     return cfg
 
 def delete_from_DB(table_name, id):
-    sqlite_con = create_db_SQLite_conn()
-    cur = sqlite_con.cursor()
+    conn, cur = create_ms_db_conn()
     cur.execute("DELETE FROM " + table_name + " WHERE id = ?", [id])
-    sqlite_con.commit()
-    sqlite_con.close()
+    conn.commit()
+    conn.close()
 
 def add_or_update_to_db(to_add_table, id, to_add_value):
-    sqlite_con = create_db_SQLite_conn()
-    cur = sqlite_con.cursor()
+    conn, cur = create_ms_db_conn()
+
     if id:
-        sql_update = ''' UPDATE ''' + to_add_table + ''' SET name = ? WHERE id = ?'''
+        sql_update = ''' UPDATE ''' + to_add_table + ''' SET categoryName = ? WHERE id = ?'''
         cur.execute(sql_update, [to_add_value, id])
     else:
-        sql_insert = ''' INSERT INTO ''' + to_add_value +  ''' VALUES (?, ?)'''
-        cur.execute(sql_insert,  [to_add_value, str(uuid.uuid4())])
+        id = int(str(uuid.uuid1().int)[:6])
+        sql_insert = ''' INSERT INTO ''' + to_add_table +  ''' VALUES (?, ?)'''
+        cur.execute(sql_insert,  [id, to_add_value])
 
-    sqlite_con.commit()
-    sqlite_con.close()
+    conn.commit()
+    conn.close()
 
 def get_data_from_db(tableName):
-    sqlite_con = create_db_SQLite_conn()
+    conn, cur = create_ms_db_conn()
 
-    sql_select = ''' SELECT * from ''' + tableName + ''' order by name '''
-    cur = sqlite_con.cursor()
+    if tableName == "categories":
+        orderby = 'categoryName'
+    elif tableName == "stores":
+        orderby = 'storeName'
+
+    sql_select = ''' SELECT * from ''' + tableName + ''' order by ''' + orderby
     cur.execute(sql_select)
     rows = cur.fetchall()
-    sqlite_con.close()
+    conn.close()
 
     ret_array = json.dumps({"values": []})
     ret_json = json.loads(ret_array)
 
     for row in rows:
-        add_array = {"name": row[0], "id": row[1]}
+        add_array = {"name": row[1], "id": row[0]}
         ret_json["values"].append(add_array)
 
     return ret_json
@@ -114,54 +118,56 @@ def create_ms_db_conn():
 
         return conn, cursor
 
-def create_db_SQLite_conn():
-        conn = None
-        try:
-            conn = sqlite3.connect(r'./receiptParser.db')
-        except Error as e:
-            print(e)
-        
-        return conn
-
 def init_mssql_db (conn):
-    create_purchases_table = """ IF object_id('purchaseDataLocal', 'U') is null
-                                    CREATE TABLE [dbo].[purchaseDataLocal](
-                                    [article_name] [varchar](100) NULL,
-                                    [amount] [int] NULL,
-                                    [total] [decimal](15, 2) NULL,
-                                    [category] [varchar](100) NULL,
-                                    [location] [varchar](100) NULL,
-                                    [timestamp] [datetime] NULL,
-                                    [id] [varchar](50) NULL
-                                ) ON [PRIMARY] """
+    create_receipts_tables = """ IF object_id('tags', 'U') is null
+                                    CREATE TABLE tags (id int PRIMARY KEY, tagName nvarchar(50))
+                                IF object_id('stores', 'U') is null
+                                    CREATE TABLE stores (id int PRIMARY KEY, storeName nvarchar(50))
+                                IF object_id('categories', 'U') is null
+                                    CREATE TABLE categories (id int PRIMARY KEY, categoryName nvarchar(50))
+                                IF object_id('items', 'U') is null
+                                    CREATE TABLE items (id int PRIMARY KEY, itemName nvarchar(100), itemTotal decimal(15,2), categoryId int FOREIGN KEY REFERENCES categories(id))
+                                IF object_id('purchasesArticles', 'U') is null
+                                    CREATE TABLE purchasesArticles (id int, itemid int FOREIGN KEY REFERENCES items(id))
+                                IF object_id('receipts', 'U') is null
+                                    CREATE TABLE receipts (id int PRIMARY KEY, storeId int, [date] date, total decimal(15,2), tagId int FOREIGN KEY REFERENCES tags(id), purchaseId int) 
+                                IF object_id('purchaseData', 'V') is null
+                                    select i.itemName article_name, 1 amount, itemTotal total, c.categoryName, storeName location, date timestamp, CONVERT(varchar, r.id) id from receipts r
+                                        JOIN stores s ON r.storeId = s.id
+                                        JOIN purchasesArticles pa ON r.purchaseId = pa.id
+                                        JOIN items i on pa.itemid = i.id
+                                        JOIN categories c on c.id = i.categoryId """
     if conn:
-        create_table(conn, create_purchases_table)
+        create_table(conn, create_receipts_tables)
     else:
         print ("Error! cannot create the database connection.")
 
-
-def init_sqlite_db (conn):
-    create_categories_table = """CREATE TABLE IF NOT EXISTS categories 
-        (
-            name varchar(100),
-            id varchar(20)
-        )"""
-
-    create_stores_table = """CREATE TABLE IF NOT EXISTS stores 
-        (
-            name varchar(100),
-            id varchar(20)
-        )"""
-
-    if conn:
-        create_table(conn, create_categories_table)
-        create_table(conn, create_stores_table)
-    else:
-        print ("Error! cannot create the database connection.")
-
+    
 def create_table(conn, sql_query):
     try:
-        c = conn.cursor()
-        c.execute(sql_query)
+        conn.execute(sql_query)
+        conn.commit()
+        conn.close()
+
     except Error as e:
         print(e)
+
+def get_category_id(category_name):
+    conn, cursor = create_ms_db_conn()
+    cursor.execute("select TOP 1 id from categories where categoryName = ?", [category_name])
+    rows = cursor.fetchone()
+    conn.close()
+
+    category_id = rows[0]
+
+    return category_id
+
+def get_store_id(store_name):
+    conn, cursor = create_ms_db_conn()
+    cursor.execute("select TOP 1 id from stores where storeName = ?", [store_name])
+    rows = cursor.fetchone()
+    conn.close()
+
+    store_id = rows[0]
+
+    return store_id

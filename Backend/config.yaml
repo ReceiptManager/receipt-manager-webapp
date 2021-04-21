@@ -7,6 +7,6 @@ parserPort: 8721         #Receipt parser Port
 parserToken: dEkYyxgqVHRqV #Receipt parser Token
 
 sqlServerIP: 192.168.50.6  #MSSQL IP
-sqlDatabase: reciptData    #MSSQL Database
+sqlDatabase: receiptData    #MSSQL Database
 sqlUsername: receiptParser #MSSQL Username
 sqlPassword: receiptParser2021! #MSSQL User Password

@@ -134,6 +134,7 @@ function addCategory(event, t, elementId)
 {
   if (event.which == 13)
   {
+    closeMobileKeyboard(event, t, "category" + elementId)
     var newCat = t.shadowRoot.getElementById("category" + elementId).value
 
     if (!elementId)

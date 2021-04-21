@@ -334,6 +334,7 @@ class MainElement extends LitElement {
       position: absolute;
       z-index: -1;
       padding-right: 10px;
+      width: calc(100% - 25px);
     }
 
     .storeDropdown {

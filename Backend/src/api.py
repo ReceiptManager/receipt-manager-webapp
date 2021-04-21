@@ -4,7 +4,7 @@ from flask import Flask, request, send_from_directory
 import requests
 import json
 import uuid
-from util import check_existing_token, delete_from_DB, create_ms_db_conn,get_data_from_db, add_or_update_to_db, delete_from_DB, load_conf
+from util import check_existing_token, delete_from_DB, create_ms_db_conn, get_category_id,get_data_from_db, add_or_update_to_db, delete_from_DB, get_store_id, load_conf
 
 app = Flask(__name__, static_url_path='', static_folder='../webroot',)
 cors = CORS(app, resources={r"/api/upload/*": {"origins": "*"}})
@@ -64,7 +64,7 @@ def upload():
 
             for article in splitted_articles:
                 if len(article) > 3:
-                    cursor.execute("SELECT TOP 1 category FROM pruchaseData where article_name like ? order by timestamp desc", [f"%{article}%"])
+                    cursor.execute("SELECT TOP 1 category FROM purchaseData where article_name like ? order by timestamp desc", [f"%{article}%"])
                     row = cursor.fetchone()
 
                     if (row):
@@ -91,7 +91,8 @@ def get_history():
     conn, cursor = create_ms_db_conn()
     history_json = []
 
-    cursor.execute("select SUM(total) as totalSum, location, id, timestamp from purchaseDataLocal \
+    cursor.execute("select SUM(total) as totalSum, location, id, timestamp from purchaseData \
+	                where id is not null \
                     GROUP BY timestamp, id, location \
                     ORDER BY timestamp desc")
 
@@ -115,9 +116,9 @@ def get_history_details():
     receipt_total = request.args['receiptTotal']
     receipt_date = request.args['receiptDate']
     purchase_id = request.args['purchaseID']
-    conn, cursor = create_ms_db_conn()
     
-    cursor.execute("select article_name, total, category from purchaseDataLocal where id = ?", [purchase_id])
+    conn, cursor = create_ms_db_conn()
+    cursor.execute("select article_name, total, category from purchaseData where id = ?", [purchase_id])
 
     purchase_details = {"storeName": store_name, "receiptTotal": receipt_total, "receiptDate": receipt_date, "purchaseID": purchase_id,"receiptItems": []}
     
@@ -181,21 +182,31 @@ def update_receipt_to_db():
 
     conn, cursor = create_ms_db_conn()
 
-    store_name = post_json["storeName"]
+    store_id = get_store_id(post_json["storeName"])
     receipt_date = post_json["receiptDate"]
+    receipt_total = post_json["receiptTotal"]
     receipt_id = post_json["purchaseID"]
 
     receipt_date = datetime.strptime(receipt_date, "%d.%m.%Y")
     receipt_date = receipt_date.strftime("%m-%d-%Y")
 
-    cursor.execute("DELETE FROM purchaseDataLocal WHERE ID = ?", [receipt_id])
+    # Delete old values
+    cursor.execute("DELETE FROM receipts WHERE ID = ?", [receipt_id])
+    cursor.execute("DELETE FROM purchasesArticles WHERE ID = ?", [receipt_id])
+    cursor.execute("DELETE FROM items where id IN (select itemid from purchasesArticles where id = ?)", [receipt_id])
 
+    # Write article positions
     for article in post_json["receiptItems"]:
+        article_id = int(str(uuid.uuid1().int)[:8])
         article_name = article[1]
         article_sum = article[2]
-        article_category = article[3]
+        article_category_id = get_category_id(article[3])
 
-        cursor.execute("INSERT INTO purchaseDataLocal values (?,?,?,?,?,?,?)", [article_name, 1, article_sum, article_category, store_name, receipt_date, receipt_id])
+        cursor.execute("INSERT INTO items values (?,?,?,?)", [article_id, article_name, article_sum, article_category_id])
+        cursor.execute("INSERT INTO purchasesArticles values (?,?)", [receipt_id, article_id])
+
+    # Write receipt summary
+    cursor.execute("INSERT INTO receipts values (?,?,?,?,?,?)", [receipt_id, store_id, receipt_date, receipt_total, None, receipt_id])
         
     conn.commit()
     conn.close()
@@ -213,20 +224,27 @@ def write_receipt_to_db():
 
     conn, cursor = create_ms_db_conn()
 
-    store_name = post_json["storeName"]
+    store_id = get_store_id(post_json["storeName"])
     receipt_date = post_json["receiptDate"]
-    receipt_id = uuid.uuid4()
+    receipt_total = post_json["receiptTotal"]
+    receipt_id = int(str(uuid.uuid1().int)[:6])
 
     receipt_date = datetime.strptime(receipt_date, "%d.%m.%Y")
     receipt_date = receipt_date.strftime("%m-%d-%Y")
 
+    # Write article positions
     for article in post_json["receiptItems"]:
+        article_id = int(str(uuid.uuid1().int)[:8])
         article_name = article[1]
         article_sum = article[2]
-        article_category = article[3]
+        article_category_id = get_category_id(article[3])
 
-        cursor.execute("INSERT INTO purchaseDataLocal values (?,?,?,?,?,?,?)", [article_name, 1, article_sum, article_category, store_name, receipt_date, receipt_id])
-        
+        cursor.execute("INSERT INTO items values (?,?,?,?)", [article_id, article_name, article_sum, article_category_id])
+        cursor.execute("INSERT INTO purchasesArticles values (?,?)", [receipt_id, article_id])
+
+    # Write receipt summary
+    cursor.execute("INSERT INTO receipts values (?,?,?,?,?,?)", [receipt_id, store_id, receipt_date, receipt_total, None, receipt_id])
+
     conn.commit()
     conn.close()
 
