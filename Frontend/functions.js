@@ -432,6 +432,10 @@ function updateResponseJson (itemId, mode, t)
   else if (mode == "articleSum")
   {
     var updateVal = t.shadowRoot.getElementById("sum" + itemId).value;
+    if (!updateVal.includes('.'))
+    {
+      updateVal = updateVal + '.00'
+    }
     t.responseJson["receiptItems"][itemId][2] = updateVal;
   }
   else if (mode == "category")
