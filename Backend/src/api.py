@@ -4,7 +4,7 @@ from flask import Flask, request, send_from_directory
 import requests
 import json
 import uuid
-from util import check_existing_token, delete_from_DB, create_ms_db_conn, get_category_id,get_data_from_db, add_or_update_to_db, delete_from_DB, get_store_id, load_conf
+from util import check_existing_token, convert_to_mysql_query, delete_from_DB, get_category_id,get_data_from_db, add_or_update_to_db, delete_from_DB, get_store_id, load_conf, load_db_conn
 
 app = Flask(__name__, static_url_path='', static_folder='../webroot',)
 cors = CORS(app, resources={r"/api/upload/*": {"origins": "*"}})
@@ -56,7 +56,7 @@ def upload():
                 year_string[2] = "20" + year_string[2]
                 response_json["receiptDate"] = year_string[0] + "." + year_string[1] + "." + year_string[2]
 
-        conn, cursor = create_ms_db_conn()
+        conn, cursor = load_db_conn()
         for idx, article in enumerate(response_json["receiptItems"]):
             article = article[0]
 
@@ -64,7 +64,11 @@ def upload():
 
             for article in splitted_articles:
                 if len(article) > 3:
-                    cursor.execute("SELECT TOP 1 category FROM purchaseData where article_name like ? order by timestamp desc", [f"%{article}%"])
+                    sql_query = "SELECT TOP 1 category FROM purchaseData where article_name like ? order by timestamp desc"
+                    if cfg['dbMode'] == "mysql":
+                        sql_query = convert_to_mysql_query(sql_query)
+
+                    cursor.execute(sql_query, [f"%{article}%"])
                     row = cursor.fetchone()
 
                     if (row):
@@ -88,7 +92,7 @@ def get_history():
     if api_token != request.args['token']:
         return "Unthorized", 401
 
-    conn, cursor = create_ms_db_conn()
+    conn, cursor = load_db_conn()
     history_json = []
 
     cursor.execute("select SUM(total) as totalSum, location, id, timestamp from purchaseData \
@@ -99,7 +103,10 @@ def get_history():
     rows = cursor.fetchall()
 
     for row in rows:
-        add_json = {'location': row.location, 'totalSum': str(row.totalSum), 'timestamp': str(row.timestamp), 'id': row.id}
+        if cfg['dbMode'] == "mysql":
+            add_json = {'location': row[1], 'totalSum': str(row[0]), 'timestamp': str(row[3]), 'id': row[2]}
+        else:
+            add_json = {'location': row.location, 'totalSum': str(row.totalSum), 'timestamp': str(row.timestamp), 'id': row.id}
         history_json.append(add_json)
 
     conn.close()
@@ -117,15 +124,24 @@ def get_history_details():
     receipt_date = request.args['receiptDate']
     purchase_id = request.args['purchaseID']
     
-    conn, cursor = create_ms_db_conn()
-    cursor.execute("select article_name, total, category from purchaseData where id = ?", [purchase_id])
+    conn, cursor = load_db_conn()
 
+    sql_query = "select article_name, total, category from purchaseData where id = ?"
+    if cfg['dbMode'] == "mysql":
+        sql_query = convert_to_mysql_query(sql_query)
+
+    cursor.execute(sql_query, [purchase_id])
+    
     purchase_details = {"storeName": store_name, "receiptTotal": receipt_total, "receiptDate": receipt_date, "purchaseID": purchase_id,"receiptItems": []}
     
     rows = cursor.fetchall()
 
     for row in rows:
-        add_json = [row.article_name, str(row.total), row.category]
+        if cfg['dbMode'] == "mysql":
+            add_json = [row[0], str(row[1]), row[2]]
+        else:
+            add_json = [row.article_name, str(row.total), row.category]
+
         purchase_details["receiptItems"].append(add_json)
 
     conn.close()
@@ -180,7 +196,7 @@ def update_receipt_to_db():
     post_string = json.dumps(request.get_json())
     post_json = json.loads(post_string)
 
-    conn, cursor = create_ms_db_conn()
+    conn, cursor = load_db_conn()
 
     store_id = get_store_id(post_json["storeName"])
     receipt_date = post_json["receiptDate"]
@@ -191,9 +207,21 @@ def update_receipt_to_db():
     receipt_date = receipt_date.strftime("%m-%d-%Y")
 
     # Delete old values
-    cursor.execute("DELETE FROM receipts WHERE ID = ?", [receipt_id])
-    cursor.execute("DELETE FROM purchasesArticles WHERE ID = ?", [receipt_id])
-    cursor.execute("DELETE FROM items where id IN (select itemid from purchasesArticles where id = ?)", [receipt_id])
+    sql_query = "DELETE FROM receipts WHERE ID = ?"
+    if cfg['dbMode'] == "mysql":
+        sql_query = convert_to_mysql_query(sql_query)
+
+    cursor.execute(sql_query, [receipt_id])
+
+    sql_query = "DELETE FROM purchasesArticles WHERE ID = ?"
+    if cfg['dbMode'] == "mysql":
+        sql_query = convert_to_mysql_query(sql_query)
+    cursor.execute(sql_query, [receipt_id])
+
+    sql_query = "DELETE FROM items where id IN (select itemid from purchasesArticles where id = ?)"
+    if cfg['dbMode'] == "mysql":
+        sql_query = convert_to_mysql_query(sql_query)
+    cursor.execute(sql_query, [receipt_id])
 
     # Write article positions
     for article in post_json["receiptItems"]:
@@ -202,12 +230,24 @@ def update_receipt_to_db():
         article_sum = article[2]
         article_category_id = get_category_id(article[3])
 
-        cursor.execute("INSERT INTO items values (?,?,?,?)", [article_id, article_name, article_sum, article_category_id])
-        cursor.execute("INSERT INTO purchasesArticles values (?,?)", [receipt_id, article_id])
+        sql_query = "INSERT INTO items values (?,?,?,?)"
+        if cfg['dbMode'] == "mysql":
+            sql_query = convert_to_mysql_query(sql_query)
+        cursor.execute(sql_query, [article_id, article_name, article_sum, article_category_id])
+
+        sql_query = "INSERT INTO purchasesArticles values (?,?)"
+        if cfg['dbMode'] == "mysql":
+            sql_query = convert_to_mysql_query(sql_query)
+        cursor.execute(sql_query, [receipt_id, article_id])
 
     # Write receipt summary
-    cursor.execute("INSERT INTO receipts values (?,?,?,?,?,?)", [receipt_id, store_id, receipt_date, receipt_total, None, receipt_id])
-        
+    if cfg['dbMode'] == "mysql":
+        sql_query = "INSERT INTO receipts values (%s,%s,STR_TO_DATE(%s,'%m-%d-%Y'),%s,%s,%s)"
+    else:
+        sql_query = "INSERT INTO receipts values (?,?,?,?,?,?)"
+
+    cursor.execute(sql_query, [receipt_id, store_id, receipt_date, receipt_total, None, receipt_id])
+    
     conn.commit()
     conn.close()
 
@@ -222,7 +262,7 @@ def write_receipt_to_db():
     post_string = json.dumps(request.get_json())
     post_json = json.loads(post_string)
 
-    conn, cursor = create_ms_db_conn()
+    conn, cursor = load_db_conn()
 
     store_id = get_store_id(post_json["storeName"])
     receipt_date = post_json["receiptDate"]
@@ -239,11 +279,23 @@ def write_receipt_to_db():
         article_sum = article[2]
         article_category_id = get_category_id(article[3])
 
-        cursor.execute("INSERT INTO items values (?,?,?,?)", [article_id, article_name, article_sum, article_category_id])
-        cursor.execute("INSERT INTO purchasesArticles values (?,?)", [receipt_id, article_id])
+        sql_query = "INSERT INTO items values (?,?,?,?)"
+        if cfg['dbMode'] == "mysql":
+            sql_query = convert_to_mysql_query(sql_query)
+        cursor.execute(sql_query, [article_id, article_name, article_sum, article_category_id])
+
+        sql_query = "INSERT INTO purchasesArticles values (?,?)"
+        if cfg['dbMode'] == "mysql":
+            sql_query = convert_to_mysql_query(sql_query)
+        cursor.execute(sql_query, [receipt_id, article_id])
 
     # Write receipt summary
-    cursor.execute("INSERT INTO receipts values (?,?,?,?,?,?)", [receipt_id, store_id, receipt_date, receipt_total, None, receipt_id])
+    if cfg['dbMode'] == "mysql":
+        sql_query = "INSERT INTO receipts values (%s,%s,STR_TO_DATE(%s,'%m-%d-%Y'),%s,%s,%s)"
+    else:
+        sql_query = "INSERT INTO receipts values (?,?,?,?,?,?)"
+
+    cursor.execute(sql_query, [receipt_id, store_id, receipt_date, receipt_total, None, receipt_id])
 
     conn.commit()
     conn.close()

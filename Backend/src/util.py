@@ -66,13 +66,13 @@ def load_conf():
     return cfg
 
 def delete_from_DB(table_name, id):
-    conn, cur = create_ms_db_conn()
+    conn, cur = load_db_conn()
     cur.execute("DELETE FROM " + table_name + " WHERE id = ?", [id])
     conn.commit()
     conn.close()
 
 def add_or_update_to_db(to_add_table, id, to_add_value):
-    conn, cur = create_ms_db_conn()
+    conn, cur = load_db_conn()
 
     if id:
         sql_update = ''' UPDATE ''' + to_add_table + ''' SET categoryName = ? WHERE id = ?'''
@@ -80,13 +80,17 @@ def add_or_update_to_db(to_add_table, id, to_add_value):
     else:
         id = int(str(uuid.uuid1().int)[:6])
         sql_insert = ''' INSERT INTO ''' + to_add_table +  ''' VALUES (?, ?)'''
+
+        if cfg['dbMode'] == "mysql":
+            sql_insert = convert_to_mysql_query(sql_insert)
+
         cur.execute(sql_insert,  [id, to_add_value])
 
     conn.commit()
     conn.close()
 
 def get_data_from_db(tableName):
-    conn, cur = create_ms_db_conn()
+    conn, cur = load_db_conn()
 
     if tableName == "categories":
         orderby = 'categoryName'
@@ -107,6 +111,15 @@ def get_data_from_db(tableName):
 
     return ret_json
 
+def load_db_conn():
+    if cfg['dbMode'] == "mssql":
+        conn, cur = create_ms_db_conn()
+    elif cfg['dbMode'] == "mysql":
+        conn, cur = create_mysql_db_conn()
+    else:
+        print ("Error! No valid db mode found. Please use mssql or mysql")
+
+    return conn, cur
 def create_ms_db_conn():
         global cfg
         if not cfg:
@@ -116,6 +129,10 @@ def create_ms_db_conn():
         cur = conn.cursor()
 
         return conn, cur
+
+def convert_to_mysql_query(sql_query):
+    sql_query = sql_query.replace('?','%s')
+    return sql_query
 
 def create_mysql_db_conn():
     global cfg
@@ -132,11 +149,37 @@ def create_mysql_db_conn():
         print(e)
 
     cur = conn.cursor()
-
     return conn, cur
 
 def init_mysql_db (conn):
-    None
+    create_receipts_tags = "CREATE TABLE IF NOT EXISTS tags (id int, tagName nvarchar(50), PRIMARY KEY(id)); " 
+    create_receipts_stores = "CREATE TABLE IF NOT EXISTS stores (id int, storeName nvarchar(50), PRIMARY KEY(id));" 
+    create_receipts_categories = "CREATE TABLE IF NOT EXISTS categories (id int, categoryName nvarchar(50), PRIMARY KEY(id)); "
+    create_receipts_items = "CREATE TABLE IF NOT EXISTS items (id int, itemName nvarchar(100), itemTotal decimal(15,2), categoryId int, FOREIGN KEY (categoryId) REFERENCES categories(id), PRIMARY KEY(id));"
+    create_receipts_purchasesArticles = " CREATE TABLE IF NOT EXISTS purchasesArticles (id int, itemid int, FOREIGN KEY (itemid) REFERENCES items(id));"
+    create_receipts_receipts = " CREATE TABLE IF NOT EXISTS receipts (id int, storeId int, `date` date, total decimal(15,2), tagId int, FOREIGN KEY (tagId) REFERENCES tags(id), purchaseId int, PRIMARY KEY(id));"
+                             
+
+    create_receipts_view = """
+                                CREATE OR REPLACE VIEW purchaseData AS
+                                select i.itemName article_name, 1 amount, itemTotal total, c.categoryName category, storeName location, date timestamp, CONVERT(r.id, char) id from receipts r
+                                    JOIN stores s ON r.storeId = s.id
+                                    JOIN purchasesArticles pa ON r.purchaseId = pa.id
+                                    JOIN items i on pa.itemid = i.id
+                                    JOIN categories c on c.id = i.categoryId
+                           """
+
+    if conn:
+        create_mysql_table(conn, create_receipts_tags)
+        create_mysql_table(conn, create_receipts_stores)
+        create_mysql_table(conn, create_receipts_categories)
+        create_mysql_table(conn, create_receipts_items)
+        create_mysql_table(conn, create_receipts_purchasesArticles)
+        create_mysql_table(conn, create_receipts_receipts)
+        create_mysql_table(conn, create_receipts_view)
+        conn.close()
+    else:
+        print ("Error! cannot create the database connection.")
 
 def init_mssql_db (conn):
     create_receipts_tables = """ IF object_id('tags', 'U') is null
@@ -154,20 +197,29 @@ def init_mssql_db (conn):
                            """
     create_receipts_view = """  IF object_id('purchaseData', 'V') is null
                                 EXEC('CREATE VIEW purchaseData AS
-                                    select i.itemName article_name, 1 amount, itemTotal total, c.categoryName, storeName location, date timestamp, CONVERT(varchar, r.id) id from receipts r
+                                    select i.itemName article_name, 1 amount, itemTotal total, c.categoryName category, storeName location, date timestamp, CONVERT(varchar, r.id) id from receipts r
                                         JOIN stores s ON r.storeId = s.id
                                         JOIN purchasesArticles pa ON r.purchaseId = pa.id
                                         JOIN items i on pa.itemid = i.id
                                         JOIN categories c on c.id = i.categoryId')
                             """
     if conn:
-        create_table(conn, create_receipts_tables)
-        create_table(conn, create_receipts_view)
+        create_mssql_table(conn, create_receipts_tables)
+        create_mssql_table(conn, create_receipts_view)
         conn.close()
     else:
         print ("Error! cannot create the database connection.")
 
-def create_table(conn, sql_query):
+def create_mysql_table(conn, sql_query):
+    try:
+        cur = conn.cursor()
+        cur.execute(sql_query)
+        conn.commit()
+
+    except Error as e:
+        print(e)
+
+def create_mssql_table(conn, sql_query):
     try:
         cur = conn.cursor()
         cur.execute(sql_query)
@@ -177,8 +229,13 @@ def create_table(conn, sql_query):
         print(e)
 
 def get_category_id(category_name):
-    conn, cursor = create_ms_db_conn()
-    cursor.execute("select TOP 1 id from categories where categoryName = ?", [category_name])
+    conn, cursor = load_db_conn()
+
+    sql_query = "select id from categories where categoryName = ?"
+    if cfg['dbMode'] == "mysql":
+        sql_query = convert_to_mysql_query(sql_query)
+
+    cursor.execute(sql_query, [category_name])
     rows = cursor.fetchone()
     conn.close()
 
@@ -187,8 +244,13 @@ def get_category_id(category_name):
     return category_id
 
 def get_store_id(store_name):
-    conn, cursor = create_ms_db_conn()
-    cursor.execute("select TOP 1 id from stores where storeName = ?", [store_name])
+    conn, cursor = load_db_conn()
+    
+    sql_query = "select id from stores where storeName = ?"
+    if cfg['dbMode'] == "mysql":
+        sql_query = convert_to_mysql_query(sql_query)
+
+    cursor.execute(sql_query, [store_name])
     rows = cursor.fetchone()
     conn.close()
 
