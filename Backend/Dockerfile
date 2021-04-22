@@ -27,8 +27,8 @@ COPY config.yaml .
 # load compiled frontend from last release
 RUN mkdir -p /app/unrar && \
     cd /app/unrar && \
-    wget https://github.com/ReceiptManager/receipt-manager-webapp/releases/latest/download/receipt-parser-webapp.zip && \
-    unzip receipt-parser-webapp.zip && \
+    wget https://github.com/ReceiptManager/receipt-manager-webapp/releases/latest/download/receipt-manager-webapp.zip && \
+    unzip receipt-manager-webapp.zip && \
     mkdir -p /app/webroot && \
     cp -r /app/unrar/webroot/* /app/webroot && \
     rm -rf /app/runrar
