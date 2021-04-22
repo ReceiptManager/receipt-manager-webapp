@@ -11,6 +11,10 @@ import './node_modules/@polymer/iron-icons/iron-icons.js';
 import './node_modules/@polymer/iron-icons/maps-icons.js';
 import './node_modules/@polymer/app-layout/app-layout.js';
 import {closeDrawer, openDrawer, setMenuIcon, menuIcon, chooseAddMode, setOpenPage, loadTranslations, translated} from './functions.js';
+import './scann.js'
+import './history.js'
+import './addCategory.js'
+import './addStore.js'
 
 class MainElement extends LitElement {
   static get properties() {
@@ -87,6 +91,7 @@ class MainElement extends LitElement {
           ${this.menuMode == "addStore"
             ? html `<addstore-element id="mainElement"></addstore-element>` : html ``
           }
+
         </div>
 
         <paper-toast class= "uploadToast fit-bottom" id="uploadToast" duration="5000" text="${translated.toasts.lbl_startUpload}"></paper-toast>

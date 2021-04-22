@@ -1,0 +1,8 @@
+{
+  "entrypoint": "index.html",
+  "sources": [
+    "**.js",
+    "manifest.webmanifest",
+    "package.json"
+  ]
+}
