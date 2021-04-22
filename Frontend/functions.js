@@ -54,6 +54,10 @@ function loadPageData(t, origin)
     {
       t.getStaticData("categories")
     }
+    else if (origin == "addStore")
+    {
+      t.getStaticData("stores")
+    }
 }
 
 function loadTranslations() {
@@ -85,6 +89,11 @@ function chooseAddMode(t)
   {
     addCategoryPage.categoriesJson["values"].unshift(["", ""])
     addCategoryPage.requestUpdate()
+  }
+  else if (openPage == "addStore")
+  {
+    addStorePage.storesJson["values"].unshift(["",""])
+    addStorePage.requestUpdate()
   }
 }
 
@@ -153,12 +162,49 @@ function addCategory(event, t, elementId)
       xhr.open("POST", "http://" + backendIP + ":" + backendPort + "/api/addValue?token=" + backendToken + "&toAddArray=categories&toAddValue=" + newCat + "&id=" + elementId, true);
   
       xhr.onerror = function () {
-        console.eror("Error with code " + xhr.status);
+        console.error("Error with code " + xhr.status);
       };
   
       xhr.onload = function () {
         t.shadowRoot.getElementById("uploadToastDone").open()
         t.getStaticData("categories")
+        t.requestUpdate()
+      }
+  
+      xhr.send()
+    }
+  }
+}
+
+function addStore(event, t, elementId)
+{
+  if (event.which == 13)
+  {
+    closeMobileKeyboard(event, t, "store" + elementId)
+    var newStore = t.shadowRoot.getElementById("store" + elementId).value
+
+    if (!elementId)
+    {
+      elementId = ""
+    }
+  
+    if (newStore)
+    {
+      if (newStore.includes("&"))
+      {
+        newStore = newStore.replace("&", "%26")
+      }
+  
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "http://" + backendIP + ":" + backendPort + "/api/addValue?token=" + backendToken + "&toAddArray=stores&toAddValue=" + newStore + "&id=" + elementId, true);
+  
+      xhr.onerror = function () {
+        console.error("Error with code " + xhr.status);
+      };
+  
+      xhr.onload = function () {
+        t.shadowRoot.getElementById("uploadToastDone").open()
+        t.getStaticData("stores")
         t.requestUpdate()
       }
   
@@ -451,7 +497,7 @@ function calcDifference (t)
 
 function assumeArticleSum (t)
 {
-  t.shadowRoot.getElementById("receiptTotal").value = t.articleSum.toFixed(2);
+  t.shadowRoot.getElementById("receiptTotal").value = t.shadowRoot.getElementById("articleSum").value;
   updateResponseJson(null, "receiptTotal", t)
 }
 
@@ -513,4 +559,4 @@ function closeMobileKeyboard (event, t, id)
 }
 
 export {showReceipt, responseChanged, storesChanged, addItem, addStoreFromScan, updateItemIDs, deleteItem, activateDeleteMode, validateCategories, validateStore, validateDate, validateTotal, validateArticles, updateResponseJson, closeDrawer, openDrawer, calcDifference, assumeArticleSum, openSpinner, closeSpinner, setMenuIcon, chooseAddMode, setOpenPage, 
-        addCategory, getSelectedCategoryId, manualInput, loadTranslations, resetForm, closeMobileKeyboard, loadSettings, menuIcon, language,backendIP, backendPort, translated, backendToken}
+        addCategory, addStore,getSelectedCategoryId, manualInput, loadTranslations, resetForm, closeMobileKeyboard, loadSettings, menuIcon, language,backendIP, backendPort, translated, backendToken}

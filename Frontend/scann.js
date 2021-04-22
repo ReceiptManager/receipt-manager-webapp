@@ -95,10 +95,19 @@ checkValidAndSave(e)
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
 
     xhr.onload = function () {
-      instance.shadowRoot.getElementById("saveToDB").open()
-      instance.responseJson = null
-      instance.manualInput = null
-      instance.storedFile = null
+      if (xhr.status == 200)
+      {
+        instance.shadowRoot.getElementById("saveToDB").open()
+        instance.responseJson = null
+        instance.manualInput = null
+        instance.storedFile = null
+      }
+      else
+      {
+        instance.errorCode = xhr.statusText
+        instance.shadowRoot.getElementById("errorOnUpload").open()
+      }
+
     }
 
     xhr.onerror = function () {
@@ -271,7 +280,11 @@ checkValidAndSave(e)
           <div class="foundArticles">${translated.texts.lbl_articleCount}: ${this.responseJson.receiptItems.length}</div>
 
           <paper-icon-button icon="create" class="extraButtons" @click=${() => activateDeleteMode(this)}></paper-icon-button>
-          <paper-icon-button icon="arrow-drop-down" class="extraButtons showReceipt" id="showReceiptButton" @click=${() => showReceipt(this)}></paper-icon-button>
+          
+          ${!this.manualInput
+            ? html `<paper-icon-button icon="arrow-drop-down" class="extraButtons showReceipt" id="showReceiptButton" @click=${() => showReceipt(this)}></paper-icon-button>` : html ``
+          }
+          
           <paper-icon-button class="assumeArticleSum extraButtons" icon="play-for-work" @click=${() => assumeArticleSum(this)}></paper-icon-button>
           <paper-input class="articleSum" class="extraButtons" required="true" auto-validate pattern="([0-9]|[0-9]{2})\.[0-9]{2}" id="articleSum" label="${translated.inputLabels.lbl_articleSum}" value="${this.articleSum.toFixed(2)}" @keyup=${e => closeMobileKeyboard(e, this, "articleSum")}>
             <div slot="suffix">€</div>
@@ -286,7 +299,6 @@ checkValidAndSave(e)
         <iron-icon icon="euro-symbol" slot="suffix"></iron-icon>  
     </paper-input>
 
-    <!-- DEBUG: <br> ${JSON.stringify(this.responseJson)} -->
    `: 
     html``}
 
@@ -311,7 +323,7 @@ checkValidAndSave(e)
     <!-- On event elements -->
 
     <paper-dialog id="addStore" class="addStoreDialog">
-      <paper-input class="addStoreInput" required="true" id="newStore" label="${translated.buttons.lbl_newStore}"></paper-input>
+      <paper-input class="addStoreInput" required="true" id="newStore" label="${translated.inputLabels.lbl_newStore}"></paper-input>
       <div class="buttons">
         <paper-button dialog-confirm>${translated.buttons.lbl_close}</paper-button>  
         <paper-button @click=${() => addStoreFromScan(this)}>${translated.buttons.lbl_save}</paper-button>

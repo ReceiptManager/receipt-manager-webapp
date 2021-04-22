@@ -68,15 +68,28 @@ def load_conf():
 
 def delete_from_DB(table_name, id):
     conn, cur = load_db_conn()
-    cur.execute("DELETE FROM " + table_name + " WHERE id = ?", [id])
+
+    sql_query = "DELETE FROM " + table_name + " WHERE id = ?"
+    if cfg['dbMode'] == "mysql":
+        sql_query = convert_to_mysql_query(sql_query)
+
+    cur.execute(sql_query, [id])
     conn.commit()
     conn.close()
 
 def add_or_update_to_db(to_add_table, id, to_add_value):
     conn, cur = load_db_conn()
 
+    if to_add_table == "categories":
+        name_col = "categoryName"
+    elif to_add_table == "stores":
+        name_col = "storeName"
+
     if id:
-        sql_update = ''' UPDATE ''' + to_add_table + ''' SET categoryName = ? WHERE id = ?'''
+        sql_update = ''' UPDATE ''' + to_add_table + ''' SET ''' + name_col + ''' = ? WHERE id = ?'''
+        if cfg['dbMode'] == "mysql":
+            sql_update = convert_to_mysql_query(sql_update)
+
         cur.execute(sql_update, [to_add_value, id])
     else:
         id = int(str(uuid.uuid1().int)[:6])

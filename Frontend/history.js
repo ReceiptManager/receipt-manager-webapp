@@ -420,6 +420,7 @@ class MainElement extends LitElement {
       border-bottom-style: dotted;
       border-color: dimgray;
       width: calc(100% - 60px);
+      line-height: 20px;
     }
 
     .uploadToast {
