@@ -4,7 +4,7 @@ from util import init_mssql_db, init_mysql_db,load_conf, create_web_config, chec
 def main():
     cfg = load_conf()
 
-    print ("Using " + cfg['dbMode'] + "")
+    print ("Using " + cfg['dbMode'] + " DB")
     conn = load_db_conn()[0]
     if cfg['dbMode'] == "mssql":
         init_mssql_db(conn)

@@ -64,9 +64,11 @@ def upload():
 
             for article in splitted_articles:
                 if len(article) > 3:
-                    sql_query = "SELECT TOP 1 category FROM purchaseData where article_name like ? order by timestamp desc"
+                    
                     if cfg['dbMode'] == "mysql":
-                        sql_query = convert_to_mysql_query(sql_query)
+                        sql_query = "SELECT category FROM purchaseData where article_name like %s order by timestamp desc limit 1"
+                    else:
+                        sql_query = "SELECT TOP 1 category FROM purchaseData where article_name like ? order by timestamp desc"
 
                     cursor.execute(sql_query, [f"%{article}%"])
                     row = cursor.fetchone()
