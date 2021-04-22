@@ -98,10 +98,11 @@ def add_or_update_to_db(to_add_table, id, to_add_value):
         if cfg['dbMode'] == "mysql":
             sql_insert = convert_to_mysql_query(sql_insert)
 
-        cur.execute(sql_insert,  [id, to_add_value])
+        cur.execute(sql_insert,  [id, to_add_value]) 
 
     conn.commit()
     conn.close()
+    return id
 
 def get_data_from_db(tableName):
     conn, cur = load_db_conn()
@@ -268,6 +269,9 @@ def get_store_id(store_name):
     rows = cursor.fetchone()
     conn.close()
 
-    store_id = rows[0]
+    if rows:
+        store_id = rows[0]
+    else:
+        store_id = add_or_update_to_db("stores", None, store_name)
 
     return store_id
