@@ -14,7 +14,7 @@ COPY requirements.txt .
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
     curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list
 
-RUN apt-get update && apt-get install -y unzip unixodbc-dev
+RUN apt-get update && apt-get install -y unzip unixodbc-dev git nano
 RUN ACCEPT_EULA=Y apt-get install -y msodbcsql17
 
 # install dependencies
@@ -24,14 +24,14 @@ RUN pip install -r requirements.txt
 COPY src/ ./src
 COPY config.yaml .
 
-# load compiled frontend from last release
-RUN mkdir -p /app/unrar && \
-    cd /app/unrar && \
-    wget https://github.com/ReceiptManager/receipt-manager-webapp/releases/latest/download/receipt-manager-webapp.zip && \
-    unzip receipt-manager-webapp.zip && \
-    mkdir -p /app/webroot && \
-    cp -r /app/unrar/webroot/* /app/webroot && \
-    rm -rf /app/runrar
+# clone repo
+RUN git clone https://github.com/ReceiptManager/receipt-manager-webapp.git
+
+# compile frontend with polymer
+RUN apt-get install nodejs npm \
+    npm install -g polymer-cli \
+    cd receipt-manager-webapp/Frontend \
+    polymer build 
 
 WORKDIR /app/src
 

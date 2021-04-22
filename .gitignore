@@ -1,5 +1,4 @@
 ﻿Frontend/build/*
-Frontend/node_modules/*
 Backend/src/__pycache__/*
 Backend/.vscode/*
 Backend/__pycache__/*
