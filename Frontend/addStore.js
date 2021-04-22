@@ -28,11 +28,11 @@ class MainElement extends LitElement {
     xhr.send();
   }
 
-  deleteCategory(catId)
+  deleteStore(storeId)
   {
     var instance = this
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://" + backendIP + ":"+ backendPort + "/api/deleteValue?token=" + backendToken + "&tableName=stores&id=" + catId, true);
+    xhr.open("POST", "http://" + backendIP + ":"+ backendPort + "/api/deleteValue?token=" + backendToken + "&tableName=stores&id=" + storeId, true);
     
     xhr.onload = function () {
       instance.shadowRoot.getElementById("deleteToastDone").open()
@@ -63,7 +63,7 @@ class MainElement extends LitElement {
 
                 return html `
                   <paper-input class="store" id="store${store.id}" label="${translated.inputLabels.lbl_store}" value="${storeName}" @keyup=${e => addStore(e, this, store.id)}></paper-input>
-                  <paper-icon-button class="deleteButton" icon="delete" @click=${() => this.deleteCategory(store.id)}></paper-icon-button>
+                  <paper-icon-button class="deleteButton" icon="delete" @click=${() => this.deleteStore(store.id)}></paper-icon-button>
                 
                 `
             })}

@@ -9,7 +9,8 @@ import './node_modules/@polymer/paper-toast/paper-toast.js';
 import './node_modules/@polymer/paper-icon-button/paper-icon-button.js';
 import './node_modules/@polymer/iron-icon/iron-icon.js';
 import './node_modules/@polymer/iron-icons/iron-icons.js';
-import {showReceipt, addItem, addStoreFromScan, deleteItem, activateDeleteMode, validateCategories, validateStore, validateDate, validateTotal, validateArticles, updateResponseJson, calcDifference, assumeArticleSum, backendIP, backendPort, openSpinner, closeSpinner, getSelectedCategoryId, closeMobileKeyboard, loadSettings, resetForm, manualInput, translated, backendToken} from './functions.js';
+import {showReceipt, addItem, addStoreFromScan, deleteItem, activateDeleteMode, validateCategories, validateStore, validateDate, validateTotal, validateArticles, updateResponseJson, calcDifference, assumeArticleSum, 
+        backendIP, backendPort, openSpinner, closeSpinner, getSelectedCategoryId, closeMobileKeyboard, loadSettings, resetForm, manualInput, translated, backendToken} from './functions.js';
 
 class ScanElement extends LitElement {
   static get properties() {
@@ -298,7 +299,6 @@ checkValidAndSave(e)
     <paper-input label="${translated.inputLabels.lbl_totalPrice}" required="true" id="receiptTotal" auto-validate pattern="([0-9]|[0-9]{2})\.[0-9]{2}" value="${this.responseJson.receiptTotal}" @change=${() => updateResponseJson(null, "receiptTotal", this)} @keyup=${e => closeMobileKeyboard(e, this, "receiptTotal")}>
         <iron-icon icon="euro-symbol" slot="suffix"></iron-icon>  
     </paper-input>
-
    `: 
     html``}
 
@@ -309,6 +309,7 @@ checkValidAndSave(e)
       </paper-input>
       <paper-button raised class="buttons" id="uploadButton" @click=${this.uploadFile}><iron-icon icon="file-upload"></iron-icon>${translated.buttons.lbl_upload}</paper-button>
       <paper-button raised class="buttons" id="manualReceipt" @click=${() => manualInput(this)}><iron-icon icon="input"></iron-icon>${translated.buttons.lbl_manual}</paper-button> 
+      <div class="version">Version: ${version}</div>
     `  
     : html ``
     }
@@ -319,6 +320,8 @@ checkValidAndSave(e)
         <paper-button raised class="buttons" @click=${() => resetForm(this)}><iron-icon icon="clear"></iron-icon>${translated.buttons.lbl_abort}</paper-button>
       `: html ``
     }
+
+    
 
     <!-- On event elements -->
 
@@ -394,6 +397,14 @@ checkValidAndSave(e)
         {
           width: calc(100% - 10px);
           padding-left: 8px;
+        }
+
+        .version
+        {
+          font-family: 'Roboto';
+          margin-top: 10px;
+          margin-left: 10px;
+          font-size: 10px;
         }
 
         .foundArticles
