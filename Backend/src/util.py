@@ -53,12 +53,13 @@ def load_conf():
             parser_ip = os.environ.get('parserIP', "")
             parser_port = os.environ.get('parserPort', "")
             parser_token = os.environ.get('parserToken', "")
+            dbMode = os.environ.get('dbMode', "")
             sql_server_ip = os.environ.get('sqlServerIP', "")
             sql_database = os.environ.get('sqlDatabase', "")
             sql_username = os.environ.get('sqlUsername', "")
             sql_password = os.environ.get('sqlPassword', "")
 
-            tmpCfg = {"backendIP": backend_ip, "backendPort": backend_port, "backendLanguage": backend_language, "parserIP": parser_ip, "parserPort": parser_port, "parserToken": parser_token, "sqlServerIP": sql_server_ip, "sqlDatabase": sql_database, "sqlUsername": sql_username, "sqlPassword": sql_password}
+            tmpCfg = {"backendIP": backend_ip, "backendPort": backend_port, "backendLanguage": backend_language, "parserIP": parser_ip, "parserPort": parser_port, "parserToken": parser_token, "dbMode": dbMode, "sqlServerIP": sql_server_ip, "sqlDatabase": sql_database, "sqlUsername": sql_username, "sqlPassword": sql_password}
 
             jsonCfg = json.dumps(tmpCfg)
             cfg = json.loads(jsonCfg)
