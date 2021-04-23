@@ -2,6 +2,7 @@ var backendIP
 var backendPort
 var backendToken
 var language
+var webPrefix
 var settingsLoaded
 var menuIcon
 var openPage
@@ -23,6 +24,16 @@ function loadSettings(t, origin)
           backendPort = settings['backendPort']
           backendToken = settings['backendToken']
           language = settings['language']
+          
+          if (settings['useSSL'])
+          {
+            webPrefix = "https://"
+          }
+          else
+          {
+            webPrefix = "http://"
+          }
+
           settingsLoaded = true
     
           loadPageData(t, origin)
@@ -57,6 +68,10 @@ function loadPageData(t, origin)
     else if (origin == "addStore")
     {
       t.getStaticData("stores")
+    }
+    else if (origin == "settings")
+    {
+      
     }
 }
 
@@ -563,4 +578,4 @@ function closeMobileKeyboard (event, t, id)
 }
 
 export {showReceipt, responseChanged, storesChanged, addItem, addStoreFromScan, updateItemIDs, deleteItem, activateDeleteMode, validateCategories, validateStore, validateDate, validateTotal, validateArticles, updateResponseJson, closeDrawer, openDrawer, calcDifference, assumeArticleSum, openSpinner, closeSpinner, setMenuIcon, chooseAddMode, setOpenPage, 
-        addCategory, addStore,getSelectedCategoryId, manualInput, loadTranslations, resetForm, closeMobileKeyboard, loadSettings, menuIcon, language,backendIP, backendPort, translated, backendToken}
+        addCategory, addStore,getSelectedCategoryId, manualInput, loadTranslations, resetForm, closeMobileKeyboard, loadSettings, menuIcon, language,backendIP, backendPort, translated, backendToken, webPrefix}

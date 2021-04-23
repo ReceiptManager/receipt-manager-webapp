@@ -4,4 +4,5 @@ Backend/.vscode/*
 Backend/__pycache__/*
 Backend/src/.api_token
 Backend/webroot/*
-!Backend/webroot/.gitkeep 
+!Backend/webroot/.gitkeep
+Frontend/ssl

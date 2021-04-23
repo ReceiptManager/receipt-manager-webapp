@@ -6,3 +6,4 @@ pyodbc==4.0.30
 requests==2.25.1
 uuid==1.30
 mysql-connector-python==8.0.24
+cryptography==3.4.7

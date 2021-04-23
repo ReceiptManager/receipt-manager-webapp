@@ -1,7 +1,7 @@
 {
     "title": "Kassenbon Scanner",
     "menu": 
-        {"lbl_scan": "Einscannen", "lbl_history": "Verlauf", "lbl_categories": "Kategorien", "lbl_stores": "Supermärkte"},
+        {"lbl_scan": "Einscannen", "lbl_history": "Verlauf", "lbl_categories": "Kategorien", "lbl_stores": "Supermärkte", "lbl_settings": "Einstellungen"},
     "buttons": 
         {"lbl_upload": "Hochladen", "lbl_save": "Speichern", "lbl_manual": "Manuell", "lbl_close": "Schließen", "lbl_abort": "Abbrechen"},
     "toasts":
@@ -10,5 +10,5 @@
     "inputLabels":
         {"lbl_uploadFile": "Datei hochladen", "lbl_store": "Supermarkt", "lbl_date": "Datum", "lbl_category": "Kategorie", "lbl_article": "Artikel", "lbl_price": "Preis", "lbl_articleSum": "Summe", "lbl_totalPrice": "Gesamtsumme", "lbl_newStore": "Neuer Supermarkt"},
     "texts":
-        {"lbl_articleCount": "Artikelanzahl"}
+        {"lbl_articleCount": "Artikelanzahl", "lbL_certDownload": "SSL Zertifikat installieren"}
 }

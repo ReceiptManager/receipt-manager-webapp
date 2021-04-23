@@ -15,6 +15,7 @@ import './scann.js'
 import './history.js'
 import './addCategory.js'
 import './addStore.js'
+import './settings.js'
 
 class MainElement extends LitElement {
   static get properties() {
@@ -50,6 +51,11 @@ class MainElement extends LitElement {
       this.shadowRoot.getElementById("addButton").style.display = null
       this.selectedMenu = "3"
     }
+    else if (mode == "settings")
+    {
+      this.shadowRoot.getElementById("addButton").style.display = "none"
+      this.selectedMenu = "4"
+    }
   }
 
   render() {
@@ -73,6 +79,7 @@ class MainElement extends LitElement {
               <paper-icon-item @click=${() => this.openSelectedWindow("history")}><iron-icon icon="update" slot="item-icon"></iron-icon>${translated.menu.lbl_history}</paper-icon-item>
               <paper-icon-item @click=${() => this.openSelectedWindow("addCategory")}><iron-icon icon="add-shopping-cart" slot="item-icon"></iron-icon>${translated.menu.lbl_categories}</paper-icon-item>
               <paper-icon-item @click=${() => this.openSelectedWindow("addStore")}><iron-icon icon="maps:add-location" slot="item-icon"></iron-icon>${translated.menu.lbl_stores}</paper-icon-item>
+              <paper-icon-item @click=${() => this.openSelectedWindow("settings")}><iron-icon icon="settings" slot="item-icon"></iron-icon>${translated.menu.lbl_settings}</paper-icon-item>
             </paper-listbox>
           </app-drawer>
           
@@ -90,6 +97,10 @@ class MainElement extends LitElement {
           
           ${this.menuMode == "addStore"
             ? html `<addstore-element id="mainElement"></addstore-element>` : html ``
+          }
+
+          ${this.menuMode == "settings"
+            ? html `<settings-element id="mainElement"></settings-element>` : html ``
           }
 
         </div>

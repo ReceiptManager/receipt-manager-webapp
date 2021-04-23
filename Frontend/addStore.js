@@ -4,7 +4,7 @@ import "./node_modules/@polymer/paper-input/paper-input.js";
 import './node_modules/@polymer/paper-listbox/paper-listbox.js';
 import './node_modules/@polymer/paper-dialog/paper-dialog.js';
 import './node_modules/@polymer/paper-toast/paper-toast.js';
-import {backendIP, backendPort, addStore, openSpinner, closeSpinner, loadSettings, translated, backendToken}  from './functions.js';
+import {backendIP, backendPort, addStore, openSpinner, closeSpinner, loadSettings, translated, backendToken, webPrefix}  from './functions.js';
 
 class MainElement extends LitElement {
   static get properties() {
@@ -18,7 +18,7 @@ class MainElement extends LitElement {
     var instance = this
 
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", "http://" + backendIP + ":"+ backendPort + "/api/getValue?token=" + backendToken + "&getValuesFrom=" + arrayName, true);
+    xhr.open("GET", webPrefix + backendIP + ":"+ backendPort + "/api/getValue?token=" + backendToken + "&getValuesFrom=" + arrayName, true);
     
     xhr.onload = function () {
       instance.storesJson = JSON.parse(xhr.response)
@@ -32,7 +32,7 @@ class MainElement extends LitElement {
   {
     var instance = this
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://" + backendIP + ":"+ backendPort + "/api/deleteValue?token=" + backendToken + "&tableName=stores&id=" + storeId, true);
+    xhr.open("POST", webPrefix + backendIP + ":"+ backendPort + "/api/deleteValue?token=" + backendToken + "&tableName=stores&id=" + storeId, true);
     
     xhr.onload = function () {
       instance.shadowRoot.getElementById("deleteToastDone").open()

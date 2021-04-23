@@ -11,7 +11,7 @@ import './node_modules/@polymer/paper-icon-button/paper-icon-button.js';
 import './node_modules/@polymer/iron-icon/iron-icon.js';
 import './node_modules/@polymer/iron-icons/iron-icons.js';
 import {updateResponseJson, addItem, deleteItem, activateDeleteMode, calcDifference, validateStore, validateDate, validateArticles, validateCategories, validateTotal, backendIP, backendPort, responseChanged, assumeArticleSum, openSpinner, closeSpinner, setMenuIcon, 
-        getSelectedCategoryId, closeMobileKeyboard, loadSettings,language, translated, backendToken}  from './functions.js';
+        getSelectedCategoryId, closeMobileKeyboard, loadSettings,language, translated, backendToken, webPrefix}  from './functions.js';
 
 class MainElement extends LitElement {
   static get properties() {
@@ -26,7 +26,7 @@ class MainElement extends LitElement {
     var instance = this
 
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", "http://" + backendIP + ":"+ backendPort + "/api/getValue?token=" + backendToken + "&getValuesFrom=" + arrayName, true);
+    xhr.open("GET", webPrefix + backendIP + ":"+ backendPort + "/api/getValue?token=" + backendToken + "&getValuesFrom=" + arrayName, true);
     
     if (arrayName == "categories")
     {
@@ -48,7 +48,7 @@ class MainElement extends LitElement {
     var instance = this
 
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", "http://" + backendIP + ":"+ backendPort + "/api/getHistory?token=" + backendToken, true);
+    xhr.open("GET", webPrefix + backendIP + ":"+ backendPort + "/api/getHistory?token=" + backendToken, true);
     
     xhr.onload = function () {
         instance.historyPurchases = JSON.parse(xhr.response)
@@ -98,7 +98,7 @@ class MainElement extends LitElement {
     // Sende kassenbon an Backend für metabase
     var instance = this
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://" + backendIP + ":" + backendPort + "/api/updateReceiptToDB?token=" + backendToken)
+    xhr.open("POST", webPrefix + backendIP + ":" + backendPort + "/api/updateReceiptToDB?token=" + backendToken)
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
 
     xhr.onload = function () {
@@ -127,7 +127,7 @@ class MainElement extends LitElement {
     var instance = this
 
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", "http://" + backendIP + ":"+ backendPort + "/api/getHistoryDetails?token=" + backendToken + "&purchaseID=" + purchaseId + "&storeName=" + location + "&receiptTotal=" + totalSum + "&receiptDate=" + date , true);
+    xhr.open("GET", webPrefix + backendIP + ":"+ backendPort + "/api/getHistoryDetails?token=" + backendToken + "&purchaseID=" + purchaseId + "&storeName=" + location + "&receiptTotal=" + totalSum + "&receiptDate=" + date , true);
     
     xhr.onload = function () {
         var purchaseDetails = JSON.parse(xhr.response)

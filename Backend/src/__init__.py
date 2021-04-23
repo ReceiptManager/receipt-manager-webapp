@@ -1,8 +1,11 @@
 from server import server
-from util import init_mssql_db, init_mysql_db,load_conf, create_web_config, check_existing_token, load_db_conn
+from util import create_ssl_cert,init_mssql_db, init_mysql_db,load_conf, create_web_config, check_existing_token, load_db_conn
 
 def main():
     cfg = load_conf()
+
+    if cfg['useSSL']:
+        create_ssl_cert([cfg['backendIP']])
 
     print ("Using " + cfg['dbMode'] + " DB")
     conn = load_db_conn()[0]

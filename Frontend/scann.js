@@ -10,7 +10,7 @@ import './node_modules/@polymer/paper-icon-button/paper-icon-button.js';
 import './node_modules/@polymer/iron-icon/iron-icon.js';
 import './node_modules/@polymer/iron-icons/iron-icons.js';
 import {showReceipt, addItem, addStoreFromScan, deleteItem, activateDeleteMode, validateCategories, validateStore, validateDate, validateTotal, validateArticles, updateResponseJson, calcDifference, assumeArticleSum, 
-        backendIP, backendPort, openSpinner, closeSpinner, getSelectedCategoryId, closeMobileKeyboard, loadSettings, resetForm, manualInput, translated, backendToken} from './functions.js';
+        backendIP, backendPort, openSpinner, closeSpinner, getSelectedCategoryId, closeMobileKeyboard, loadSettings, resetForm, manualInput, translated, backendToken, webPrefix} from './functions.js';
 
 class ScanElement extends LitElement {
   static get properties() {
@@ -33,7 +33,7 @@ class ScanElement extends LitElement {
     var instance = this
 
     var xhr = new XMLHttpRequest();
-    xhr.open("GET", "http://" + backendIP + ":"+ backendPort + "/api/getValue?token=" + backendToken + "&getValuesFrom=" + arrayName, true);
+    xhr.open("GET", webPrefix + backendIP + ":"+ backendPort + "/api/getValue?token=" + backendToken + "&getValuesFrom=" + arrayName, true);
     
     if (arrayName == "categories")
     {
@@ -92,7 +92,7 @@ checkValidAndSave(e)
     // Sende kassenbon an Backend für metabase
     var instance = this
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://" + backendIP + ":" + backendPort + "/api/writeReceiptToDB?token=" + backendToken)
+    xhr.open("POST", webPrefix + backendIP + ":" + backendPort + "/api/writeReceiptToDB?token=" + backendToken)
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
 
     xhr.onload = function () {
@@ -139,7 +139,7 @@ checkValidAndSave(e)
     var formData = new FormData();
     formData.append("file", file, file.name);
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://" + backendIP + ":" + backendPort + "/api/upload?token=" + backendToken + "&legacy_parser=True&grayscale_image=True&rotate_image=True", true);
+    xhr.open("POST", webPrefix + backendIP + ":" + backendPort + "/api/upload?token=" + backendToken + "&legacy_parser=True&grayscale_image=True&rotate_image=True", true);
 
 
     xhr.onerror = function () {
@@ -309,7 +309,6 @@ checkValidAndSave(e)
       </paper-input>
       <paper-button raised class="buttons" id="uploadButton" @click=${this.uploadFile}><iron-icon icon="file-upload"></iron-icon>${translated.buttons.lbl_upload}</paper-button>
       <paper-button raised class="buttons" id="manualReceipt" @click=${() => manualInput(this)}><iron-icon icon="input"></iron-icon>${translated.buttons.lbl_manual}</paper-button> 
-      <div class="version">Version: ${version}</div>
     `  
     : html ``
     }
@@ -397,14 +396,6 @@ checkValidAndSave(e)
         {
           width: calc(100% - 10px);
           padding-left: 8px;
-        }
-
-        .version
-        {
-          font-family: 'Roboto';
-          margin-top: 10px;
-          margin-left: 10px;
-          font-size: 10px;
         }
 
         .foundArticles

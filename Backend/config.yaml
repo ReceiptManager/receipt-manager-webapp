@@ -1,3 +1,5 @@
+useSSL: true
+backendHostname: receiptManager.home.local #Hostname
 backendIP: 192.168.50.59 #Server IP
 backendPort: 5558        #Server Port
 backendLanguage: de-DE   #Language
