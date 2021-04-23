@@ -28,10 +28,18 @@ COPY config.yaml .
 RUN git clone https://github.com/ReceiptManager/receipt-manager-webapp.git
 
 # compile frontend with polymer
-RUN apt-get install nodejs npm \
-    npm install -g polymer-cli \
-    cd receipt-manager-webapp/Frontend \
-    polymer build 
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash
+RUN apt-get install -y nodejs
+RUN npm install -g polymer-cli
+RUN cd receipt-manager-webapp/Frontend && polymer build
+RUN mkdir -p /app/webroot && mkdir -p /app/webroot/settings && cp -a receipt-manager-webapp/Frontend/build/default/. /app/webroot
+RUN cp -rf receipt-manager-webapp/Frontend/lang/. /app/webroot/lang
+RUN yes | cp -rf receipt-manager-webapp/Frontend/node_modules/lit-html/. /app/webroot/node_modules/lit-html
+RUN cp -r receipt-manager-webapp/Frontend/node_modules/lit-element/lit-element.js.map /app/webroot/node_modules/lit-element/lit-element.js.map
+RUN cp -r receipt-manager-webapp/Frontend/node_modules/lit-element/lib/*.map /app/webroot/node_modules/lit-element/lib
+RUN cp -r receipt-manager-webapp/Frontend/node_modules/@webcomponents/webcomponentsjs/. /app/webroot/node_modules/@webcomponents/webcomponentsjs
+RUN cp -r receipt-manager-webapp/Frontend/node_modules/web-animations-js/*.map /app/webroot/node_modules/web-animations-js
+RUN rm -rf receipt-manager-webapp
 
 WORKDIR /app/src
 
