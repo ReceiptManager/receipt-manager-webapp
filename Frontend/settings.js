@@ -17,7 +17,7 @@ class MainElement extends LitElement {
 
     return html `
     <div class="mainContainer" id="mainContainerHistory">
-        <paper-icon-item class="settings"  @click=${() => window.open('./ssl/ca.crt')}>
+        <paper-icon-item class="settings"  @click=${() => window.open('./ssl/cert.crt')}>
         <iron-icon icon="https" slot="item-icon"></iron-icon>
         <paper-item-body>
           <div>${translated.texts.lbL_certDownload}</div>
