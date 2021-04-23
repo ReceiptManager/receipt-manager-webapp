@@ -74,7 +74,11 @@ def upload():
                     row = cursor.fetchone()
 
                     if (row):
-                        found_cat = row.category
+                        if cfg['dbMode'] == "mysql":
+                            found_cat = row[0]
+                        else:
+                            found_cat = row.category
+                            
                         copy_array = response_json["receiptItems"][idx]
                         copy_array.insert(2, found_cat)
 
