@@ -112,6 +112,8 @@ def load_conf():
                 cfg = yaml.load(ymlfile, Loader=yaml.FullLoader)
         else:
             print("Running in docker mode!")
+            use_ssl = os.environ.get('useSSL')
+            backend_hostname = os.environ.get('backendHostname', "")
             backend_ip = os.environ.get('backendIP', "")
             backend_port = os.environ.get('backendPort', "")
             backend_language = os.environ.get('backendLanguage', "")
@@ -124,7 +126,7 @@ def load_conf():
             sql_username = os.environ.get('sqlUsername', "")
             sql_password = os.environ.get('sqlPassword', "")
 
-            tmpCfg = {"backendIP": backend_ip, "backendPort": backend_port, "backendLanguage": backend_language, "parserIP": parser_ip, "parserPort": parser_port, "parserToken": parser_token, "dbMode": dbMode, "sqlServerIP": sql_server_ip, "sqlDatabase": sql_database, "sqlUsername": sql_username, "sqlPassword": sql_password}
+            tmpCfg = {"useSSL": use_ssl, "backendHostname": backend_hostname, "backendIP": backend_ip, "backendPort": backend_port, "backendLanguage": backend_language, "parserIP": parser_ip, "parserPort": parser_port, "parserToken": parser_token, "dbMode": dbMode, "sqlServerIP": sql_server_ip, "sqlDatabase": sql_database, "sqlUsername": sql_username, "sqlPassword": sql_password}
 
             jsonCfg = json.dumps(tmpCfg)
             cfg = json.loads(jsonCfg)
