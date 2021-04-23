@@ -32,7 +32,7 @@ RUN curl -sL https://deb.nodesource.com/setup_16.x | bash
 RUN apt-get install -y nodejs
 RUN npm install -g polymer-cli
 RUN cd receipt-manager-webapp/Frontend && polymer build
-RUN mkdir -p /app/webroot && mkdir -p /app/webroot/settings && cp -a receipt-manager-webapp/Frontend/build/default/. /app/webroot
+RUN mkdir -p /app/webroot && mkdir -p /app/webroot/ssl && mkdir -p /app/webroot/settings && cp -a receipt-manager-webapp/Frontend/build/default/. /app/webroot
 RUN cp -rf receipt-manager-webapp/Frontend/lang/. /app/webroot/lang
 RUN yes | cp -rf receipt-manager-webapp/Frontend/node_modules/lit-html/. /app/webroot/node_modules/lit-html
 RUN cp -r receipt-manager-webapp/Frontend/node_modules/lit-element/lit-element.js.map /app/webroot/node_modules/lit-element/lit-element.js.map
