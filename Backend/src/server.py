@@ -1,11 +1,9 @@
 ﻿from gevent import monkey
+monkey.patch_all()
 
 from gevent.pywsgi import WSGIServer
 from api import app
 from util import load_conf, check_existing_token
-
-monkey.patch_all()
-
 
 def server():
     cfg = load_conf()
