@@ -12,7 +12,7 @@
     <link rel="manifest" href="manifest.webmanifest"/>
     <title>Receipt Parser Web</title>
     <script> 
-        var version = "0.3.1"
+        var version = "0.4.0"
         var mainPage
         var historyPage
         var addCategoryPage
@@ -22,6 +22,21 @@
     <script type="module" src="index.js"></script>
     <script src="node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <script src="node_modules/web-animations-js/web-animations-next.min.js"></script>
+    <script>
+      if('serviceWorker' in navigator) {
+          window.addEventListener('load', () => {
+              navigator.serviceWorker.register('service-worker.js')
+                  .then((registration) => { 
+                      console.log(`service worker registered succesfully ${registration}`) 
+                  })
+                  .catch((err) => {
+                      console.log(`Error registring ${err}`) 
+                  })
+          })
+      } else {
+          console.log(`Service worker is not supported in this browser or SSL not enabled.`)
+      }
+    </script>  
     <style>
       body { margin: 0; }
     </style>
