@@ -1,18 +1,21 @@
-# Receipt Manager Webapp
+<p align="center">
 
-### Docker Install guide:
-1. Install receipt parser server: [Install guide](https://receipt-parser-server.readthedocs.io/en/master/installation.html# "Install guide")
-2. Disable https from parser server in config.yml
-3. Pull Image `docker pull dielee/receipt-manager-webapp:latest`
-4. Start mysql Container `docker run --name receiptDB --network host -e MYSQL_DATABASE=receiptData -e MYSQL_USER=receiptParser -e MYSQL_PASSWORD=receiptParser2021! -e MYSQL_RANDOM_ROOT_PASSWORD=true mysql:latest`
-5. Start Container `docker run -d --network host --name "receipt-manager-webapp" -e backendIP="backendIP" -e backendPort="backendPort" -e backendLanguage="de-DE" -e parserIP="parserIP" -e parserPort="8721" -e parserToken="parserToken" -e dbMode="mssql or mysql" -e sqlServerIP="sqlServerIP" -e sqlDatabase="reciptData" -e sqlUsername="sqlUsername" -e sqlPassword="sqlPassword" dielee/receipt-manager-webapp:latest`
+  <img width=600 src="https://i.imgur.com/EPoolzW.png">
 
-### Manual Install guide:
-1. Install receipt parser server: [Install guide](https://receipt-parser-server.readthedocs.io/en/master/installation.html# "Install guide")
-2. Disable https from parser server in config.yml
-3. Download latest release from releases page: [Link](https://github.com/ReceiptManager/receipt-manager-webapp/releases "Link")
-4. Unzip release and fill in settings into config.yml
-5. <ins>Only Linux</ins> - Install unixODBC `sudo apt-get install unixodbc-dev`
-6. Install python dependencies with `pip install -r requirements.txt`
-7. Go into /src and run `python3 __init__.py` or on windows `python .\__init__.py`
-8. Webapplication is now available at your IP and port defined in config.yml.
+</p>
+
+# Receipt Manager Webapp 
+You can find pre-compiled releases on the Github release page or in the FDROID repository.
+All the needed info about how to  use the `receipt-manager-webapp` is present at your [wiki](https://receipt-manager-webapp.readthedocs.io/en/latest/index.html).
+* :star: We appreciate your star, it helps!
+
+---
+
+- *I. Content & Features*
+  - [Home](https://receipt-manager-webapp.readthedocs.io/en/latest/)
+  
+
+- *II. Getting started*
+  - [Docker install guide](https://receipt-manager-app.readthedocs.io/en/latest/installation#manuel-installation-guide.html)
+  - [Manual install guide](https://github.com/ReceiptManager/receipt-parser-app/wiki/installation.html)
+---
