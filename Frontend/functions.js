@@ -71,7 +71,7 @@ function loadPageData(t, origin)
     }
     else if (origin == "settings")
     {
-      
+
     }
 }
 

@@ -321,7 +321,10 @@ def get_category_id(category_name):
     rows = cursor.fetchone()
     conn.close()
 
-    category_id = rows[0]
+    if rows:
+        category_id = rows[0]
+    else:
+        category_id = None
 
     return category_id
 

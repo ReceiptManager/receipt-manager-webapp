@@ -78,7 +78,7 @@ def upload():
                             found_cat = row[0]
                         else:
                             found_cat = row.category
-                            
+
                         copy_array = response_json["receiptItems"][idx]
                         copy_array.insert(2, found_cat)
 
@@ -284,6 +284,9 @@ def write_receipt_to_db():
         article_name = article[1]
         article_sum = article[2]
         article_category_id = get_category_id(article[3])
+
+        if not article_category_id:
+            return "Category id for category: " + article[3] + " not found", 500
 
         sql_query = "INSERT INTO items values (?,?,?,?)"
         if cfg['dbMode'] == "mysql":

@@ -25,6 +25,7 @@ class ScanElement extends LitElement {
       uploadedFile: Object,
       manualInput: Boolean,
       errorCode: String,
+      errorText: String,
     };
   }
 
@@ -105,7 +106,8 @@ checkValidAndSave(e)
       }
       else
       {
-        instance.errorCode = xhr.statusText
+        instance.errorCode = xhr.status
+        instance.errorText = xhr.responseText
         instance.shadowRoot.getElementById("errorOnUpload").open()
       }
 
@@ -271,7 +273,7 @@ checkValidAndSave(e)
                 </paper-dropdown-menu-light>
 
                 <paper-input class="itemListArticle" required="true" id="article${item[0]}" label="${translated.inputLabels.lbl_article}" value="${item[1]}" @change=${() => updateResponseJson(item[0], "article", this)}  @keyup=${e => closeMobileKeyboard(e, this, "article" + item[0])}></paper-input>
-                <paper-input class="itemListSum" required="true" auto-validate pattern="((\-|)[0-9]|[0-9]{2})\.[0-9]{2}" id="sum${item[0]}" label="${translated.inputLabels.lbl_price}" value="${item[2]}" @change=${() => updateResponseJson(item[0], "articleSum", this)}  @keyup=${e => closeMobileKeyboard(e, this, "sum" + item[0])}>
+                <paper-input class="itemListSum" required="true" auto-validate pattern="((\-|)[0-9]|[0-9]{2}|[0-9]{3})\.[0-9]{2}" id="sum${item[0]}" label="${translated.inputLabels.lbl_price}" value="${item[2]}" @change=${() => updateResponseJson(item[0], "articleSum", this)}  @keyup=${e => closeMobileKeyboard(e, this, "sum" + item[0])}>
                   <div slot="suffix">€</div>
                 </paper-input>
                 <paper-icon-button class="addButton" id="addArticleButton${item[0]}" icon="add-circle" @click=${() => addItem(item[0], this)}></paper-icon-button>
@@ -282,12 +284,9 @@ checkValidAndSave(e)
 
           <paper-icon-button icon="create" class="extraButtons" @click=${() => activateDeleteMode(this)}></paper-icon-button>
           
-          ${!this.manualInput
-            ? html `<paper-icon-button icon="arrow-drop-down" class="extraButtons showReceipt" id="showReceiptButton" @click=${() => showReceipt(this)}></paper-icon-button>` : html ``
-          }
-          
+          <paper-icon-button icon="arrow-drop-down" class="extraButtons showReceipt" id="showReceiptButton" @click=${() => showReceipt(this)} style=${this.manualInput ? css `visibility: hidden;`: css ``}></paper-icon-button>
           <paper-icon-button class="assumeArticleSum extraButtons" icon="play-for-work" @click=${() => assumeArticleSum(this)}></paper-icon-button>
-          <paper-input class="articleSum" class="extraButtons" required="true" auto-validate pattern="([0-9]|[0-9]{2})\.[0-9]{2}" id="articleSum" label="${translated.inputLabels.lbl_articleSum}" value="${this.articleSum.toFixed(2)}" @keyup=${e => closeMobileKeyboard(e, this, "articleSum")}>
+          <paper-input class="articleSum" class="extraButtons" required="true" auto-validate pattern="([0-9]|[0-9]{2}|[0-9]{3})\.[0-9]{2}" id="articleSum" label="${translated.inputLabels.lbl_articleSum}" value="${this.articleSum.toFixed(2)}" @keyup=${e => closeMobileKeyboard(e, this, "articleSum")}>
             <div slot="suffix">€</div>
           </paper-input>
           
@@ -296,7 +295,7 @@ checkValidAndSave(e)
 
           <img id="uploadedImage" class="uploadedImage"/>
 
-    <paper-input label="${translated.inputLabels.lbl_totalPrice}" required="true" id="receiptTotal" auto-validate pattern="([0-9]|[0-9]{2})\.[0-9]{2}" value="${this.responseJson.receiptTotal}" @change=${() => updateResponseJson(null, "receiptTotal", this)} @keyup=${e => closeMobileKeyboard(e, this, "receiptTotal")}>
+    <paper-input label="${translated.inputLabels.lbl_totalPrice}" required="true" id="receiptTotal" auto-validate pattern="([0-9]|[0-9]{2}|[0-9]{3})\.[0-9]{2}" value="${this.responseJson.receiptTotal}" @change=${() => updateResponseJson(null, "receiptTotal", this)} @keyup=${e => closeMobileKeyboard(e, this, "receiptTotal")}>
         <iron-icon icon="euro-symbol" slot="suffix"></iron-icon>  
     </paper-input>
    `: 
@@ -336,7 +335,7 @@ checkValidAndSave(e)
     <paper-toast class= "uploadToast fit-bottom" id="saveToDB" duration="2500" text="${translated.toasts.lbl_saveSuccess}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="saveToDBError" duration="2500" text="${translated.toasts.lbl_saveError}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="invalidSums" duration="2000" text="${translated.toasts.lbl_invalidSums}"></paper-toast>
-    <paper-toast class= "invalidSums fit-bottom" id="errorOnUpload" duration="5000" text="${translated.toasts.lbl_errorOnUpload} ${this.errorCode}"></paper-toast>
+    <paper-toast class= "invalidSums fit-bottom" id="errorOnUpload" duration="5000" text="${translated.toasts.lbl_errorOnUpload} ${this.errorCode}, ${this.errorText}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="differentSums" duration="2000" text="${translated.toasts.lbl_diffrentSums1} ${this.articleSum.toFixed(2)}€ ${translated.toasts.lbl_diffrentSums2} ${this.receiptSum.toFixed(2)}€ ${translated.toasts.lbl_diffrentSums3}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="invalidDate" duration="2000" text="Datum fehlerhaft, bitte überprüfen!"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="invalidCategory" duration="2000" text="Kategorie fehlerhaft, bitte überprüfen!"></paper-toast>
