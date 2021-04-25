@@ -351,9 +351,9 @@ checkValidAndSave(e)
     <paper-toast class= "invalidSums fit-bottom" id="invalidSums" duration="2000" text="${translated.toasts.lbl_invalidSums}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="errorOnUpload" duration="5000" text="${translated.toasts.lbl_errorOnUpload} ${this.errorCode}, ${this.errorText}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="differentSums" duration="2000" text="${translated.toasts.lbl_diffrentSums1} ${this.articleSum.toFixed(2)}€ ${translated.toasts.lbl_diffrentSums2} ${this.receiptSum.toFixed(2)}€ ${translated.toasts.lbl_diffrentSums3}"></paper-toast>
-    <paper-toast class= "invalidSums fit-bottom" id="invalidDate" duration="2000" text="Datum fehlerhaft, bitte überprüfen!"></paper-toast>
-    <paper-toast class= "invalidSums fit-bottom" id="invalidCategory" duration="2000" text="Kategorie fehlerhaft, bitte überprüfen!"></paper-toast>
-    <paper-toast class= "invalidSums fit-bottom" id="invalidStore" duration="2000" text="Supermarkt fehlerhaft, bitte überprüfen!"></paper-toast>
+    <paper-toast class= "invalidSums fit-bottom" id="invalidDate" duration="2000" text="${translated.toasts.lbl_invalidDate}"></paper-toast>
+    <paper-toast class= "invalidSums fit-bottom" id="invalidCategory" duration="2000" text="${translated.toasts.lbl_invalidCategory}"></paper-toast>
+    <paper-toast class= "invalidSums fit-bottom" id="invalidStore" duration="2000" text="${translated.toasts.lbl_invalidStore}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="invalidToken" duration="5000" text="${translated.toasts.lbl_invalidToken}"></paper-toast>
     </div>
     `;

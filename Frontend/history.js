@@ -312,13 +312,13 @@ class MainElement extends LitElement {
       }
     </div>
 
-    <paper-toast class= "uploadToast fit-bottom" id="saveToDB" duration="2500" text="Übergabe an Metabase erfolgreich!"></paper-toast>
-    <paper-toast class= "invalidSums fit-bottom" id="saveToDBError" duration="2500" text="Übergabe an Metabase fehlgeschlagen!"></paper-toast>
-    <paper-toast class= "invalidSums fit-bottom" id="invalidSums" duration="2000" text="Summen fehlerhaft, bitte überprüfen!"></paper-toast>
-    <paper-toast class= "invalidSums fit-bottom" id="differentSums" duration="2000" text="Summen der Artikel ${this.articleSum.toFixed(2)}€ und Summe des Bons ${this.receiptSum.toFixed(2)}€ stimmen nicht überein."></paper-toast>
-    <paper-toast class= "invalidSums fit-bottom" id="invalidDate" duration="2000" text="Datum fehlerhaft, bitte überprüfen!"></paper-toast>
-    <paper-toast class= "invalidSums fit-bottom" id="invalidCategory" duration="2000" text="Kategorie fehlerhaft, bitte überprüfen!"></paper-toast>
-    <paper-toast class= "invalidSums fit-bottom" id="invalidStore" duration="2000" text="Supermarkt fehlerhaft, bitte überprüfen!"></paper-toast>
+    <paper-toast class= "uploadToast fit-bottom" id="saveToDB" duration="2500" text="${translated.toasts.lbl_saveSuccess}"></paper-toast>
+    <paper-toast class= "invalidSums fit-bottom" id="saveToDBError" duration="2500" text="${translated.toasts.lbl_saveError}"></paper-toast>
+    <paper-toast class= "invalidSums fit-bottom" id="invalidSums" duration="2000" text="${translated.toasts.lbl_invalidSums}"></paper-toast>
+    <paper-toast class= "invalidSums fit-bottom" id="differentSums" duration="2000" text="${translated.toasts.lbl_diffrentSums1} ${this.articleSum.toFixed(2)}€ ${translated.toasts.lbl_diffrentSums2} ${this.receiptSum.toFixed(2)}€ ${translated.toasts.lbl_diffrentSums3}"></paper-toast>
+    <paper-toast class= "invalidSums fit-bottom" id="invalidDate" duration="2000" text="${translated.toasts.lbl_invalidDate}"></paper-toast>
+    <paper-toast class= "invalidSums fit-bottom" id="invalidCategory" duration="2000" text="${translated.toasts.lbl_invalidCategory}"></paper-toast>
+    <paper-toast class= "invalidSums fit-bottom" id="invalidStore" duration="2000" text="${translated.toasts.lbl_invalidStore}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="invalidToken" duration="5000" text="${translated.toasts.lbl_invalidToken}"></paper-toast>
     `;
   }

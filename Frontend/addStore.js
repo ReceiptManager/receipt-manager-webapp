@@ -77,8 +77,8 @@ class MainElement extends LitElement {
         </div>
         ` : html `<paper-spinner id="loadingSpinner" class="loadingSpinner" active></paper-spinner>`
       }
-      <paper-toast class= "uploadToast fit-bottom" id="uploadToastDone" duration="2500" text="Kategorie gespeichert!"></paper-toast>
-      <paper-toast class= "uploadToast fit-bottom" id="deleteToastDone" duration="2500" text="Kategorie gelöscht!"></paper-toast>
+      <paper-toast class= "uploadToast fit-bottom" id="uploadToastDone" duration="2500" text="${translated.toasts.lbl_storeSaved}"></paper-toast>
+      <paper-toast class= "uploadToast fit-bottom" id="deleteToastDone" duration="2500" text="${translated.toasts.lbl_storeDeleted}"></paper-toast>
       <paper-toast class= "invalid fit-bottom" id="invalidToken" duration="5000" text="${translated.toasts.lbl_invalidToken}"></paper-toast>
       `
   }
@@ -131,7 +131,7 @@ class MainElement extends LitElement {
       .uploadToast {
         --paper-toast-background-color: green;
       }
-      
+
       .invalid {
         --paper-toast-background-color: red;
       }
