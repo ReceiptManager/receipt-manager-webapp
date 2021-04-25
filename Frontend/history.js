@@ -31,13 +31,27 @@ class MainElement extends LitElement {
     if (arrayName == "categories")
     {
       xhr.onload = function () {
-        instance.categoriesJson = JSON.parse(xhr.response)
+        if (xhr.status == 200)
+        {
+          instance.categoriesJson = JSON.parse(xhr.response)
+        }
+        else
+        {
+          instance.shadowRoot.getElementById("invalidToken").open()
+        }
       }
     }
     else
     {
       xhr.onload = function () {
-        instance.storesJson = JSON.parse(xhr.response)
+        if (xhr.status == 200)
+        {
+            instance.storesJson = JSON.parse(xhr.response)
+        }
+        else
+        {
+            instance.shadowRoot.getElementById("invalidToken").open()
+        }
       }
     }
 
@@ -51,7 +65,15 @@ class MainElement extends LitElement {
     xhr.open("GET", webPrefix + backendIP + ":"+ backendPort + "/api/getHistory?token=" + backendToken, true);
     
     xhr.onload = function () {
+      if (xhr.status == 200)
+      {
         instance.historyPurchases = JSON.parse(xhr.response)
+      }
+      else
+      {
+        instance.shadowRoot.getElementById("invalidToken").open()
+      }
+        
     }
 
     xhr.send();
@@ -297,6 +319,7 @@ class MainElement extends LitElement {
     <paper-toast class= "invalidSums fit-bottom" id="invalidDate" duration="2000" text="Datum fehlerhaft, bitte überprüfen!"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="invalidCategory" duration="2000" text="Kategorie fehlerhaft, bitte überprüfen!"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="invalidStore" duration="2000" text="Supermarkt fehlerhaft, bitte überprüfen!"></paper-toast>
+    <paper-toast class= "invalidSums fit-bottom" id="invalidToken" duration="5000" text="${translated.toasts.lbl_invalidToken}"></paper-toast>
     `;
   }
 

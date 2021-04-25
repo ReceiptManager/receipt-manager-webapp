@@ -21,7 +21,14 @@ class MainElement extends LitElement {
     xhr.open("GET", webPrefix + backendIP + ":"+ backendPort + "/api/getValue?token=" + backendToken + "&getValuesFrom=" + arrayName, true);
     
     xhr.onload = function () {
-      instance.categoriesJson = JSON.parse(xhr.response)
+      if (xhr.status == 200)
+      {
+        instance.categoriesJson = JSON.parse(xhr.response)
+      }
+      else
+      {
+        instance.shadowRoot.getElementById("invalidToken").open()
+      }
       closeSpinner()
     }
 
@@ -72,6 +79,7 @@ class MainElement extends LitElement {
       }
       <paper-toast class= "uploadToast fit-bottom" id="uploadToastDone" duration="2500" text="Kategorie gespeichert!"></paper-toast>
       <paper-toast class= "uploadToast fit-bottom" id="deleteToastDone" duration="2500" text="Kategorie gelöscht!"></paper-toast>
+      <paper-toast class= "invalid fit-bottom" id="invalidToken" duration="5000" text="${translated.toasts.lbl_invalidToken}"></paper-toast>
       `
   }
 
@@ -122,6 +130,10 @@ class MainElement extends LitElement {
       
       .uploadToast {
         --paper-toast-background-color: green;
+      }
+
+      .invalid {
+        --paper-toast-background-color: red;
       }
     `;
   }
