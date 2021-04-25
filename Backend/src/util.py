@@ -1,3 +1,4 @@
+from cryptography.x509 import ExtendedKeyUsage, ExtendedKeyUsageOID, oid
 import pyodbc
 import uuid
 import json
@@ -49,6 +50,7 @@ def create_ssl_cert(
                 alt_names.append(x509.IPAddress(ipaddress.ip_address(addr)))
 
         san = x509.SubjectAlternativeName(alt_names)
+        extended_key_usage = x509.ExtendedKeyUsage([x509.oid.ExtendedKeyUsageOID.SERVER_AUTH, x509.oid.ExtendedKeyUsageOID.CLIENT_AUTH])
 
         # path_len=0 means this cert can only sign itself, not other certs.
         basic_contraints = x509.BasicConstraints(ca=True, path_length=0)
@@ -60,9 +62,10 @@ def create_ssl_cert(
             .public_key(key.public_key())
             .serial_number(1000)
             .not_valid_before(now)
-            .not_valid_after(now + timedelta(days=10 * 365))
+            .not_valid_after(now + timedelta(days=2 * 365))
             .add_extension(basic_contraints, False)
             .add_extension(san, False)
+            .add_extension(extended_key_usage, True)
             .sign(key, hashes.SHA256(), default_backend())
         )
         cert_pem = cert.public_bytes(encoding=serialization.Encoding.PEM)
