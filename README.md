@@ -16,6 +16,6 @@ All the needed info about how to  use the `receipt-manager-webapp` is present at
   
 
 - *II. Getting started*
-  - [Docker install guide](https://receipt-manager-app.readthedocs.io/en/latest/installation#manuel-installation-guide.html)
-  - [Manual install guide](https://github.com/ReceiptManager/receipt-parser-app/wiki/installation.html)
+  - [Docker install guide](https://receipt-manager-webapp.readthedocs.io/en/latest/installation.html)
+  - [Manual install guide](https://receipt-manager-webapp.readthedocs.io/en/latest/installation.html#manuel-installation-guide)
 ---
