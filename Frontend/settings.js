@@ -4,7 +4,7 @@ import "./node_modules/@polymer/paper-input/paper-input.js";
 import './node_modules/@polymer/paper-listbox/paper-listbox.js';
 import './node_modules/@polymer/paper-dialog/paper-dialog.js';
 import './node_modules/@polymer/paper-toast/paper-toast.js';
-import {loadSettings, translated}  from './functions.js';
+import {loadSettings, translated, resetSettings}  from './functions.js';
 
 class MainElement extends LitElement {
   static get properties() {
@@ -12,12 +12,17 @@ class MainElement extends LitElement {
     };
   }
 
+  reloadPage ()
+  {
+    resetSettings()
+    window.location.href = window.location.href
+  }
 
   render() {
 
     return html `
     <div class="mainContainer" id="mainContainerHistory">
-      <paper-icon-item class="settings"  @click=${() => window.location.href = window.location.href}>
+      <paper-icon-item class="settings"  @click=${this.reloadPage}>
           <iron-icon icon="refresh" slot="item-icon"></iron-icon>
           <paper-item-body>
             <div>${translated.texts.lbl_clearCache}</div>
