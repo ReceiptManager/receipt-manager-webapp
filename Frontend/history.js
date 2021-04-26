@@ -201,7 +201,8 @@ class MainElement extends LitElement {
         ? html `
             ${this.historyPurchases.map(purchase => {
                 actMonth = monthString
-                var date = new Date(purchase.timestamp)
+                var isoDate = purchase.timestamp.replace(/\s/, 'T')
+                var date = new Date(isoDate)
                 const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
                 monthString = date.toLocaleDateString(language , {month: 'long'})
 
