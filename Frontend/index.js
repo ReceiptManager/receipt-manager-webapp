@@ -157,6 +157,7 @@ class MainElement extends LitElement {
 
         .bodyContainer {
           inset: 0px;
+          width: 100%;
           position: absolute;
           background-color: rgba(255,255,255,200);
           z-index: 2;
