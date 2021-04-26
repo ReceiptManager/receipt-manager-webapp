@@ -10,7 +10,7 @@ var translated
 
 function resetSettings()
 {
-  var settingsLoaded = false
+  settingsLoaded = false
 }
 
 function loadSettings(t, origin) 
