@@ -23,7 +23,7 @@ class MainElement extends LitElement {
             <div>${translated.texts.lbl_clearCache}</div>
           </paper-item-body>
         </paper-icon-item>
-        <paper-icon-item class="settings"  @click=${() => window.open('./ssl/cert.crt')}>
+        <paper-icon-item class="settings"  @click=${() => window.open('./ssl/ca.crt')}>
         <iron-icon icon="https" slot="item-icon"></iron-icon>
         <paper-item-body>
           <div>${translated.texts.lbl_certDownload}</div>

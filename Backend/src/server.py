@@ -13,8 +13,8 @@ def server():
         http_server = WSGIServer(
             (cfg["backendIP"], int(cfg["backendPort"])),
             app,
-            certfile="../webroot/ssl/cert.crt",
-            keyfile="../webroot/ssl/key.pem",
+            certfile="ssl/cert.crt",
+            keyfile="ssl/key.pem",
         )
         print(
             "Server started. Running on https://"

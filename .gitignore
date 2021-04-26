@@ -5,6 +5,8 @@ Backend/__pycache__/*
 Backend/src/.api_token
 Backend/webroot/*
 !Backend/webroot/.gitkeep
+!Backend/src/ssl/.gitkeep
+Backend/src/ssl/*
 Frontend/ssl
 
 

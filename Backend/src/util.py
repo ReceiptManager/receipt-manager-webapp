@@ -18,14 +18,62 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 cfg = None
 api_token = None
 
-
 def create_ssl_cert(
     ip_addresses=None,
-    key_file="../webroot/ssl/key.pem",
-    cert_file="../webroot/ssl/cert.crt",
-):
+    ca_cert="../webroot/ssl/ca.crt",
+    ca_key="../webroot/ssl/ca.key",
+    key_file="ssl/key.pem",
+    cert_file="ssl/cert.crt",
+    ):
 
+    root_cert = None
+    root_key = None
+    now = datetime.utcnow()
+    if not os.path.isfile(ca_cert) and not os.path.isfile(ca_key):
+        # Create CA Cert and Key
+        root_key = rsa.generate_private_key(
+            public_exponent=65537,
+            key_size=2048,
+            backend=default_backend()
+        )
+        subject = issuer = x509.Name([
+            x509.NameAttribute(NameOID.COUNTRY_NAME, u"DE"),
+            x509.NameAttribute(NameOID.STATE_OR_PROVINCE_NAME, u"NRW"),
+            x509.NameAttribute(NameOID.LOCALITY_NAME, u"NV"),
+            x509.NameAttribute(NameOID.ORGANIZATION_NAME, u"ReceiptManager"),
+            x509.NameAttribute(NameOID.COMMON_NAME, u"receipt-manager-ca"),
+        ])
+            
+        basic_contraints = x509.BasicConstraints(ca=True, path_length=1)
+
+        root_cert = (
+            x509.CertificateBuilder()
+            .subject_name(subject)
+            .issuer_name(issuer)
+            .public_key(root_key.public_key())
+            .serial_number(x509.random_serial_number())
+            .not_valid_before(now)
+            .not_valid_after(now + timedelta(days=2 * 365))
+            .add_extension(basic_contraints, False)
+            .sign(root_key, hashes.SHA256(), default_backend()))
+
+        ca_cert_pem = root_cert.public_bytes(encoding=serialization.Encoding.PEM)
+        ca_key_pem = root_key.private_bytes(
+            encoding=serialization.Encoding.PEM,
+            format=serialization.PrivateFormat.TraditionalOpenSSL,
+            encryption_algorithm=serialization.NoEncryption(),
+        )
+
+        open(ca_key, "wb").write(ca_key_pem)
+        open(ca_cert, "wb").write(ca_cert_pem)
+    
     if not os.path.isfile(cert_file) and not os.path.isfile(key_file):
+        if not root_cert and not root_key:
+            cert_binary = open(ca_cert,"rb").read()
+            root_cert = x509.load_pem_x509_certificate(cert_binary, default_backend())
+            key_binary = open(ca_key,"rb").read()
+            root_key = serialization.load_pem_private_key(key_binary, None, default_backend())
+
         # Generate our key
         key = rsa.generate_private_key(
             public_exponent=65537,
@@ -50,23 +98,19 @@ def create_ssl_cert(
                 alt_names.append(x509.IPAddress(ipaddress.ip_address(addr)))
 
         san = x509.SubjectAlternativeName(alt_names)
-        extended_key_usage = x509.ExtendedKeyUsage([x509.oid.ExtendedKeyUsageOID.SERVER_AUTH, x509.oid.ExtendedKeyUsageOID.CLIENT_AUTH])
+        extended_key_usage = x509.ExtendedKeyUsage([x509.oid.ExtendedKeyUsageOID.SERVER_AUTH])
 
-        # path_len=0 means this cert can only sign itself, not other certs.
-        basic_contraints = x509.BasicConstraints(ca=True, path_length=0)
-        now = datetime.utcnow()
         cert = (
             x509.CertificateBuilder()
             .subject_name(name)
-            .issuer_name(name)
+            .issuer_name(root_cert.issuer)
             .public_key(key.public_key())
-            .serial_number(1000)
+            .serial_number(x509.random_serial_number())
             .not_valid_before(now)
             .not_valid_after(now + timedelta(days=2 * 365))
-            .add_extension(basic_contraints, False)
             .add_extension(san, False)
             .add_extension(extended_key_usage, True)
-            .sign(key, hashes.SHA256(), default_backend())
+            .sign(root_key, hashes.SHA256(), default_backend())
         )
         cert_pem = cert.public_bytes(encoding=serialization.Encoding.PEM)
         key_pem = key.private_bytes(
