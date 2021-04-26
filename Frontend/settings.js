@@ -17,7 +17,7 @@ class MainElement extends LitElement {
 
     return html `
     <div class="mainContainer" id="mainContainerHistory">
-      <paper-icon-item class="settings"  @click=${() => location.reload()}>
+      <paper-icon-item class="settings"  @click=${() => window.location.href = window.location.href}>
           <iron-icon icon="refresh" slot="item-icon"></iron-icon>
           <paper-item-body>
             <div>${translated.texts.lbl_clearCache}</div>
