@@ -40,6 +40,7 @@ RUN cp -r receipt-manager-webapp/Frontend/node_modules/lit-element/lib/*.map /ap
 RUN cp -r receipt-manager-webapp/Frontend/node_modules/@webcomponents/webcomponentsjs/. /app/webroot/node_modules/@webcomponents/webcomponentsjs
 RUN cp -r receipt-manager-webapp/Frontend/node_modules/web-animations-js/*.map /app/webroot/node_modules/web-animations-js
 RUN cp -r receipt-manager-webapp/Frontend/img/. /app/webroot/img
+RUN cp receipt-manager-webapp/Frontend/favicon.ico /app/webroot/favicon.ico
 RUN rm -rf receipt-manager-webapp
 
 WORKDIR /app/src
