@@ -1,7 +1,7 @@
 import { LitElement, html, css } from "./node_modules/lit-element/lit-element.js";
-import {setPassiveTouchGestures} from '@polymer/polymer/lib/utils/settings.js';
+import { setPassiveTouchGestures } from "./node_modules/@polymer/polymer/lib/utils/settings.js";
 import './node_modules/@polymer/paper-item/paper-item.js';
-import './node_modules/@polymer/paper-item/paper-icon-item.js'
+import './node_modules/@polymer/paper-item/paper-icon-item.js';
 import './node_modules/@polymer/paper-listbox/paper-listbox.js';
 import './node_modules/@polymer/paper-spinner/paper-spinner.js';
 import './node_modules/@polymer/paper-toast/paper-toast.js';
@@ -10,59 +10,48 @@ import './node_modules/@polymer/iron-icon/iron-icon.js';
 import './node_modules/@polymer/iron-icons/iron-icons.js';
 import './node_modules/@polymer/iron-icons/maps-icons.js';
 import './node_modules/@polymer/app-layout/app-layout.js';
-import {closeDrawer, openDrawer, setMenuIcon, menuIcon, chooseAddMode, setOpenPage, loadTranslations, translated} from './functions.js';
-import './scann.js'
-import './history.js'
-import './addCategory.js'
-import './addStore.js'
-import './settings.js'
+import { closeDrawer, openDrawer, setMenuIcon, menuIcon, chooseAddMode, setOpenPage, loadTranslations, translated } from './functions.js';
+import './scann.js';
+import './history.js';
+import './addCategory.js';
+import './addStore.js';
+import './settings.js';
 
 class MainElement extends LitElement {
   static get properties() {
     return {
       menuMode: String,
-      selectedMenu: String,
+      selectedMenu: String
     };
   }
 
-  openSelectedWindow(mode)  
-  {
-    this.shadowRoot.getElementById("drawer").close()
-    this.menuMode = mode
-    setOpenPage(mode)
+  openSelectedWindow(mode) {
+    this.shadowRoot.getElementById("drawer").close();
+    this.menuMode = mode;
+    setOpenPage(mode);
 
-    if (mode == "scan")
-    {
-      this.shadowRoot.getElementById("addButton").style.display = "none"
-      this.selectedMenu = "0"
-    }
-    else if (mode == "history")
-    {
-      this.shadowRoot.getElementById("addButton").style.display = "none"
-      this.selectedMenu = "1"
-    }
-    else if (mode == "addCategory")
-    {
-      this.shadowRoot.getElementById("addButton").style.display = null
-      this.selectedMenu = "2"
-    }
-    else if (mode == "addStore")
-    {
-      this.shadowRoot.getElementById("addButton").style.display = null
-      this.selectedMenu = "3"
-    }
-    else if (mode == "settings")
-    {
-      this.shadowRoot.getElementById("addButton").style.display = "none"
-      this.selectedMenu = "4"
+    if (mode == "scan") {
+      this.shadowRoot.getElementById("addButton").style.display = "none";
+      this.selectedMenu = "0";
+    } else if (mode == "history") {
+      this.shadowRoot.getElementById("addButton").style.display = "none";
+      this.selectedMenu = "1";
+    } else if (mode == "addCategory") {
+      this.shadowRoot.getElementById("addButton").style.display = null;
+      this.selectedMenu = "2";
+    } else if (mode == "addStore") {
+      this.shadowRoot.getElementById("addButton").style.display = null;
+      this.selectedMenu = "3";
+    } else if (mode == "settings") {
+      this.shadowRoot.getElementById("addButton").style.display = "none";
+      this.selectedMenu = "4";
     }
   }
 
   render() {
     return html`
 
-    ${translated
-      ? html `
+    ${translated ? html`
       
           <paper-spinner id="loadingSpinner" class="loadingSpinner"></paper-spinner>
           <div class="bodyContainer" id="bodyContainer" style="opacity: 100%">
@@ -83,47 +72,38 @@ class MainElement extends LitElement {
             </paper-listbox>
           </app-drawer>
           
-          ${this.menuMode == "scan" || !this.menuMode
-            ? html `<scan-element id="mainElement"></scan-element>` : html ``
-          }
+          ${this.menuMode == "scan" || !this.menuMode ? html`<scan-element id="mainElement"></scan-element>` : html``}
           
-          ${this.menuMode == "history"
-            ? html `<history-element id="mainElement"></history-element>` : html ``
-          }
+          ${this.menuMode == "history" ? html`<history-element id="mainElement"></history-element>` : html``}
 
-          ${this.menuMode == "addCategory"
-            ? html `<addcategory-element id="mainElement"></addcategory-element>` : html ``
-                }
+          ${this.menuMode == "addCategory" ? html`<addcategory-element id="mainElement"></addcategory-element>` : html``}
           
-          ${this.menuMode == "addStore"
-            ? html `<addstore-element id="mainElement"></addstore-element>` : html ``
-          }
+          ${this.menuMode == "addStore" ? html`<addstore-element id="mainElement"></addstore-element>` : html``}
 
-          ${this.menuMode == "settings"
-            ? html `<settings-element id="mainElement"></settings-element>` : html ``
-          }
+          ${this.menuMode == "settings" ? html`<settings-element id="mainElement"></settings-element>` : html``}
 
         </div>
 
         <paper-toast class= "uploadToast fit-bottom" id="uploadToast" duration="5000" text="${translated.toasts.lbl_startUpload}"></paper-toast>
         
-      ` 
-      : html `<paper-spinner id="loadingSpinner" class="loadingSpinner" active></paper-spinner>`
-    }
-      `
+        <paper-toast class="fit-bottom" id="updateToast" duration="0" text="${translated.toasts.lbl_newVersion}">
+          <paper-button id="updateButton" class="updateButton" @click=${() => servicesPage.toggleUpdate()}>UPDATE</paper-button>
+        </paper-toast>
+        
+      ` : html`<paper-spinner id="loadingSpinner" class="loadingSpinner" active></paper-spinner>`}
+      `;
   }
 
-  updated ()
-  {
-    mainPage = this
+  updated() {
+    mainPage = this;
   }
 
   constructor() {
     super();
     setPassiveTouchGestures(true);
-    loadTranslations()
-    this.selectedMenu = "0"
-    setMenuIcon("menu")
+    loadTranslations();
+    this.selectedMenu = "0";
+    setMenuIcon("menu");
   }
 
   static get styles() {
@@ -167,7 +147,6 @@ class MainElement extends LitElement {
         .uploadToast {
           --paper-toast-background-color: green;
         }
-    
         `;
   }
 

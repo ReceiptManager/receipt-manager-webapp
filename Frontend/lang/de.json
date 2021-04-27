@@ -13,5 +13,5 @@
     "inputLabels":
         {"lbl_uploadFile": "Datei hochladen", "lbl_store": "Supermarkt", "lbl_date": "Datum", "lbl_category": "Kategorie", "lbl_article": "Artikel", "lbl_price": "Preis", "lbl_articleSum": "Summe", "lbl_totalPrice": "Gesamtsumme", "lbl_newStore": "Neuer Supermarkt"},
     "texts":
-        {"lbl_articleCount": "Artikelanzahl", "lbl_certDownload": "SSL Zertifikat installieren", "lbl_clearCache": "Cache leeren"}
+        {"lbl_articleCount": "Artikelanzahl", "lbl_certDownload": "CA Zertifikat installieren", "lbl_clearCache": "Cache leeren"}
 }
