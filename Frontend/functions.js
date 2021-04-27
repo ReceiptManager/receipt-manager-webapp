@@ -8,11 +8,6 @@ var menuIcon
 var openPage
 var translated
 
-function resetSettings()
-{
-  settingsLoaded = false
-}
-
 function loadSettings(t, origin) 
 {
   if (!settingsLoaded)
@@ -73,10 +68,6 @@ function loadPageData(t, origin)
     else if (origin == "addStore")
     {
       t.getStaticData("stores")
-    }
-    else if (origin == "settings")
-    {
-
     }
 }
 
@@ -583,4 +574,4 @@ function closeMobileKeyboard (event, t, id)
 }
 
 export {showReceipt, responseChanged, storesChanged, addItem, addStoreFromScan, updateItemIDs, deleteItem, activateDeleteMode, validateCategories, validateStore, validateDate, validateTotal, validateArticles, updateResponseJson, closeDrawer, openDrawer, calcDifference, assumeArticleSum, openSpinner, closeSpinner, setMenuIcon, chooseAddMode, setOpenPage, 
-        addCategory, addStore,getSelectedCategoryId, manualInput, loadTranslations, resetForm, closeMobileKeyboard, loadSettings, resetSettings, menuIcon, language,backendIP, backendPort, translated, backendToken, webPrefix}
+        addCategory, addStore,getSelectedCategoryId, manualInput, loadTranslations, resetForm, closeMobileKeyboard, loadSettings, menuIcon, language,backendIP, backendPort, translated, backendToken, webPrefix}

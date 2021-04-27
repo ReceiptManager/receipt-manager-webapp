@@ -1,1 +1,1 @@
-{"useSSL": true, "backendIP": "192.168.50.59", "backendPort": 5558, "backendToken": "a9429289", "language": "de-DE"}
+{"useSSL": false, "backendIP": "192.168.50.59", "backendPort": 5558, "backendToken": "a9429289", "language": "de-DE"}
