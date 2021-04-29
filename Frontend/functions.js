@@ -13,7 +13,7 @@ function loadSettings(t, origin)
   if (!settingsLoaded)
   {
       let xhr = new XMLHttpRequest();
-      xhr.open("GET", "./settings/settings.json");
+      xhr.open("GET", "./settings/settings.json?" + (new Date().getTime()));
     
       xhr.onload = function () 
       {
