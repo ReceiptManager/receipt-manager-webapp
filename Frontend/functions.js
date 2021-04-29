@@ -7,6 +7,7 @@ var settingsLoaded
 var menuIcon
 var openPage
 var translated
+var europeCountries = []
 
 function loadSettings(t, origin) 
 {
@@ -24,6 +25,7 @@ function loadSettings(t, origin)
           backendPort = settings['backendPort']
           backendToken = settings['backendToken']
           language = settings['language']
+          europeCountries = ["de-DE", "en-GB", "es-ES", "fr-FR"]
           
           if (settings['useSSL'])
           {
@@ -443,11 +445,11 @@ function updateResponseJson (itemId, mode, t)
   else if (mode == "articleSum")
   {
     var updateVal = t.shadowRoot.getElementById("sum" + itemId).value;
-    if (!updateVal.includes('.'))
+    if (!updateVal.includes('.') && !updateVal.includes(',') && updateVal.length > 0)
     {
       updateVal = updateVal + '.00'
     }
-    t.responseJson["receiptItems"][itemId][2] = updateVal;
+    t.responseJson["receiptItems"][itemId][2] = updateVal.replace(',','.');
   }
   else if (mode == "category")
   {
@@ -467,6 +469,12 @@ function updateResponseJson (itemId, mode, t)
   else if (mode == "receiptTotal")
   {
     var updateVal = t.shadowRoot.getElementById("receiptTotal").value;
+
+    if (updateVal.includes(',') && europeCountries.includes(language))
+    {
+      updateVal = updateVal.replace(',','.')
+    }
+
     t.responseJson["receiptTotal"] = updateVal;
   }
 
@@ -506,7 +514,10 @@ function calcDifference (t)
 {
   if (t.articleSum && t.responseJson.receiptTotal)
   {
-    t.differenceSum = (parseFloat(t.articleSum) - parseFloat(t.responseJson.receiptTotal)).toFixed(2)
+    var articleSum = t.articleSum.replace(',','.')
+    var totalSum = t.responseJson.receiptTotal.replace(',','.')
+
+    t.differenceSum = (parseFloat(articleSum) - parseFloat(totalSum)).toFixed(2)
   }
 }
 
@@ -563,6 +574,7 @@ function resetForm (t)
   t.responseJson = null
   t.manualInput = null
   t.storedFile = null
+  t.differenceSum = null
 }
 
 function closeMobileKeyboard (event, t, id)
@@ -574,4 +586,4 @@ function closeMobileKeyboard (event, t, id)
 }
 
 export {showReceipt, responseChanged, storesChanged, addItem, addStoreFromScan, updateItemIDs, deleteItem, activateDeleteMode, validateCategories, validateStore, validateDate, validateTotal, validateArticles, updateResponseJson, closeDrawer, openDrawer, calcDifference, assumeArticleSum, openSpinner, closeSpinner, setMenuIcon, chooseAddMode, setOpenPage, 
-        addCategory, addStore,getSelectedCategoryId, manualInput, loadTranslations, resetForm, closeMobileKeyboard, loadSettings, menuIcon, language,backendIP, backendPort, translated, backendToken, webPrefix}
+        addCategory, addStore,getSelectedCategoryId, manualInput, loadTranslations, resetForm, closeMobileKeyboard, loadSettings, menuIcon, language,backendIP, backendPort, translated, backendToken, webPrefix, europeCountries}

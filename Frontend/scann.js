@@ -10,7 +10,7 @@ import './node_modules/@polymer/paper-icon-button/paper-icon-button.js';
 import './node_modules/@polymer/iron-icon/iron-icon.js';
 import './node_modules/@polymer/iron-icons/iron-icons.js';
 import {showReceipt, addItem, addStoreFromScan, deleteItem, activateDeleteMode, validateCategories, validateStore, validateDate, validateTotal, validateArticles, updateResponseJson, calcDifference, assumeArticleSum, 
-        backendIP, backendPort, openSpinner, closeSpinner, getSelectedCategoryId, closeMobileKeyboard, loadSettings, resetForm, manualInput, translated, backendToken, webPrefix} from './functions.js';
+        backendIP, backendPort, openSpinner, closeSpinner, getSelectedCategoryId, closeMobileKeyboard, loadSettings, resetForm, manualInput, translated, backendToken, webPrefix, europeCountries, language} from './functions.js';
 
 class ScanElement extends LitElement {
   static get properties() {
@@ -21,6 +21,7 @@ class ScanElement extends LitElement {
       storedFile: Object,
       articleSum: Number,
       receiptSum: Number,
+      totalSum: String,
       differenceSum: Number,
       uploadedFile: Object,
       manualInput: Boolean,
@@ -222,8 +223,8 @@ checkValidAndSave(e)
         }
     }
 
-    // Set article sum = 0
-    this.articleSum = 0
+    // Set article sum empty
+    this.articleSum = ""
 
     if (this.responseJson)
     {
@@ -255,7 +256,40 @@ checkValidAndSave(e)
             // calc article Sum
             if (item[2])
             {
-              this.articleSum = this.articleSum + parseFloat(item[2])
+              // Convert to flotable format
+              var JsSum = item[2].replace(',','.')
+              var actSum = this.articleSum.replace(',','.')
+
+              if (!actSum)
+              {
+                actSum = 0
+              }
+              
+              // Calc article sum
+              this.articleSum = parseFloat(actSum) + parseFloat(JsSum)
+
+              // Replace dot with comma
+              if (europeCountries.includes(language))
+              {
+                this.articleSum = this.articleSum.toFixed(2).toString().replace('.',',')
+              }
+              else
+              {
+                this.articleSum = this.articleSum.toFixed(2)
+              }
+            }
+
+            // Convert digits with dots in commas
+            var itemSum = item[2]
+            if (item[2].includes('.') && europeCountries.includes(language))
+            {
+              itemSum = item[2].replace('.',',')
+            }
+
+            this.totalSum = this.responseJson.receiptTotal
+            if (this.totalSum.includes('.') && europeCountries.includes(language))
+            {
+              this.totalSum = this.totalSum.replace('.',',')
             }
 
             if (itemCnt == itemsLength)
@@ -287,7 +321,7 @@ checkValidAndSave(e)
                 </paper-dropdown-menu-light>
 
                 <paper-input class="itemListArticle" required="true" id="article${item[0]}" label="${translated.inputLabels.lbl_article}" value="${item[1]}" @change=${() => updateResponseJson(item[0], "article", this)}  @keyup=${e => closeMobileKeyboard(e, this, "article" + item[0])}></paper-input>
-                <paper-input class="itemListSum" required="true" auto-validate pattern="((\-|)[0-9]|[0-9]{2}|[0-9]{3})\.[0-9]{2}" id="sum${item[0]}" label="${translated.inputLabels.lbl_price}" value="${item[2]}" @change=${() => updateResponseJson(item[0], "articleSum", this)}  @keyup=${e => closeMobileKeyboard(e, this, "sum" + item[0])}>
+                <paper-input class="itemListSum" required="true" auto-validate pattern="((\-|)[0-9]|[0-9]{2}|[0-9]{3})\.[0-9]{2}" id="sum${item[0]}" label="${translated.inputLabels.lbl_price}" value="${itemSum}" @change=${() => updateResponseJson(item[0], "articleSum", this)}  @keyup=${e => closeMobileKeyboard(e, this, "sum" + item[0])}>
                   <div slot="suffix">€</div>
                 </paper-input>
                 <paper-icon-button class="addButton" id="addArticleButton${item[0]}" icon="add-circle" @click=${() => addItem(item[0], this)}></paper-icon-button>
@@ -300,7 +334,7 @@ checkValidAndSave(e)
           
           <paper-icon-button icon="arrow-drop-down" class="extraButtons showReceipt" id="showReceiptButton" @click=${() => showReceipt(this)} style=${this.manualInput ? css `visibility: hidden;`: css ``}></paper-icon-button>
           <paper-icon-button class="assumeArticleSum extraButtons" icon="play-for-work" @click=${() => assumeArticleSum(this)}></paper-icon-button>
-          <paper-input class="articleSum" class="extraButtons" required="true" auto-validate pattern="([0-9]|[0-9]{2}|[0-9]{3})\.[0-9]{2}" id="articleSum" label="${translated.inputLabels.lbl_articleSum}" value="${this.articleSum.toFixed(2)}" @keyup=${e => closeMobileKeyboard(e, this, "articleSum")}>
+          <paper-input class="articleSum" class="extraButtons" required="true" auto-validate pattern="([0-9]|[0-9]{2}|[0-9]{3})\.[0-9]{2}" id="articleSum" label="${translated.inputLabels.lbl_articleSum}" value="${this.articleSum}" @keyup=${e => closeMobileKeyboard(e, this, "articleSum")}>
             <div slot="suffix">€</div>
           </paper-input>
           
@@ -309,7 +343,7 @@ checkValidAndSave(e)
 
           <img id="uploadedImage" class="uploadedImage"/>
 
-    <paper-input label="${translated.inputLabels.lbl_totalPrice}" required="true" id="receiptTotal" auto-validate pattern="([0-9]|[0-9]{2}|[0-9]{3})\.[0-9]{2}" value="${this.responseJson.receiptTotal}" @change=${() => updateResponseJson(null, "receiptTotal", this)} @keyup=${e => closeMobileKeyboard(e, this, "receiptTotal")}>
+    <paper-input label="${translated.inputLabels.lbl_totalPrice}" required="true" id="receiptTotal" auto-validate pattern="([0-9]|[0-9]{2}|[0-9]{3})\.[0-9]{2}" value="${this.totalSum}" @change=${() => updateResponseJson(null, "receiptTotal", this)} @keyup=${e => closeMobileKeyboard(e, this, "receiptTotal")}>
         <iron-icon icon="euro-symbol" slot="suffix"></iron-icon>  
     </paper-input>
    `: 
@@ -350,7 +384,7 @@ checkValidAndSave(e)
     <paper-toast class= "invalidSums fit-bottom" id="saveToDBError" duration="2500" text="${translated.toasts.lbl_saveError}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="invalidSums" duration="2000" text="${translated.toasts.lbl_invalidSums}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="errorOnUpload" duration="5000" text="${translated.toasts.lbl_errorOnUpload} ${this.errorCode}, ${this.errorText}"></paper-toast>
-    <paper-toast class= "invalidSums fit-bottom" id="differentSums" duration="2000" text="${translated.toasts.lbl_diffrentSums1} ${this.articleSum.toFixed(2)}€ ${translated.toasts.lbl_diffrentSums2} ${this.receiptSum.toFixed(2)}€ ${translated.toasts.lbl_diffrentSums3}"></paper-toast>
+    <paper-toast class= "invalidSums fit-bottom" id="differentSums" duration="2000" text="${translated.toasts.lbl_diffrentSums1} ${this.articleSum}€ ${translated.toasts.lbl_diffrentSums2} ${this.receiptSum.toFixed(2)}€ ${translated.toasts.lbl_diffrentSums3}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="invalidDate" duration="2000" text="${translated.toasts.lbl_invalidDate}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="invalidCategory" duration="2000" text="${translated.toasts.lbl_invalidCategory}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="invalidStore" duration="2000" text="${translated.toasts.lbl_invalidStore}"></paper-toast>
