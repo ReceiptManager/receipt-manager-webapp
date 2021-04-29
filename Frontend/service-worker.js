@@ -1,4 +1,4 @@
-var version = "0.4.4"
+var version = "0.5.0"
 
 self.addEventListener('install', event => {
   console.log(`installing service worker`);
