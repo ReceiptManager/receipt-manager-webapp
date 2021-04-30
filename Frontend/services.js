@@ -4,71 +4,34 @@ import "./node_modules/@polymer/paper-input/paper-input.js";
 import './node_modules/@polymer/paper-listbox/paper-listbox.js';
 import './node_modules/@polymer/paper-dialog/paper-dialog.js';
 import './node_modules/@polymer/paper-toast/paper-toast.js';
-import { translated } from './functions.js';
+import {Workbox} from 'https://storage.googleapis.com/workbox-cdn/releases/6.1.5/workbox-window.prod.mjs';
 
 class MainElement extends LitElement {
   static get properties() {
     return {
-        newWorker: Object
+      workBox: Object
     };
   }
 
-  registerServiceWorkers()
-  {
+  registerServiceWorkers() {
     if ('serviceWorker' in navigator) 
     {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('service-worker.js').then(registration => {
-            console.log(`service worker registered succesfully`);
-          }).catch(err => {
-            console.log(`Error registring ${err}`);
-          });
-        });
-      } 
-      else 
-      {
-        console.log(`Service worker is not supported in this browser or SSL not enabled.`);
-      }
+      this.workBox = new Workbox('/service-worker.js');
 
-    if ('serviceWorker' in navigator) 
-    {
-        navigator.serviceWorker.register('/service-worker.js').then(reg => {
-        reg.addEventListener('updatefound', () => {
-        this.newWorker = reg.installing;
-        this.newWorker.addEventListener('statechange', () => {
-            switch (this.newWorker.state) {
-            case 'installed':
-                if (navigator.serviceWorker.controller) {
-                 this.showUpdateBar();
-                }
+      this.workBox.addEventListener('waiting', () => this.showUpdateBar());
 
-                break;
-            }
-        });
-        });
-    });
-
-    let refreshing;
-    navigator.serviceWorker.addEventListener('controllerchange', function () 
-    {
-        if (refreshing) return;
-        window.location.reload();
-        refreshing = true;
-    });
+      this.workBox.register()
     }
   }
 
   toggleUpdate() {
-    this.newWorker.postMessage({
-      action: 'skipWaiting'
-    });
+    this.workBox.messageSkipWaiting()
+    window.location.reload()
   }
-
 
   showUpdateBar() {
     mainPage.shadowRoot.getElementById('updateToast').open();
   }
-  
 
   render() {
     return html`
@@ -76,13 +39,13 @@ class MainElement extends LitElement {
   }
 
   updated() {
-    servicesPage = this
+    servicesPage = this;
   }
 
   constructor() {
     super();
     setPassiveTouchGestures(true);
-    this.registerServiceWorkers()
+    this.registerServiceWorkers();
   }
 
   static get styles() {

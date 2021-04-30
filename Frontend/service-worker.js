@@ -1,45 +1,30 @@
-var version = "0.5.0"
+var version = "0.5.1"
+importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.1.5/workbox-sw.js');
 
-self.addEventListener('install', event => {
-  console.log(`installing service worker`);
-  
-  event.waitUntil(
-    caches.open(version)
-      .then(cache => cache.addAll([
-        './settings/settings.json',
-        './img/icon-144.png',
-        './img/icon-192.png',
-        './lang/de.json',
-        './addCategory.js',
-        './functions.js',
-        './history.js',
-        './index.html',
-        './index.js',
-        './manifest.webmanifest',
-        './scann.js',
-        './settings.js',
-      ]))
-  );
+workbox.setConfig({
+  debug: false
 });
 
-self.addEventListener('message', function (event) {
-  if (event.data.action === 'skipWaiting') {
+workbox.routing.registerRoute(
+  new RegExp('\.js$'),
+  new workbox.strategies.StaleWhileRevalidate({
+    cacheName: version,
+  }));
+
+workbox.routing.registerRoute(
+    ({url}) => url.pathname.startsWith('/img/'),
+    new workbox.strategies.StaleWhileRevalidate({
+      cacheName: version,
+    }));
+
+workbox.routing.registerRoute(
+      ({url}) => url.pathname.startsWith('/lang/'),
+      new workbox.strategies.StaleWhileRevalidate({
+        cacheName: version,
+      }));
+
+addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
     self.skipWaiting();
   }
-});
-
-self.addEventListener('activate', () => {
-  console.log(`activating service worker`);
-});
-
-self.addEventListener('fetch', function (event) {
-  event.respondWith(
-    caches.match(event.request)
-      .then(function (response) {
-        if (response) {
-          return response;
-        }
-        return fetch(event.request);
-      })
-  );
 });
