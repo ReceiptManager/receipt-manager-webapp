@@ -24,7 +24,7 @@ workbox.routing.registerRoute(
     }));
 
 workbox.routing.registerRoute(
-    ({url}) => url.pathname.startsWith('/'),
+    '/',
     new workbox.strategies.StaleWhileRevalidate({
       cacheName: version,
     }));
