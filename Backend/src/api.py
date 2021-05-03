@@ -51,10 +51,7 @@ def upload():
 
     file = request.files["file"]
     file_name = file.filename
-    legacy_parser = request.args["legacy_parser"]
-    grayscale_image = request.args["grayscale_image"]
-    rotate_image = request.args["rotate_image"]
-
+    
     url = (
             "http://"
             + str(cfg["parserIP"])
@@ -62,13 +59,11 @@ def upload():
             + str(cfg["parserPort"])
             + "/api/upload?access_token="
             + str(cfg["parserToken"])
-            + "&legacy_parser="
-            + legacy_parser
-            + "&grayscale_image="
-            + grayscale_image
-            + "&rotate_image="
-            + rotate_image
-            + "&gaussian_blur=True&median_blur=True"
+            + "&legacy_parser=True"
+            + "&grayscale_image=True"
+            + "&rotate_image=True"
+            + "&gaussian_blur=True"
+            + "&median_blur=True"
     )
 
     receipt_upload = requests.post(url, files={"file": (file_name, file)})
