@@ -207,6 +207,7 @@ checkValidAndSave(e)
   }
 
   render() {
+
     if (this.responseJson)
     {
         if (!this.responseJson.storeName)
@@ -313,7 +314,7 @@ checkValidAndSave(e)
             return html `
             <div class="itemsListContainer">
                 <paper-dropdown-menu-light class="itemListCategories" required="true" value="${item[3]}" id="category${item[0]}" label="${translated.inputLabels.lbl_category}" @selected-item-changed=${() => updateResponseJson(item[0], "category", this)} noink noAnimations>
-                  <paper-listbox slot="dropdown-content" selected="${getSelectedCategoryId(this, item[3])}">
+                  <paper-listbox slot="dropdown-content" class="categoryDropdown" selected="${getSelectedCategoryId(this, item[3])}">
                     ${this.categoriesJson["values"].map(category => {
                       return html `<paper-item>${category.name}</paper-item>`
                     })}
@@ -430,13 +431,13 @@ checkValidAndSave(e)
           width: 98%;
           display: inline-grid;
           grid-auto-flow: column;
-          grid-template-columns: 90px calc(100% - 200px) auto auto;
+          grid-template-columns: 115px calc(100% - 225px) auto auto;
           column-gap: 6px;
         }
 
         .itemListCategories
         {
-          width: 95px;
+          width: 120px;
           margin-top: 1px;
         }
 

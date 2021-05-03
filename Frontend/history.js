@@ -412,7 +412,7 @@ class MainElement extends LitElement {
       width: 98%;
       display: inline-grid;
       grid-auto-flow: column;
-      grid-template-columns: 90px calc(100% - 200px) auto auto;
+      grid-template-columns: 115px calc(100% - 225px) auto auto;
       column-gap: 6px;
     }
 
@@ -426,7 +426,7 @@ class MainElement extends LitElement {
 
     .itemListCategories
     {
-      width: 95px;
+      width: 120px;
       margin-top: 1px;
     }
 
