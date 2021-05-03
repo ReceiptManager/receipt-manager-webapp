@@ -51,7 +51,7 @@ def upload():
 
     file = request.files["file"]
     file_name = file.filename
-    
+
     url = (
             "http://"
             + str(cfg["parserIP"])
@@ -168,40 +168,62 @@ def get_history_details():
     if api_token != request.args["token"]:
         return "Unthorized", 401
 
-    store_name = request.args["storeName"]
-    receipt_total = request.args["receiptTotal"]
-    receipt_date = request.args["receiptDate"]
     purchase_id = request.args["purchaseID"]
 
     conn, cursor = load_db_conn()
-
-    sql_query = "select article_name, total, category from purchaseData where id = ?"
+    sql_query = (
+                "SELECT storeName, total, date " +
+                "FROM receipts re " +
+                "JOIN stores st ON re.storeId = st.id " +
+                "where re.id = ?"
+                )
+                
     if cfg["dbMode"] == "mysql":
         sql_query = convert_to_mysql_query(sql_query)
 
-    cursor.execute(sql_query, [purchase_id])
+    cursor.execute(sql_query, [purchase_id]) 
+    row = cursor.fetchone()
 
-    purchase_details = {
-        "storeName": store_name,
-        "receiptTotal": receipt_total,
-        "receiptDate": receipt_date,
-        "purchaseID": purchase_id,
-        "receiptItems": [],
-    }
-
-    rows = cursor.fetchall()
-
-    for row in rows:
+    if row:
         if cfg["dbMode"] == "mysql":
-            add_json = [row[0], str(row[1]), row[2]]
+            store_name = row[0]
+            receipt_total = row[1]
+            receipt_date = row[2]
         else:
-            add_json = [row.article_name, str(row.total), row.category]
+            store_name = row.storeName
+            receipt_total = row.total
+            receipt_date = row.date
+    
+        receipt_date = receipt_date.strftime("%d.%m.%Y")
 
-        purchase_details["receiptItems"].append(add_json)
+        purchase_details = {
+            "storeName": store_name,
+            "receiptTotal": str(receipt_total),
+            "receiptDate": str(receipt_date),
+            "purchaseID": purchase_id,
+            "receiptItems": [],
+        }
 
-    conn.close()
+        sql_query = "select article_name, total, category from purchaseData where id = ?"
+        if cfg["dbMode"] == "mysql":
+            sql_query = convert_to_mysql_query(sql_query)
 
-    return json.dumps(purchase_details)
+        cursor.execute(sql_query, [purchase_id])
+        rows = cursor.fetchall()
+
+        for row in rows:
+            if cfg["dbMode"] == "mysql":
+                add_json = [row[0], str(row[1]), row[2]]
+            else:
+                add_json = [row.article_name, str(row.total), row.category]
+
+            purchase_details["receiptItems"].append(add_json)
+
+        conn.close()
+
+        return json.dumps(purchase_details)
+    else:
+        return "Purchase not found!", 500
 
 
 @app.route("/api/getValue", methods=["GET", "OPTIONS"])
