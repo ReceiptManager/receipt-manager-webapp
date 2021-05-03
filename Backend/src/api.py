@@ -177,7 +177,7 @@ def get_history_details():
                 "JOIN stores st ON re.storeId = st.id " +
                 "where re.id = ?"
                 )
-                
+
     if cfg["dbMode"] == "mysql":
         sql_query = convert_to_mysql_query(sql_query)
 
@@ -199,7 +199,7 @@ def get_history_details():
         purchase_details = {
             "storeName": store_name,
             "receiptTotal": str(receipt_total),
-            "receiptDate": str(receipt_date),
+            "receiptDate": receipt_date,
             "purchaseID": purchase_id,
             "receiptItems": [],
         }
