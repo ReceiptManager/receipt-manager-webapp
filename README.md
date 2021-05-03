@@ -5,7 +5,7 @@
 </p>
 
 # Receipt Manager Webapp 
-You can find pre-compiled releases on the Github release page or in the FDROID repository.
+You can find pre-compiled releases on the Github release page.
 All the needed info about how to  use the `receipt-manager-webapp` is present at your [wiki](https://receipt-manager-webapp.readthedocs.io/en/latest/index.html).
 * :star: We appreciate your star, it helps!
 
