@@ -172,7 +172,7 @@ def get_history_details():
 
     conn, cursor = load_db_conn()
     sql_query = (
-                "SELECT storeName, total, date " +
+                "SELECT storeName, total, date, purchaseId " +
                 "FROM receipts re " +
                 "JOIN stores st ON re.storeId = st.id " +
                 "where re.id = ?"
@@ -189,10 +189,12 @@ def get_history_details():
             store_name = row[0]
             receipt_total = row[1]
             receipt_date = row[2]
+            db_purchase_id = row[3]
         else:
             store_name = row.storeName
             receipt_total = row.total
             receipt_date = row.date
+            db_purchase_id = row.purchaseId
     
         receipt_date = receipt_date.strftime("%d.%m.%Y")
 
@@ -200,7 +202,7 @@ def get_history_details():
             "storeName": store_name,
             "receiptTotal": str(receipt_total),
             "receiptDate": receipt_date,
-            "purchaseID": purchase_id,
+            "purchaseID": db_purchase_id,
             "receiptItems": [],
         }
 
