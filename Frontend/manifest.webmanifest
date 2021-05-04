@@ -1,6 +1,5 @@
 {
     "short_name": "Kassenbon Scanner",
-    "name": "Kassenbon Scanner Webapplication",
     "icons": [
         {
             "src": "/img/icon-128.png",
@@ -14,7 +13,7 @@
         }
     ],
     "start_url": ".",
-    "background_color": "#191970",
+    "background_color": "#ffffff",
     "display": "standalone",
-    "theme_color": "#191970"
+    "theme_color": "#333366"
 }

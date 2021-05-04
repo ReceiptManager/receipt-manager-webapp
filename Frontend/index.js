@@ -87,7 +87,7 @@ class MainElement extends LitElement {
         <paper-toast class= "uploadToast fit-bottom" id="uploadToast" duration="5000" text="${translated.toasts.lbl_startUpload}"></paper-toast>
         
         <paper-toast class="fit-bottom" id="updateToast" duration="0" text="${translated.toasts.lbl_newVersion}">
-          <paper-button id="updateButton" class="updateButton" @click=${() => servicesPage.toggleUpdate()}>UPDATE</paper-button>
+          <paper-button id="updateButton" class="yellow-button" @click=${() => servicesPage.toggleUpdate()}>UPDATE</paper-button>
         </paper-toast>
         
       ` : html`<paper-spinner id="loadingSpinner" class="loadingSpinner" active></paper-spinner>`}
@@ -122,7 +122,7 @@ class MainElement extends LitElement {
 
         .appToolbar {
           font-family: Roboto;
-          background-color: midnightblue;
+          background-color: #333366;
           border-radius: 0px 0px 20px 20px;      
           color: white;
         }
@@ -144,8 +144,13 @@ class MainElement extends LitElement {
           opacity: 20%;
         }
 
-        .uploadToast {
-          --paper-toast-background-color: green;
+        .yellow-button {
+          text-transform: none;
+          color: #eeff41;
+        }
+
+        paper-toast {
+          text-align: center;
         }
         `;
   }

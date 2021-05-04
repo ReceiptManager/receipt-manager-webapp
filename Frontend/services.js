@@ -1,9 +1,5 @@
 ﻿import { LitElement, html, css } from "./node_modules/lit-element/lit-element.js";
 import { setPassiveTouchGestures } from "./node_modules/@polymer/polymer/lib/utils/settings.js";
-import "./node_modules/@polymer/paper-input/paper-input.js";
-import './node_modules/@polymer/paper-listbox/paper-listbox.js';
-import './node_modules/@polymer/paper-dialog/paper-dialog.js';
-import './node_modules/@polymer/paper-toast/paper-toast.js';
 import {Workbox} from 'https://storage.googleapis.com/workbox-cdn/releases/6.1.5/workbox-window.prod.mjs';
 
 class MainElement extends LitElement {
@@ -77,10 +73,6 @@ class MainElement extends LitElement {
         margin-left: 10px;
         font-size: 10px;
       }
-      
-      .updateToast {
-          --paper-toast-background-color: green;
-        }
 
     `;
   }
