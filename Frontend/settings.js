@@ -9,6 +9,7 @@ import {loadSettings, translated}  from './functions.js';
 class MainElement extends LitElement {
   static get properties() {
     return {
+      version: String,
     };
   }
 
