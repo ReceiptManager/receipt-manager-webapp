@@ -1,4 +1,4 @@
-var version = "0.6.1"
+var version = "0.6.2"
 importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.1.5/workbox-sw.js');
 
 workbox.setConfig({
