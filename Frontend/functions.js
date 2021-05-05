@@ -404,9 +404,7 @@ function validateTotal(t)
   }
   else
   {
-    t.receiptSum = parseFloat(t.shadowRoot.getElementById("receiptTotal").value)
-
-    if (t.articleSum.toFixed(2) != t.receiptSum.toFixed(2))
+    if (parseFloat(t.articleSum.replace(',','.')) != parseFloat(t.totalSum.replace(',','.')))
     {
       sumsValid = false
     }

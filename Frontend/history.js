@@ -19,7 +19,6 @@ class MainElement extends LitElement {
       historyPurchases: Object,
       responseJson: Object,
       articleSum: Number,
-      receiptSum: Number,
     };
   }
   getStaticData(arrayName){
@@ -350,7 +349,7 @@ class MainElement extends LitElement {
     <paper-toast class= "uploadToast fit-bottom" id="saveToDB" duration="2500" text="${translated.toasts.lbl_saveSuccess}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="saveToDBError" duration="2500" text="${translated.toasts.lbl_saveError}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="invalidSums" duration="2000" text="${translated.toasts.lbl_invalidSums}"></paper-toast>
-    <paper-toast class= "invalidSums fit-bottom" id="differentSums" duration="2000" text="${translated.toasts.lbl_diffrentSums1} ${this.articleSum}€ ${translated.toasts.lbl_diffrentSums2} ${this.receiptSum}€ ${translated.toasts.lbl_diffrentSums3}"></paper-toast>
+    <paper-toast class= "invalidSums fit-bottom" id="differentSums" duration="3000" text="${translated.toasts.lbl_diffrentSums1} ${this.articleSum}€ ${translated.toasts.lbl_diffrentSums2} ${this.totalSum}€ ${translated.toasts.lbl_diffrentSums3}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="invalidDate" duration="2000" text="${translated.toasts.lbl_invalidDate}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="invalidCategory" duration="2000" text="${translated.toasts.lbl_invalidCategory}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="invalidStore" duration="2000" text="${translated.toasts.lbl_invalidStore}"></paper-toast>
@@ -369,7 +368,6 @@ class MainElement extends LitElement {
     loadSettings(this, "historyPage")
 
     this.articleSum = 0
-    this.receiptSum = 0
   }
 
   static get styles() {
@@ -443,6 +441,7 @@ class MainElement extends LitElement {
     .articleSum {
       display: inline-block;
       width: 60px;
+      pointer-events: none;
     }
 
     .assumeArticleSum {

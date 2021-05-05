@@ -20,7 +20,6 @@ class ScanElement extends LitElement {
       storesJson: String,
       storedFile: Object,
       articleSum: Number,
-      receiptSum: Number,
       totalSum: String,
       differenceSum: Number,
       uploadedFile: Object,
@@ -385,7 +384,7 @@ checkValidAndSave(e)
     <paper-toast class= "invalidSums fit-bottom" id="saveToDBError" duration="2500" text="${translated.toasts.lbl_saveError}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="invalidSums" duration="2000" text="${translated.toasts.lbl_invalidSums}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="errorOnUpload" duration="5000" text="${translated.toasts.lbl_errorOnUpload} ${this.errorCode}, ${this.errorText}"></paper-toast>
-    <paper-toast class= "invalidSums fit-bottom" id="differentSums" duration="2000" text="${translated.toasts.lbl_diffrentSums1} ${this.articleSum}€ ${translated.toasts.lbl_diffrentSums2} ${this.receiptSum.toFixed(2)}€ ${translated.toasts.lbl_diffrentSums3}"></paper-toast>
+    <paper-toast class= "invalidSums fit-bottom" id="differentSums" duration="3000" text="${translated.toasts.lbl_diffrentSums1} ${this.articleSum}€ ${translated.toasts.lbl_diffrentSums2} ${this.totalSum}€ ${translated.toasts.lbl_diffrentSums3}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="invalidDate" duration="2000" text="${translated.toasts.lbl_invalidDate}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="invalidCategory" duration="2000" text="${translated.toasts.lbl_invalidCategory}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="invalidStore" duration="2000" text="${translated.toasts.lbl_invalidStore}"></paper-toast>
@@ -398,7 +397,6 @@ checkValidAndSave(e)
     super();
     setPassiveTouchGestures(true);
     loadSettings(this, "scan")
-    this.receiptSum = 0
   }
 
   static get styles() {
@@ -511,6 +509,7 @@ checkValidAndSave(e)
         .articleSum {
           display: inline-block;
           width: 60px;
+          pointer-events: none;
         }
 
         .assumeArticleSum {
