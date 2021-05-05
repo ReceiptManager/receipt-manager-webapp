@@ -2,14 +2,10 @@
     "short_name": "Kassenbon Scanner",
     "icons": [
         {
-            "src": "/img/icon-128.png",
+            "src": "/img/icon-512.png",
             "type": "image/png",
-            "sizes": "144x448"
-        },
-        {
-            "src": "/img/icon-192.png",
-            "type": "image/png",
-            "sizes": "192x192"
+            "sizes": "512x512",
+            "purpose": "maskable any"
         }
     ],
     "start_url": ".",
