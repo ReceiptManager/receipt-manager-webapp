@@ -9,8 +9,8 @@ import './node_modules/@polymer/paper-toast/paper-toast.js';
 import './node_modules/@polymer/paper-icon-button/paper-icon-button.js';
 import './node_modules/@polymer/iron-icon/iron-icon.js';
 import './node_modules/@polymer/iron-icons/iron-icons.js';
-import {showReceipt, addItem, addStoreFromScan, deleteItem, activateDeleteMode, validateCategories, validateStore, validateDate, validateTotal, validateArticles, updateResponseJson, calcDifference, assumeArticleSum, 
-        backendIP, backendPort, openSpinner, closeSpinner, getSelectedCategoryId, closeMobileKeyboard, loadSettings, resetForm, manualInput, translated, backendToken, webPrefix, europeCountries, language} from './functions.js';
+import {showReceipt, openAddStoreDialog, deleteItem, activateDeleteMode, validateCategories, validateStore, validateDate, validateTotal, validateArticles, updateResponseJson, calcDifference, assumeArticleSum, 
+        backendIP, backendPort, openSpinner, closeSpinner, getSelectedCategoryId, closeMobileKeyboard, loadSettings, openCopyDialog, resetForm, manualInput, translated, backendToken, webPrefix, europeCountries, language} from './functions.js';
 
 class ScanElement extends LitElement {
   static get properties() {
@@ -244,7 +244,7 @@ checkValidAndSave(e)
                 })}
               </paper-listbox>
             </paper-dropdown-menu-light>
-            <paper-icon-button icon="add-circle" class="addStore" @click=${() => this.shadowRoot.getElementById("addStore").open()}></paper-icon-button>
+            <paper-icon-button icon="add-circle" class="addStore" @click=${() => openAddStoreDialog(mainPage)}></paper-icon-button>
 
             <paper-input label="${translated.inputLabels.lbl_date}" required="true" id="receiptDate" auto-validate pattern="^(0[1-9]|[12][0-9]|3[01])[.](0[1-9]|1[012])[.](19|20)[0-9]{2}$" value="${this.responseJson.receiptDate}" @change=${() => updateResponseJson(null, "receiptDate", this)} @keyup=${e => closeMobileKeyboard(e, this, "receiptDate")}>
               <iron-icon icon="date-range" slot="suffix"></iron-icon>    
@@ -324,7 +324,7 @@ checkValidAndSave(e)
                 <paper-input class="itemListSum" required="true" auto-validate pattern="((\-|)[0-9]|[0-9]{2}|[0-9]{3})\.[0-9]{2}" id="sum${item[0]}" label="${translated.inputLabels.lbl_price}" value="${itemSum}" @change=${() => updateResponseJson(item[0], "articleSum", this)}  @keyup=${e => closeMobileKeyboard(e, this, "sum" + item[0])}>
                   <div slot="suffix">€</div>
                 </paper-input>
-                <paper-icon-button class="addButton" id="addArticleButton${item[0]}" icon="add-circle" @click=${() => addItem(item[0], this)}></paper-icon-button>
+                <paper-icon-button class="addButton" id="addArticleButton${item[0]}" icon="add-circle" @click=${() => openCopyDialog(item[0], this)}></paper-icon-button>
                 <paper-icon-button class="deleteButton" id="deleteArticleButton${item[0]}" icon="delete" @click=${() => deleteItem(item[0], this)}></paper-icon-button>
               </div>`;
           })}
@@ -370,15 +370,6 @@ checkValidAndSave(e)
     
 
     <!-- On event elements -->
-
-    <paper-dialog id="addStore" class="addStoreDialog">
-      <paper-input class="addStoreInput" required="true" id="newStore" label="${translated.inputLabels.lbl_newStore}"></paper-input>
-      <div class="buttons">
-        <paper-button dialog-confirm>${translated.buttons.lbl_close}</paper-button>  
-        <paper-button @click=${() => addStoreFromScan(this)}>${translated.buttons.lbl_save}</paper-button>
-      </div>
-    </paper-dialog>
-
     <paper-toast class= "uploadToast fit-bottom" id="uploadToastDone" duration="2500" text="${translated.toasts.lbl_uploadDone}"></paper-toast>
     <paper-toast class= "uploadToast fit-bottom" id="saveToDB" duration="2500" text="${translated.toasts.lbl_saveSuccess}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="saveToDBError" duration="2500" text="${translated.toasts.lbl_saveError}"></paper-toast>
@@ -391,6 +382,10 @@ checkValidAndSave(e)
     <paper-toast class= "invalidSums fit-bottom" id="invalidToken" duration="5000" text="${translated.toasts.lbl_invalidToken}"></paper-toast>
     </div>
     `;
+  }
+
+  updated() {
+    scanPage = this;
   }
 
   constructor() {
@@ -482,6 +477,11 @@ checkValidAndSave(e)
           font-size: small;
           margin-left: calc(100% - 95px);
           color: lightgrey;
+        }
+
+        .dialogText
+        {
+
         }
 
         .uploadToast {

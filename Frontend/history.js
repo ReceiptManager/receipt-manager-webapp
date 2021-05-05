@@ -10,8 +10,8 @@ import './node_modules/@polymer/paper-toast/paper-toast.js';
 import './node_modules/@polymer/paper-icon-button/paper-icon-button.js';
 import './node_modules/@polymer/iron-icon/iron-icon.js';
 import './node_modules/@polymer/iron-icons/iron-icons.js';
-import {updateResponseJson, addItem, deleteItem, activateDeleteMode, calcDifference, validateStore, validateDate, validateArticles, validateCategories, validateTotal, backendIP, backendPort, responseChanged, assumeArticleSum, openSpinner, closeSpinner, setMenuIcon, 
-        getSelectedCategoryId, closeMobileKeyboard, loadSettings,language, translated, backendToken, webPrefix, europeCountries}  from './functions.js';
+import {updateResponseJson, deleteItem, activateDeleteMode, calcDifference, validateStore, validateDate, validateArticles, validateCategories, validateTotal, backendIP, backendPort, responseChanged, assumeArticleSum, openSpinner, closeSpinner, setMenuIcon, 
+        getSelectedCategoryId, closeMobileKeyboard, loadSettings,language, translated, backendToken, webPrefix, europeCountries, openCopyDialog}  from './functions.js';
 
 class MainElement extends LitElement {
   static get properties() {
@@ -319,7 +319,7 @@ class MainElement extends LitElement {
                         <div slot="suffix">€</div>
                       </paper-input>
 
-                      <paper-icon-button class="addButton" id="addArticleButton${item[0]}" icon="add-circle" @click=${() => addItem(item[0], this)}></paper-icon-button>
+                      <paper-icon-button class="addButton" id="addArticleButton${item[0]}" icon="add-circle" @click=${() => openCopyDialog(item[0], this)}></paper-icon-button>
                       <paper-icon-button class="deleteButton" id="deleteArticleButton${item[0]}" icon="delete" @click=${() => deleteItem(item[0], this)}></paper-icon-button>
                       </div>
                   `

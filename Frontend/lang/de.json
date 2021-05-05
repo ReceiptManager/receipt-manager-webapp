@@ -3,7 +3,7 @@
     "menu": 
         {"lbl_scan": "Einscannen", "lbl_history": "Verlauf", "lbl_categories": "Kategorien", "lbl_stores": "Supermärkte", "lbl_settings": "Einstellungen"},
     "buttons": 
-        {"lbl_upload": "Hochladen", "lbl_save": "Speichern", "lbl_manual": "Manuell", "lbl_close": "Schließen", "lbl_abort": "Abbrechen"},
+        {"lbl_upload": "Hochladen", "lbl_save": "Speichern", "lbl_manual": "Manuell", "lbl_close": "Schließen", "lbl_abort": "Abbrechen", "lbl_yes": "Ja", "lbl_no": "Nein"},
     "toasts":
         {"lbl_startUpload": "Lade Kassenbon hoch...", "lbl_uploadDone": "Upload abgeschlossen!", "lbl_saveSuccess": "Übergabe an Metabase erfolgreich!", "lbl_saveError": "Übergabe an Metabase fehlgeschlagen!", "lbl_invalidSums": "Summen fehlerhaft, bitte überprüfen!",
         "lbl_diffrentSums1": "Summen der Artikel", "lbl_diffrentSums2": "und Summe des Bons", "lbl_diffrentSums3": "stimmen nicht überein.", "lbl_errorOnUpload": "Upload fehlgeschlagen mit Fehler: ",
@@ -14,5 +14,5 @@
     "inputLabels":
         {"lbl_uploadFile": "Datei hochladen", "lbl_store": "Supermarkt", "lbl_date": "Datum", "lbl_category": "Kategorie", "lbl_article": "Artikel", "lbl_price": "Preis", "lbl_articleSum": "Summe", "lbl_totalPrice": "Gesamtsumme", "lbl_newStore": "Neuer Supermarkt"},
     "texts":
-        {"lbl_articleCount": "Artikelanzahl", "lbl_certDownload": "CA Zertifikat installieren", "lbl_clearCache": "Cache leeren"}
+        {"lbl_articleCount": "Artikelanzahl", "lbl_certDownload": "CA Zertifikat installieren", "lbl_clearCache": "Cache leeren", "lbl_copyLine": "Makierte Zeile kopieren ?"}
 }

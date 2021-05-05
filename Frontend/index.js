@@ -10,7 +10,7 @@ import './node_modules/@polymer/iron-icon/iron-icon.js';
 import './node_modules/@polymer/iron-icons/iron-icons.js';
 import './node_modules/@polymer/iron-icons/maps-icons.js';
 import './node_modules/@polymer/app-layout/app-layout.js';
-import { closeDrawer, openDrawer, setMenuIcon, menuIcon, chooseAddMode, setOpenPage, loadTranslations, translated } from './functions.js';
+import { closeDrawer, openDrawer, setMenuIcon, menuIcon, chooseAddMode, setOpenPage, loadTranslations, translated, showBackground, addItem, addStoreFromScan } from './functions.js';
 import './scann.js';
 import './history.js';
 import './addCategory.js';
@@ -21,7 +21,8 @@ class MainElement extends LitElement {
   static get properties() {
     return {
       menuMode: String,
-      selectedMenu: String
+      selectedMenu: String,
+      copyID: Number,
     };
   }
 
@@ -45,6 +46,22 @@ class MainElement extends LitElement {
     } else if (mode == "settings") {
       this.shadowRoot.getElementById("addButton").style.display = "none";
       this.selectedMenu = "4";
+    }
+  }
+  
+  getCurrentRoot()
+  {
+    if (!this.menuMode ||this.menuMode == "scan")
+    {
+      return scanPage
+    }
+    else if (this.menuMode == "history")
+    {
+      return historyPage
+    }
+    else
+    {
+      return null
     }
   }
 
@@ -84,8 +101,25 @@ class MainElement extends LitElement {
 
         </div>
 
+        <!-- On event elements -->
+        <paper-dialog id="copyLine" class="copyLine">
+            <div class="dialogText" style="margin-left: 10px; font-size: 15px;">${translated.texts.lbl_copyLine}</div>
+            <div class="buttons">
+              <paper-button dialog-confirm @click=${() => showBackground()}>${translated.buttons.lbl_close}</paper-button>  
+              <paper-button @click=${() => addItem(false, this.copyID, this.getCurrentRoot())}>${translated.buttons.lbl_no}</paper-button>
+              <paper-button @click=${() => addItem(true, this.copyID, this.getCurrentRoot())}>${translated.buttons.lbl_yes}</paper-button>
+            </div>
+        </paper-dialog>
+
+        <paper-dialog id="addStore" class="addStoreDialog">
+          <paper-input class="addStoreInput" required="true" id="newStore" label="${translated.inputLabels.lbl_newStore}"></paper-input>
+          <div class="buttons">
+            <paper-button dialog-confirm @click=${() => showBackground()}>${translated.buttons.lbl_close}</paper-button>  
+            <paper-button @click=${() => addStoreFromScan(scanPage)}>${translated.buttons.lbl_save}</paper-button>
+          </div>
+        </paper-dialog>
+
         <paper-toast class= "uploadToast fit-bottom" id="uploadToast" duration="5000" text="${translated.toasts.lbl_startUpload}"></paper-toast>
-        
         <paper-toast class="fit-bottom" id="updateToast" duration="0" text="${translated.toasts.lbl_newVersion}">
           <paper-button id="updateButton" class="yellow-button" @click=${() => servicesPage.toggleUpdate()}>UPDATE</paper-button>
         </paper-toast>

@@ -145,12 +145,50 @@ function storesChanged(t){
     t.requestUpdate()
 }
 
-function addItem(itemId, t) {
-    t.responseJson["receiptItems"].splice(itemId + 1, 0, [itemId + 1, "", ""])
+function addItem(copyItem, itemId, t) {
+
+    mainPage.shadowRoot.getElementById("copyLine").close()
+    showBackground()
+    if (!copyItem)
+    {
+      t.responseJson["receiptItems"].splice(itemId + 1, 0, [itemId + 1, "", ""])
+    }
+    else
+    {
+      let articleCat = t.shadowRoot.getElementById("category" + itemId).value
+      let articleName = t.shadowRoot.getElementById("article" + itemId).value
+      let articleSum = t.shadowRoot.getElementById("sum" + itemId).value
+
+      t.responseJson["receiptItems"].splice(itemId + 1, 0, [itemId + 1, articleName, articleSum, articleCat])
+    }
+    
+    t.copyID = null
     t.responseJson = updateItemIDs(t)
     
     responseChanged(t)
 }
+
+function openCopyDialog (itemId, t)
+{
+    hideBackground()
+    mainPage.shadowRoot.getElementById("copyLine").open()
+    mainPage.copyID = itemId
+}
+
+function hideBackground()
+{
+  let bodyContainer = mainPage.shadowRoot.getElementById("bodyContainer")
+  bodyContainer.style.opacity = "20%"
+  bodyContainer.style["pointer-events"] = "none"
+}
+
+function showBackground()
+{
+  let bodyContainer = mainPage.shadowRoot.getElementById("bodyContainer")
+  bodyContainer.style.opacity = "100%"
+  bodyContainer.style["pointer-events"] = "auto"
+}
+
 
 function addCategory(event, t, elementId)
 {
@@ -226,9 +264,16 @@ function addStore(event, t, elementId)
   }
 }
 
+function openAddStoreDialog(t)
+{
+  hideBackground()
+  t.shadowRoot.getElementById("addStore").open()
+}
+
 function addStoreFromScan (t)
 {
-  var newStore = t.shadowRoot.getElementById("newStore")
+  showBackground()
+  var newStore = mainPage.shadowRoot.getElementById("newStore")
   
   if (newStore.value)
   {
@@ -244,7 +289,7 @@ function addStoreFromScan (t)
     };
 
     xhr.send()
-    t.shadowRoot.getElementById("addStore").close()
+    mainPage.shadowRoot.getElementById("addStore").close()
     newStore.value = ""
   }
 }
@@ -527,10 +572,7 @@ function assumeArticleSum (t)
 
 function openSpinner ()
 {
-  let bodyContainer = mainPage.shadowRoot.getElementById("bodyContainer")
-
-  bodyContainer.style.opacity = "20%"
-  bodyContainer.style["pointer-events"] = "none"
+  hideBackground()
 
   mainPage.shadowRoot.getElementById("loadingSpinner").active = true
   mainPage.shadowRoot.getElementById("menuButton").style["pointer-events"] = "none"
@@ -538,10 +580,7 @@ function openSpinner ()
 
 function closeSpinner ()
 {
-  let bodyContainer = mainPage.shadowRoot.getElementById("bodyContainer")
-
-  bodyContainer.style.opacity = "100%"
-  bodyContainer.style["pointer-events"] = "auto"
+  showBackground()
 
   mainPage.shadowRoot.getElementById("loadingSpinner").active = null;
   mainPage.shadowRoot.getElementById("menuButton").style["pointer-events"] = "auto"
@@ -584,4 +623,4 @@ function closeMobileKeyboard (event, t, id)
 }
 
 export {showReceipt, responseChanged, storesChanged, addItem, addStoreFromScan, updateItemIDs, deleteItem, activateDeleteMode, validateCategories, validateStore, validateDate, validateTotal, validateArticles, updateResponseJson, closeDrawer, openDrawer, calcDifference, assumeArticleSum, openSpinner, closeSpinner, setMenuIcon, chooseAddMode, setOpenPage, 
-        addCategory, addStore,getSelectedCategoryId, manualInput, loadTranslations, resetForm, closeMobileKeyboard, loadSettings, menuIcon, language,backendIP, backendPort, translated, backendToken, webPrefix, europeCountries}
+        openAddStoreDialog, showBackground, openCopyDialog, addCategory, addStore,getSelectedCategoryId, manualInput, loadTranslations, resetForm, closeMobileKeyboard, loadSettings, menuIcon, language,backendIP, backendPort, translated, backendToken, webPrefix, europeCountries}
