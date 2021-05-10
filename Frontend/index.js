@@ -65,6 +65,16 @@ class MainElement extends LitElement {
     }
   }
 
+  triggerDialog(elementId) 
+  {
+    let dialogState = this.shadowRoot.getElementById(elementId).ariaHidden
+  
+    if (dialogState == "true")
+    {
+        showBackground();
+    }
+  }
+
   render() {
     return html`
 
@@ -102,7 +112,7 @@ class MainElement extends LitElement {
         </div>
 
         <!-- On event elements -->
-        <paper-dialog id="copyLine" class="copyLine">
+        <paper-dialog id="copyLine" class="copyLine" @opened-changed=${() => this.triggerDialog("copyLine")}>
             <div class="dialogText" style="margin-left: 10px; font-size: 15px;">${translated.texts.lbl_copyLine}</div>
             <div class="buttons">
               <paper-button dialog-confirm @click=${() => showBackground()}>${translated.buttons.lbl_close}</paper-button>  
@@ -111,7 +121,7 @@ class MainElement extends LitElement {
             </div>
         </paper-dialog>
 
-        <paper-dialog id="addStore" class="addStoreDialog">
+        <paper-dialog id="addStore" class="addStoreDialog" @opened-changed=${() => this.triggerDialog("addStore")}>
           <paper-input class="addStoreInput" required="true" id="newStore" label="${translated.inputLabels.lbl_newStore}"></paper-input>
           <div class="buttons">
             <paper-button dialog-confirm @click=${() => showBackground()}>${translated.buttons.lbl_close}</paper-button>  

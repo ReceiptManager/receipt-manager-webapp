@@ -157,7 +157,7 @@ function addItem(copyItem, itemId, t) {
     {
       let articleCat = t.shadowRoot.getElementById("category" + itemId).value
       let articleName = t.shadowRoot.getElementById("article" + itemId).value
-      let articleSum = t.shadowRoot.getElementById("sum" + itemId).value
+      let articleSum = t.shadowRoot.getElementById("sum" + itemId).value.replace(',','.')
 
       t.responseJson["receiptItems"].splice(itemId + 1, 0, [itemId + 1, articleName, articleSum, articleCat])
     }
@@ -210,7 +210,7 @@ function addCategory(event, t, elementId)
       }
   
       var xhr = new XMLHttpRequest();
-      xhr.open("POST", "http://" + backendIP + ":" + backendPort + "/api/addValue?token=" + backendToken + "&toAddArray=categories&toAddValue=" + newCat + "&id=" + elementId, true);
+      xhr.open("POST", webPrefix + backendIP + ":" + backendPort + "/api/addValue?token=" + backendToken + "&toAddArray=categories&toAddValue=" + newCat + "&id=" + elementId, true);
   
       xhr.onerror = function () {
         console.error("Error with code " + xhr.status);
@@ -247,7 +247,7 @@ function addStore(event, t, elementId)
       }
   
       var xhr = new XMLHttpRequest();
-      xhr.open("POST", "http://" + backendIP + ":" + backendPort + "/api/addValue?token=" + backendToken + "&toAddArray=stores&toAddValue=" + newStore + "&id=" + elementId, true);
+      xhr.open("POST", webPrefix + backendIP + ":" + backendPort + "/api/addValue?token=" + backendToken + "&toAddArray=stores&toAddValue=" + newStore + "&id=" + elementId, true);
   
       xhr.onerror = function () {
         console.error("Error with code " + xhr.status);
@@ -282,7 +282,7 @@ function addStoreFromScan (t)
     storesChanged(t);
 
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://" + backendIP + ":" + backendPort + "/api/addValue?token=" + backendToken + "&toAddArray=stores&toAddValue=" + newStore.value + "&id=", true);
+    xhr.open("POST", webPrefix + backendIP + ":" + backendPort + "/api/addValue?token=" + backendToken + "&toAddArray=stores&toAddValue=" + newStore.value + "&id=", true);
 
     xhr.onerror = function () {
       console.error("Error with code " + xhr.status);
@@ -547,6 +547,8 @@ function openDrawer(t)
     historyPage.shadowRoot.getElementById("mainContainerHistory").style.display = null
     historyPage.shadowRoot.getElementById("mainContainerDetails").style.display = "none"
     historyPage.responseJson = null
+
+    window.scrollTo(0,0)
 
     setMenuIcon("menu")
     mainPage.requestUpdate()

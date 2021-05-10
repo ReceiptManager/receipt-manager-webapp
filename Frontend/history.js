@@ -330,13 +330,13 @@ class MainElement extends LitElement {
           
           <paper-icon-button icon="create" class="extraButtons" @click=${() => activateDeleteMode(this)}></paper-icon-button>
           <paper-icon-button class="assumeArticleSum extraButtons" icon="play-for-work" @click=${() => assumeArticleSum(this)}></paper-icon-button>
-          <paper-input class="articleSum" class="extraButtons" required="true" auto-validate pattern="([0-9]|[0-9]{2})\.[0-9]{2}" id="articleSum" label="${translated.inputLabels.lbl_articleSum}" value="${this.articleSum}" @keyup=${e => closeMobileKeyboard(e, this, "articleSum")}>
+          <paper-input class="articleSum" class="extraButtons" required="true" auto-validate pattern="([0-9]|[0-9]{2}|[0-9]{3})\.[0-9]{2}" id="articleSum" label="${translated.inputLabels.lbl_articleSum}" value="${this.articleSum}" @keyup=${e => closeMobileKeyboard(e, this, "articleSum")}>
             <div slot="suffix">€</div>
           </paper-input>
 
           <div class="${differenceCSS}" id="differenceSum">${this.differenceSum}</div>
 
-          <paper-input label="${translated.inputLabels.lbl_totalPrice}" required="true" id="receiptTotal" auto-validate pattern="([0-9]|[0-9]{2})\.[0-9]{2}" value="${this.totalSum}" @change=${() => updateResponseJson(null, "receiptTotal", this)} @keyup=${e => closeMobileKeyboard(e, this, "receiptTotal")}>
+          <paper-input label="${translated.inputLabels.lbl_totalPrice}" required="true" id="receiptTotal" auto-validate pattern="([0-9]|[0-9]{2}|[0-9]{3})\.[0-9]{2}" value="${this.totalSum}" @change=${() => updateResponseJson(null, "receiptTotal", this)} @keyup=${e => closeMobileKeyboard(e, this, "receiptTotal")}>
             <iron-icon icon="euro-symbol" slot="suffix"></iron-icon>  
           </paper-input>
 

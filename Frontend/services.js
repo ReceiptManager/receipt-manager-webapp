@@ -13,8 +13,13 @@ class MainElement extends LitElement {
     if ('serviceWorker' in navigator) 
     {
       this.workBox = new Workbox('/service-worker.js');
-
       this.workBox.addEventListener('waiting', () => this.showUpdateBar());
+      
+      this.workBox.addEventListener('message', async (event) => {
+        if (event.data.meta === 'workbox-broadcast-update') {
+          this.showUpdateBar()
+        }
+      });
 
       this.workBox.register()
     }
