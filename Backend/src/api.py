@@ -40,7 +40,6 @@ def first():
 
 @app.before_request
 def before_request():
-    print (request.endpoint)
     if request.endpoint in ('static', 'index'):
         return
 
