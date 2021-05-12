@@ -408,6 +408,26 @@ def create_mssql_table(conn, sql_query):
     except pyodbc.Error as e:
         print(e)
 
+def delete_receipt(receipt_id):
+    conn, cursor = load_db_conn()
+    
+    sql_query = "DELETE FROM receipts WHERE ID = ?"
+    if cfg["dbMode"] == "mysql":
+        sql_query = convert_to_mysql_query(sql_query)
+    cursor.execute(sql_query, [receipt_id])
+
+    sql_query = "DELETE FROM purchasesArticles WHERE ID = ?"
+    if cfg["dbMode"] == "mysql":
+        sql_query = convert_to_mysql_query(sql_query)
+    cursor.execute(sql_query, [receipt_id])
+
+    sql_query = "DELETE FROM items where id not in (select itemid from purchasesArticles)"
+    if cfg["dbMode"] == "mysql":
+        sql_query = convert_to_mysql_query(sql_query)
+    cursor.execute(sql_query)
+
+    conn.commit()
+    conn.close()
 
 def get_category_id(category_name):
     conn, cursor = load_db_conn()
@@ -426,7 +446,6 @@ def get_category_id(category_name):
         category_id = None
 
     return category_id
-
 
 def get_store_id(store_name):
     conn, cursor = load_db_conn()

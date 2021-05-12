@@ -264,10 +264,43 @@ function addStore(event, t, elementId)
   }
 }
 
-function openAddStoreDialog(t)
+function openDialog(t, elementId)
 {
   hideBackground()
-  t.shadowRoot.getElementById("addStore").open()
+  t.shadowRoot.getElementById(elementId).open()
+}
+
+function deleteReceipt(t, receiptId)
+{
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", webPrefix + backendIP + ":" + backendPort + "/api/deleteReceiptFromDB?token=" + backendToken + "&purchaseID=" + receiptId, true);
+
+  xhr.onerror = function () 
+  {
+    historyPage.shadowRoot.getElementById("receiptDeletionError").open()
+    t.shadowRoot.getElementById("deleteReceipt").close()
+    console.error("Error with code " + xhr.status);
+  };
+
+  xhr.onload = function ()
+  {
+    if (xhr.status == 200)
+    {
+      t.shadowRoot.getElementById("deleteReceipt").close()
+      historyPage.shadowRoot.getElementById("receiptDeleted").open()
+      historyPage.responseJson = null
+      historyPage.getHistoryPurchases()
+      historyPage.shadowRoot.getElementById("mainContainerHistory").style.display = null
+      historyPage.shadowRoot.getElementById("mainContainerDetails").style.display = "none"
+    }
+    else
+    {
+      historyPage.shadowRoot.getElementById("receiptDeletionError").open()
+      t.shadowRoot.getElementById("deleteReceipt").close()
+    }
+  }
+
+  xhr.send()
 }
 
 function addStoreFromScan (t)
@@ -414,7 +447,7 @@ function validateDate(t)
   var dateValid = true
   var dateField = t.shadowRoot.getElementById("receiptDate")
   var isInValid = dateField.invalid
-  var regEx = /^(0[1-9]|[12][0-9]|3[01])[.](0[1-9]|1[012])[.](19|20)[0-9]{2}$/
+  var regEx = /^((\d{4}-\d{2}-\d{2})|(\d{2}\.\d{2}\.\d{4}))$/
 
   if (isInValid && !dateField.value.match(regEx))
   {
@@ -507,6 +540,13 @@ function updateResponseJson (itemId, mode, t)
   else if (mode == "receiptDate")
   {
     var updateVal = t.shadowRoot.getElementById("receiptDate").value;
+
+    if (updateVal.match('-'))
+    {
+      var dateParts = updateVal.split("-");
+      updateVal = dateParts[2] + "." + dateParts[1] + "." + dateParts[0]
+    }
+
     t.responseJson["receiptDate"] = updateVal;
   }
   else if (mode == "receiptTotal")
@@ -624,5 +664,19 @@ function closeMobileKeyboard (event, t, id)
   }
 }
 
+function formatDate(date) {
+  var d = new Date(date),
+      month = '' + (d.getMonth() + 1),
+      day = '' + d.getDate(),
+      year = d.getFullYear();
+
+  if (month.length < 2) 
+      month = '0' + month;
+  if (day.length < 2) 
+      day = '0' + day;
+
+  return [year, month, day].join('-');
+}
+
 export {showReceipt, responseChanged, storesChanged, addItem, addStoreFromScan, updateItemIDs, deleteItem, activateDeleteMode, validateCategories, validateStore, validateDate, validateTotal, validateArticles, updateResponseJson, closeDrawer, openDrawer, calcDifference, assumeArticleSum, openSpinner, closeSpinner, setMenuIcon, chooseAddMode, setOpenPage, 
-        openAddStoreDialog, showBackground, openCopyDialog, addCategory, addStore,getSelectedCategoryId, manualInput, loadTranslations, resetForm, closeMobileKeyboard, loadSettings, menuIcon, language,backendIP, backendPort, translated, backendToken, webPrefix, europeCountries}
+        deleteReceipt, formatDate, openDialog, showBackground, openCopyDialog, addCategory, addStore,getSelectedCategoryId, manualInput, loadTranslations, resetForm, closeMobileKeyboard, loadSettings, menuIcon, language,backendIP, backendPort, translated, backendToken, webPrefix, europeCountries}

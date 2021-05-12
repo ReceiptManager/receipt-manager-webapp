@@ -135,6 +135,11 @@ class MainElement extends LitElement {
       .invalid {
         --paper-toast-background-color: red;
       }
+
+      paper-toast {
+        text-align: center;
+        font-family: Roboto;
+      }
     `;
   }
 

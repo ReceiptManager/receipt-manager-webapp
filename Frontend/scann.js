@@ -9,8 +9,8 @@ import './node_modules/@polymer/paper-toast/paper-toast.js';
 import './node_modules/@polymer/paper-icon-button/paper-icon-button.js';
 import './node_modules/@polymer/iron-icon/iron-icon.js';
 import './node_modules/@polymer/iron-icons/iron-icons.js';
-import {showReceipt, openAddStoreDialog, deleteItem, activateDeleteMode, validateCategories, validateStore, validateDate, validateTotal, validateArticles, updateResponseJson, calcDifference, assumeArticleSum, 
-        backendIP, backendPort, openSpinner, closeSpinner, getSelectedCategoryId, closeMobileKeyboard, loadSettings, openCopyDialog, resetForm, manualInput, translated, backendToken, webPrefix, europeCountries, language} from './functions.js';
+import {showReceipt, openDialog, deleteItem, activateDeleteMode, validateCategories, validateStore, validateDate, validateTotal, validateArticles, updateResponseJson, calcDifference, assumeArticleSum, 
+        formatDate, backendIP, backendPort, openSpinner, closeSpinner, getSelectedCategoryId, closeMobileKeyboard, loadSettings, openCopyDialog, resetForm, manualInput, translated, backendToken, webPrefix, europeCountries, language} from './functions.js';
 
 class ScanElement extends LitElement {
   static get properties() {
@@ -233,6 +233,12 @@ checkValidAndSave(e)
       var differenceCSS
     }
 
+    if (this.responseJson)
+    {
+      var dateParts = this.responseJson.receiptDate.split(".");
+      var hiddenDate = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]); 
+    }
+
     return html`
     <div class="mainContainer" id="mainContainer">
       ${this.responseJson ? html`
@@ -244,10 +250,9 @@ checkValidAndSave(e)
                 })}
               </paper-listbox>
             </paper-dropdown-menu-light>
-            <paper-icon-button icon="add-circle" class="addStore" @click=${() => openAddStoreDialog(mainPage)}></paper-icon-button>
+            <paper-icon-button icon="add-circle" class="addStore" @click=${() => openDialog(mainPage, "addStore")}></paper-icon-button>
 
-            <paper-input label="${translated.inputLabels.lbl_date}" required="true" id="receiptDate" auto-validate pattern="^(0[1-9]|[12][0-9]|3[01])[.](0[1-9]|1[012])[.](19|20)[0-9]{2}$" value="${this.responseJson.receiptDate}" @change=${() => updateResponseJson(null, "receiptDate", this)} @keyup=${e => closeMobileKeyboard(e, this, "receiptDate")}>
-              <iron-icon icon="date-range" slot="suffix"></iron-icon>    
+            <paper-input type="date" label="${translated.inputLabels.lbl_date}" required="true" id="receiptDate" auto-validate pattern="^(0[1-9]|[12][0-9]|3[01])[.](0[1-9]|1[012])[.](19|20)[0-9]{2}$" value=${formatDate(hiddenDate)} @change=${() => updateResponseJson(null, "receiptDate", this)} @keyup=${e => closeMobileKeyboard(e, this, "receiptDate")}> 
             </paper-input>
         
           ${this.responseJson.receiptItems.map(item => {
@@ -321,7 +326,7 @@ checkValidAndSave(e)
                 </paper-dropdown-menu-light>
 
                 <paper-input class="itemListArticle" required="true" id="article${item[0]}" label="${translated.inputLabels.lbl_article}" value="${item[1]}" @change=${() => updateResponseJson(item[0], "article", this)}  @keyup=${e => closeMobileKeyboard(e, this, "article" + item[0])}></paper-input>
-                <paper-input class="itemListSum" required="true" auto-validate pattern="((\-|)[0-9]|[0-9]{2}|[0-9]{3})\.[0-9]{2}" id="sum${item[0]}" label="${translated.inputLabels.lbl_price}" value="${itemSum}" @change=${() => updateResponseJson(item[0], "articleSum", this)}  @keyup=${e => closeMobileKeyboard(e, this, "sum" + item[0])}>
+                <paper-input type="text" class="itemListSum" required="true" auto-validate pattern="((\-|)[0-9]|[0-9]{2}|[0-9]{3})\.[0-9]{2}" id="sum${item[0]}" label="${translated.inputLabels.lbl_price}" value="${itemSum}" @change=${() => updateResponseJson(item[0], "articleSum", this)}  @keyup=${e => closeMobileKeyboard(e, this, "sum" + item[0])}>
                   <div slot="suffix">€</div>
                 </paper-input>
                 <paper-icon-button class="addButton" id="addArticleButton${item[0]}" icon="add-circle" @click=${() => openCopyDialog(item[0], this)}></paper-icon-button>
@@ -334,7 +339,7 @@ checkValidAndSave(e)
           
           <paper-icon-button icon="arrow-drop-down" class="extraButtons showReceipt" id="showReceiptButton" @click=${() => showReceipt(this)} style=${this.manualInput ? css `visibility: hidden;`: css ``}></paper-icon-button>
           <paper-icon-button class="assumeArticleSum extraButtons" icon="play-for-work" @click=${() => assumeArticleSum(this)}></paper-icon-button>
-          <paper-input class="articleSum" class="extraButtons" required="true" auto-validate pattern="([0-9]|[0-9]{2}|[0-9]{3})\.[0-9]{2}" id="articleSum" label="${translated.inputLabels.lbl_articleSum}" value="${this.articleSum}" @keyup=${e => closeMobileKeyboard(e, this, "articleSum")}>
+          <paper-input type="text" class="articleSum" class="extraButtons" required="true" auto-validate pattern="([0-9]|[0-9]{2}|[0-9]{3})\.[0-9]{2}" id="articleSum" label="${translated.inputLabels.lbl_articleSum}" value="${this.articleSum}" @keyup=${e => closeMobileKeyboard(e, this, "articleSum")}>
             <div slot="suffix">€</div>
           </paper-input>
           
@@ -479,11 +484,6 @@ checkValidAndSave(e)
           color: lightgrey;
         }
 
-        .dialogText
-        {
-
-        }
-
         .uploadToast {
           --paper-toast-background-color: green;
         }
@@ -522,6 +522,11 @@ checkValidAndSave(e)
         .showReceipt {
           transition: all 0.75s;
           padding: 3px;
+        }
+
+        paper-toast {
+          text-align: center;
+          font-family: Roboto;
         }
     `;
   }

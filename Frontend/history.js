@@ -1,4 +1,5 @@
 import { LitElement, html, css } from "./node_modules/lit-element/lit-element.js";
+import  './node_modules/@polymer/iron-dropdown/iron-dropdown.js'
 import {setPassiveTouchGestures} from '@polymer/polymer/lib/utils/settings.js';
 import "./node_modules/@polymer/paper-input/paper-input.js";
 import "./node_modules/@polymer/paper-button/paper-button.js";
@@ -11,7 +12,7 @@ import './node_modules/@polymer/paper-icon-button/paper-icon-button.js';
 import './node_modules/@polymer/iron-icon/iron-icon.js';
 import './node_modules/@polymer/iron-icons/iron-icons.js';
 import {updateResponseJson, deleteItem, activateDeleteMode, calcDifference, validateStore, validateDate, validateArticles, validateCategories, validateTotal, backendIP, backendPort, responseChanged, assumeArticleSum, openSpinner, closeSpinner, setMenuIcon, 
-        getSelectedCategoryId, closeMobileKeyboard, loadSettings,language, translated, backendToken, webPrefix, europeCountries, openCopyDialog}  from './functions.js';
+        openDialog, formatDate, getSelectedCategoryId, closeMobileKeyboard, loadSettings,language, translated, backendToken, webPrefix, europeCountries, openCopyDialog}  from './functions.js';
 
 class MainElement extends LitElement {
   static get properties() {
@@ -19,6 +20,7 @@ class MainElement extends LitElement {
       historyPurchases: Object,
       responseJson: Object,
       articleSum: Number,
+      openedReceiptId: Number,
     };
   }
   getStaticData(arrayName){
@@ -143,6 +145,7 @@ class MainElement extends LitElement {
   openPurchaseDetails (purchaseId, location, totalSum, date)
   {
     openSpinner()
+    this.openedReceiptId = purchaseId
     setMenuIcon("historyDetail")
     mainPage.requestUpdate()
     var instance = this
@@ -193,6 +196,12 @@ class MainElement extends LitElement {
       }
     }
 
+    if (this.responseJson)
+    {
+      var dateParts = this.responseJson.receiptDate.split(".");
+      var hiddenDate = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]); 
+    }
+
     return html`
     <div class="mainContainer" id="mainContainerHistory">
 
@@ -241,8 +250,7 @@ class MainElement extends LitElement {
               </paper-listbox>
             </paper-dropdown-menu-light>
 
-            <paper-input label="${translated.inputLabels.lbl_date}" required="true" id="receiptDate" auto-validate pattern="^(0[1-9]|[12][0-9]|3[01])[.](0[1-9]|1[012])[.](19|20)[0-9]{2}$" value="${this.responseJson.receiptDate}" @change=${() => updateResponseJson(null, "receiptDate", this)} @keyup=${e => closeMobileKeyboard(e, this, "receiptDate")}>
-              <iron-icon icon="date-range" slot="suffix"></iron-icon>    
+            <paper-input type="date" label="${translated.inputLabels.lbl_date}" required="true" id="receiptDate"  pattern="^(0[1-9]|[12][0-9]|3[01])[.](0[1-9]|1[012])[.](19|20)[0-9]{2}$" value=${formatDate(hiddenDate)} @change=${() => updateResponseJson(null, "receiptDate", this)} @keyup=${e => closeMobileKeyboard(e, this, "receiptDate")}>
             </paper-input>
 
             ${this.responseJson["receiptItems"].map(item => {
@@ -315,7 +323,7 @@ class MainElement extends LitElement {
                       </paper-dropdown-menu-light>
 
                       <paper-input class="itemListArticle" required="true" id="article${item[0]}" label="${translated.inputLabels.lbl_article}" value="${item[1]}" @change=${() => updateResponseJson(item[0], "article", this)} @keyup=${e => closeMobileKeyboard(e, this, "article" + item[0])}></paper-input>
-                      <paper-input class="itemListSum" required="true" auto-validate pattern="((\-|)[0-9]|[0-9]{2})\.[0-9]{2}" id="sum${item[0]}" label="${translated.inputLabels.lbl_price}" value="${itemSum}" @change=${() => updateResponseJson(item[0], "articleSum", this)} @keyup=${e => closeMobileKeyboard(e, this, "sum" + item[0])}>
+                      <paper-input type="text" class="itemListSum" required="true" auto-validate pattern="((\-|)[0-9]|[0-9]{2})\.[0-9]{2}" id="sum${item[0]}" label="${translated.inputLabels.lbl_price}" value="${itemSum}" @change=${() => updateResponseJson(item[0], "articleSum", this)} @keyup=${e => closeMobileKeyboard(e, this, "sum" + item[0])}>
                         <div slot="suffix">€</div>
                       </paper-input>
 
@@ -330,7 +338,7 @@ class MainElement extends LitElement {
           
           <paper-icon-button icon="create" class="extraButtons" @click=${() => activateDeleteMode(this)}></paper-icon-button>
           <paper-icon-button class="assumeArticleSum extraButtons" icon="play-for-work" @click=${() => assumeArticleSum(this)}></paper-icon-button>
-          <paper-input class="articleSum" class="extraButtons" required="true" auto-validate pattern="([0-9]|[0-9]{2}|[0-9]{3})\.[0-9]{2}" id="articleSum" label="${translated.inputLabels.lbl_articleSum}" value="${this.articleSum}" @keyup=${e => closeMobileKeyboard(e, this, "articleSum")}>
+          <paper-input type="text" class="articleSum" class="extraButtons" required="true" auto-validate pattern="([0-9]|[0-9]{2}|[0-9]{3})\.[0-9]{2}" id="articleSum" label="${translated.inputLabels.lbl_articleSum}" value="${this.articleSum}" @keyup=${e => closeMobileKeyboard(e, this, "articleSum")}>
             <div slot="suffix">€</div>
           </paper-input>
 
@@ -340,11 +348,14 @@ class MainElement extends LitElement {
             <iron-icon icon="euro-symbol" slot="suffix"></iron-icon>  
           </paper-input>
 
-          <paper-button raised class="buttons" @click=${this.checkValidAndUpdate}><iron-icon icon="send"></iron-icon>Speichern</paper-button>
+          <paper-button raised class="buttons" @click=${this.checkValidAndUpdate}><iron-icon icon="send"></iron-icon>${translated.buttons.lbl_save}</paper-button>
+          <paper-button raised class="buttons" @click=${() => openDialog(mainPage, "deleteReceipt")}><iron-icon icon="delete-forever"></iron-icon>${translated.buttons.lbl_delete}</paper-button>
         ` 
         : html ``
       }
     </div>
+
+
 
     <paper-toast class= "uploadToast fit-bottom" id="saveToDB" duration="2500" text="${translated.toasts.lbl_saveSuccess}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="saveToDBError" duration="2500" text="${translated.toasts.lbl_saveError}"></paper-toast>
@@ -354,6 +365,8 @@ class MainElement extends LitElement {
     <paper-toast class= "invalidSums fit-bottom" id="invalidCategory" duration="2000" text="${translated.toasts.lbl_invalidCategory}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="invalidStore" duration="2000" text="${translated.toasts.lbl_invalidStore}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="invalidToken" duration="5000" text="${translated.toasts.lbl_invalidToken}"></paper-toast>
+    <paper-toast class= "uploadToast fit-bottom" id="receiptDeleted" duration="2000" text="${translated.toasts.lbl_receiptDeleted}"></paper-toast>
+    <paper-toast class= "invalidSums fit-bottom" id="receiptDeletionError" duration="2000" text="${translated.toasts.lbl_receiptDeletionFailed}"></paper-toast>
     `;
   }
 
@@ -487,6 +500,11 @@ class MainElement extends LitElement {
 
     .invalidSums {
       --paper-toast-background-color: red;
+    }
+
+    paper-toast {
+      text-align: center;
+      font-family: Roboto;
     }
     `;
   }

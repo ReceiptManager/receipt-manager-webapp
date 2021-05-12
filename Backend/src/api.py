@@ -3,7 +3,7 @@ import uuid
 from datetime import datetime
 
 import requests
-from flask import Flask, request, send_from_directory
+from flask import Flask, request, send_from_directory, redirect, url_for
 from flask_cors import CORS, cross_origin
 
 from util import (
@@ -16,6 +16,7 @@ from util import (
     get_store_id,
     load_conf,
     load_db_conn,
+    delete_receipt
 )
 
 app = Flask(
@@ -37,6 +38,18 @@ def first():
     cfg = load_conf()
     api_token = check_existing_token()
 
+@app.before_request
+def before_request():
+    print (request.endpoint)
+    if request.endpoint in ('static', 'index'):
+        return
+
+    if not request.args:
+        return "No token provided! Add &token= to URL", 401
+
+    if api_token != request.args["token"]:
+        return "Unauthorized", 401
+
 
 @app.route("/", methods=["GET"])
 def index():
@@ -46,9 +59,6 @@ def index():
 @app.route("/api/upload", methods=["POST", "OPTIONS"])
 @cross_origin(origin="*", headers=["Content-Type"])
 def upload():
-    if api_token != request.args["token"]:
-        return "Unauthorized", 401
-
     file = request.files["file"]
     file_name = file.filename
 
@@ -125,9 +135,6 @@ def upload():
 @app.route("/api/getHistory", methods=["GET", "OPTIONS"])
 @cross_origin(origin="*", headers=["Content-Type"])
 def get_history():
-    if api_token != request.args["token"]:
-        return "Unthorized", 401
-
     conn, cursor = load_db_conn()
     history_json = []
 
@@ -165,9 +172,6 @@ def get_history():
 @app.route("/api/getHistoryDetails", methods=["GET", "OPTIONS"])
 @cross_origin(origin="*", headers=["Content-Type"])
 def get_history_details():
-    if api_token != request.args["token"]:
-        return "Unthorized", 401
-
     purchase_id = request.args["purchaseID"]
 
     conn, cursor = load_db_conn()
@@ -231,9 +235,6 @@ def get_history_details():
 @app.route("/api/getValue", methods=["GET", "OPTIONS"])
 @cross_origin(origin="*", headers=["Content-Type"])
 def get_categories():
-    if api_token != request.args["token"]:
-        return "Unthorized", 401
-
     get_values_from = request.args["getValuesFrom"]
 
     ret_json = get_data_from_db(get_values_from)
@@ -244,9 +245,6 @@ def get_categories():
 @app.route("/api/addValue", methods=["POST", "OPTIONS"])
 @cross_origin(origin="*", headers=["Content-Type"])
 def add_value():
-    if api_token != request.args["token"]:
-        return "Unauthorized", 401
-
     to_add_array = request.args["toAddArray"]
     to_add_value = request.args["toAddValue"]
     item_id = request.args["id"]
@@ -259,9 +257,6 @@ def add_value():
 @app.route("/api/deleteValue", methods=["POST", "OPTIONS"])
 @cross_origin(origin="*", headers=["Content-Type"])
 def delete_value():
-    if api_token != request.args["token"]:
-        return "Unauthorized", 401
-
     table_name = request.args["tableName"]
     item_id = request.args["id"]
 
@@ -269,13 +264,18 @@ def delete_value():
 
     return "Done!"
 
+@app.route("/api/deleteReceiptFromDB", methods=["POST", "OPTIONS"])
+@cross_origin(origin="*", headers=["Content-Type"])
+def delete_receipt_from_db():
+    receipt_id = request.args["purchaseID"]
+
+    delete_receipt(receipt_id)
+
+    return "Done!"
 
 @app.route("/api/updateReceiptToDB", methods=["POST", "OPTIONS"])
 @cross_origin(origin="*", headers=["Content-Type"])
 def update_receipt_to_db():
-    if api_token != request.args["token"]:
-        return "Unthorized", 401
-
     post_string = json.dumps(request.get_json())
     post_json = json.loads(post_string)
 
@@ -289,28 +289,14 @@ def update_receipt_to_db():
     receipt_date = datetime.strptime(receipt_date, "%d.%m.%Y")
     receipt_date = receipt_date.strftime("%m-%d-%Y")
 
-    # Delete old values
-    sql_query = "DELETE FROM receipts WHERE ID = ?"
-    if cfg["dbMode"] == "mysql":
-        sql_query = convert_to_mysql_query(sql_query)
-
-    cursor.execute(sql_query, [receipt_id])
-
-    sql_query = "DELETE FROM purchasesArticles WHERE ID = ?"
-    if cfg["dbMode"] == "mysql":
-        sql_query = convert_to_mysql_query(sql_query)
-    cursor.execute(sql_query, [receipt_id])
-
-    sql_query = "DELETE FROM items where id IN (select itemid from purchasesArticles where id = ?)"
-    if cfg["dbMode"] == "mysql":
-        sql_query = convert_to_mysql_query(sql_query)
-    cursor.execute(sql_query, [receipt_id])
+    # Clean old db data
+    delete_receipt(receipt_id)
 
     # Write article positions
     for article in post_json["receiptItems"]:
-        article_id = int(str(uuid.uuid1().int)[:8])
         article_name = article[1]
         article_sum = article[2]
+        article_id = int(str(uuid.uuid1().int)[:8])
         article_category_id = get_category_id(article[3])
 
         sql_query = "INSERT INTO items values (?,?,?,?)"
@@ -346,9 +332,6 @@ def update_receipt_to_db():
 @app.route("/api/writeReceiptToDB", methods=["POST", "OPTIONS"])
 @cross_origin(origin="*", headers=["Content-Type"])
 def write_receipt_to_db():
-    if api_token != request.args["token"]:
-        return "Unthorized", 401
-
     post_string = json.dumps(request.get_json())
     post_json = json.loads(post_string)
 

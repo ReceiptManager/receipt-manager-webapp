@@ -10,7 +10,7 @@ import './node_modules/@polymer/iron-icon/iron-icon.js';
 import './node_modules/@polymer/iron-icons/iron-icons.js';
 import './node_modules/@polymer/iron-icons/maps-icons.js';
 import './node_modules/@polymer/app-layout/app-layout.js';
-import { closeDrawer, openDrawer, setMenuIcon, menuIcon, chooseAddMode, setOpenPage, loadTranslations, translated, showBackground, addItem, addStoreFromScan } from './functions.js';
+import { closeDrawer, openDrawer, setMenuIcon, menuIcon, chooseAddMode, setOpenPage, loadTranslations, translated, showBackground, addItem, addStoreFromScan, deleteReceipt } from './functions.js';
 import './scann.js';
 import './history.js';
 import './addCategory.js';
@@ -133,6 +133,14 @@ class MainElement extends LitElement {
         <paper-toast class="fit-bottom" id="updateToast" duration="0" text="${translated.toasts.lbl_newVersion}">
           <paper-button id="updateButton" class="yellow-button" @click=${() => servicesPage.toggleUpdate()}>UPDATE</paper-button>
         </paper-toast>
+
+        <paper-dialog id="deleteReceipt" class="deleteReceiptDialog" @opened-changed=${() => this.triggerDialog("deleteReceipt")}>
+          <div class="deleteReciptText">${translated.texts.lbl_deleteReceipt}</div>
+          <div class="buttons">
+            <paper-button dialog-confirm @click=${() => showBackground()}>${translated.buttons.lbl_abort}</paper-button>  
+            <paper-button @click=${() => deleteReceipt(this, historyPage.openedReceiptId)}>${translated.buttons.lbl_yes}</paper-button>
+          </div>
+        </paper-dialog>
         
       ` : html`<paper-spinner id="loadingSpinner" class="loadingSpinner" active></paper-spinner>`}
       `;
@@ -188,6 +196,10 @@ class MainElement extends LitElement {
           opacity: 20%;
         }
 
+        .deleteReciptText {
+          margin-left: 10px;
+        }
+
         .yellow-button {
           text-transform: none;
           color: #eeff41;
@@ -195,6 +207,7 @@ class MainElement extends LitElement {
 
         paper-toast {
           text-align: center;
+          font-family: Roboto;
         }
         `;
   }
