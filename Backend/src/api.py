@@ -3,7 +3,7 @@ import uuid
 from datetime import datetime
 
 import requests
-from flask import Flask, request, send_from_directory, redirect, url_for
+from flask import Flask, request, send_from_directory
 from flask_cors import CORS, cross_origin
 
 from util import (
