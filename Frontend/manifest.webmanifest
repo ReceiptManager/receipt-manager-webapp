@@ -1,5 +1,6 @@
 {
     "short_name": "Kassenbon Scanner",
+    "name": "Kassenbon Scanner",
     "icons": [
         {
             "src": "/img/icon-512.png",
