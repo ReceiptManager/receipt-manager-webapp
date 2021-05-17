@@ -1,6 +1,7 @@
 <p align="center">
 
-  <img width=600 src="https://i.imgur.com/EPoolzW.png">
+  <img src="docs/receiptManagerWeb.gif" width="300">
+  
 
 </p>
 
