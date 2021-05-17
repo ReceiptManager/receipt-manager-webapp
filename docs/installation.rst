@@ -19,7 +19,7 @@ Finally, you can start the receipt-parser-webapp.
 
     docker run -d --network host --name "receipt-manager-webapp" -v /your/path/onDockerHost:/app/webroot/ssl -e backendIP="backendIP" -e backendPort="backendPort" -e backendLanguage="de-DE" -e parserIP="parserIP" -e parserPort="8721" -e parserToken="parserToken" -e dbMode="mssql or mysql" -e sqlServerIP="sqlServerIP" -e sqlDatabase="reciptData" -e sqlUsername="sqlUsername" -e sqlPassword="sqlPassword" dielee/receipt-manager-webapp:latest
 
-Manuel installation guide
+Manual installation guide
 =================================================
 
 1. Download the latest `release <https://github.com/ReceiptManager/receipt-manager-webapp/releases>`_
