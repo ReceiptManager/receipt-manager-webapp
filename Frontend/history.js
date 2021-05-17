@@ -1,5 +1,7 @@
 import { LitElement, html, css } from "./node_modules/lit-element/lit-element.js";
-import  './node_modules/@polymer/iron-dropdown/iron-dropdown.js'
+import "./node_modules/@vaadin/vaadin-text-field/vaadin-number-field.js"
+import "./node_modules/@vaadin/vaadin-combo-box/vaadin-combo-box.js"
+import "./node_modules/@vaadin/vaadin-text-field/vaadin-text-field.js"
 import {setPassiveTouchGestures} from '@polymer/polymer/lib/utils/settings.js';
 import "./node_modules/@polymer/paper-input/paper-input.js";
 import "./node_modules/@polymer/paper-button/paper-button.js";
@@ -12,7 +14,7 @@ import './node_modules/@polymer/paper-icon-button/paper-icon-button.js';
 import './node_modules/@polymer/iron-icon/iron-icon.js';
 import './node_modules/@polymer/iron-icons/iron-icons.js';
 import {updateResponseJson, deleteItem, activateDeleteMode, calcDifference, validateStore, validateDate, validateArticles, validateCategories, validateTotal, backendIP, backendPort, responseChanged, assumeArticleSum, openSpinner, closeSpinner, setMenuIcon, 
-        openDialog, formatDate, getSelectedCategoryId, closeMobileKeyboard, loadSettings,language, translated, backendToken, webPrefix, europeCountries, openCopyDialog}  from './functions.js';
+        openDialog, formatDate, closeMobileKeyboard, loadSettings,language, translated, backendToken, webPrefix, europeCountries, openCopyDialog}  from './functions.js';
 
 class MainElement extends LitElement {
   static get properties() {
@@ -316,17 +318,10 @@ class MainElement extends LitElement {
                return html `
                   <div class="itemsListContainer">
 
-                      <paper-dropdown-menu-light class="itemListCategories" required="true" value="${item[3]}" id="category${item[0]}" label="${translated.inputLabels.lbl_category}" @selected-item-changed=${() => updateResponseJson(item[0], "category", this)} noink noAnimations>
-                        <paper-listbox class="dropdown" slot="dropdown-content" selected="${getSelectedCategoryId(this, item[3])}">
-                          ${categories}
-                        </paper-listbox>
-                      </paper-dropdown-menu-light>
-
-                      <paper-input class="itemListArticle" required="true" id="article${item[0]}" label="${translated.inputLabels.lbl_article}" value="${item[1]}" @change=${() => updateResponseJson(item[0], "article", this)} @keyup=${e => closeMobileKeyboard(e, this, "article" + item[0])}></paper-input>
-                      <paper-input type="text" class="itemListSum" required="true" auto-validate pattern="((\-|)[0-9]|[0-9]{2})\.[0-9]{2}" id="sum${item[0]}" label="${translated.inputLabels.lbl_price}" value="${itemSum}" @change=${() => updateResponseJson(item[0], "articleSum", this)} @keyup=${e => closeMobileKeyboard(e, this, "sum" + item[0])}>
-                        <div slot="suffix">€</div>
-                      </paper-input>
-
+                      <vaadin-combo-box required id="category${item[0]}" class="itemListCategory" placeholder="${translated.inputLabels.lbl_category}" value="${item[3]}" label="${translated.inputLabels.lbl_category}" @change=${() => updateResponseJson(item[0], "category", this)}></vaadin-combo-box>
+                      <vaadin-text-field required id="article${item[0]}" class="itemListArticle" label="${translated.inputLabels.lbl_article}" value="${item[1]}" @change=${() => updateResponseJson(item[0], "article", this)} @keyup=${e => closeMobileKeyboard(e, this, "article" + item[0])}></vaadin-text-field>
+                      <vaadin-text-field required id="sum${item[0]}" step="0.1" class="itemListSum" pattern="((\-|)[0-9]|[0-9]{2})\.[0-9]{2}"  label="${translated.inputLabels.lbl_price}" value="${itemSum}" @change=${() => updateResponseJson(item[0], "articleSum", this)} @keyup=${e => closeMobileKeyboard(e, this, "sum" + item[0])}></vaadin-text-field>
+                      
                       <paper-icon-button class="addButton" id="addArticleButton${item[0]}" icon="add-circle" @click=${() => openCopyDialog(item[0], this)}></paper-icon-button>
                       <paper-icon-button class="deleteButton" id="deleteArticleButton${item[0]}" icon="delete" @click=${() => deleteItem(item[0], this)}></paper-icon-button>
                       </div>
@@ -373,6 +368,17 @@ class MainElement extends LitElement {
   updated ()
   {
     historyPage = this;
+
+    if (this.responseJson && this.categoriesJson)
+    {
+      customElements.whenDefined('vaadin-combo-box').then(function() 
+      {
+        const combos = historyPage.shadowRoot.querySelectorAll('vaadin-combo-box');
+        combos.forEach(function(comboBox) {
+          comboBox.items = historyPage.categoriesJson["values"].map(function(item) {return item.name });
+        });
+      })
+    }
   }
 
   constructor() {
@@ -435,10 +441,14 @@ class MainElement extends LitElement {
       color: dimgrey;
     }
 
-    .itemListCategories
+    .itemListSum
+    {
+      width: 60px;
+    }
+
+    .itemListCategory
     {
       width: 120px;
-      margin-top: 1px;
     }
 
     .itemListArticle
@@ -448,7 +458,7 @@ class MainElement extends LitElement {
     }
 
     .addButton{
-      margin-top: 20px;
+      margin-top: 35px;
     }
 
     .articleSum {
