@@ -1,6 +1,6 @@
 <p align="center">
 
-  <img src="docs/receiptManagerWeb.gif" width="300">
+  <img src="https://raw.githubusercontent.com/ReceiptManager/receipt-manager-webapp/master/docs/receiptManagerWeb.gif" width="300">
   
 
 </p>
