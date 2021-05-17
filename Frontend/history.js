@@ -1,5 +1,4 @@
 import { LitElement, html, css } from "./node_modules/lit-element/lit-element.js";
-import "./node_modules/@vaadin/vaadin-text-field/vaadin-number-field.js"
 import "./node_modules/@vaadin/vaadin-combo-box/vaadin-combo-box.js"
 import "./node_modules/@vaadin/vaadin-text-field/vaadin-text-field.js"
 import {setPassiveTouchGestures} from '@polymer/polymer/lib/utils/settings.js';

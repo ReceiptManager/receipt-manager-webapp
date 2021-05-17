@@ -1,4 +1,6 @@
 import { LitElement, html, css } from "./node_modules/lit-element/lit-element.js";
+import "./node_modules/@vaadin/vaadin-combo-box/vaadin-combo-box.js"
+import "./node_modules/@vaadin/vaadin-text-field/vaadin-text-field.js"
 import {setPassiveTouchGestures} from '@polymer/polymer/lib/utils/settings.js';
 import "./node_modules/@polymer/paper-input/paper-input.js";
 import "./node_modules/@polymer/paper-button/paper-button.js";
@@ -317,20 +319,12 @@ checkValidAndSave(e)
 
             return html `
             <div class="itemsListContainer">
-                <paper-dropdown-menu-light class="itemListCategories" required="true" value="${item[3]}" id="category${item[0]}" label="${translated.inputLabels.lbl_category}" @selected-item-changed=${() => updateResponseJson(item[0], "category", this)} noink noAnimations>
-                  <paper-listbox slot="dropdown-content" class="categoryDropdown" selected="${getSelectedCategoryId(this, item[3])}">
-                    ${this.categoriesJson["values"].map(category => {
-                      return html `<paper-item>${category.name}</paper-item>`
-                    })}
-                  </paper-listbox>
-                </paper-dropdown-menu-light>
-
-                <paper-input class="itemListArticle" required="true" id="article${item[0]}" label="${translated.inputLabels.lbl_article}" value="${item[1]}" @change=${() => updateResponseJson(item[0], "article", this)}  @keyup=${e => closeMobileKeyboard(e, this, "article" + item[0])}></paper-input>
-                <paper-input type="text" class="itemListSum" required="true" auto-validate pattern="((\-|)[0-9]|[0-9]{2}|[0-9]{3})\.[0-9]{2}" id="sum${item[0]}" label="${translated.inputLabels.lbl_price}" value="${itemSum}" @change=${() => updateResponseJson(item[0], "articleSum", this)}  @keyup=${e => closeMobileKeyboard(e, this, "sum" + item[0])}>
-                  <div slot="suffix">€</div>
-                </paper-input>
-                <paper-icon-button class="addButton" id="addArticleButton${item[0]}" icon="add-circle" @click=${() => openCopyDialog(item[0], this)}></paper-icon-button>
-                <paper-icon-button class="deleteButton" id="deleteArticleButton${item[0]}" icon="delete" @click=${() => deleteItem(item[0], this)}></paper-icon-button>
+                      <vaadin-combo-box required id="category${item[0]}" class="itemListCategory" placeholder="${translated.inputLabels.lbl_category}" value="${item[3]}" label="${translated.inputLabels.lbl_category}" @change=${() => updateResponseJson(item[0], "category", this)} @keyup=${e => closeMobileKeyboard(e, this, "category" + item[0])}></vaadin-combo-box>
+                      <vaadin-text-field required id="article${item[0]}" class="itemListArticle" label="${translated.inputLabels.lbl_article}" value="${item[1]}" @change=${() => updateResponseJson(item[0], "article", this)} @keyup=${e => closeMobileKeyboard(e, this, "article" + item[0])}></vaadin-text-field>
+                      <vaadin-text-field required id="sum${item[0]}" class="itemListSum" pattern="((\-|)[0-9]|[0-9]{2})\.[0-9]{2}"  label="${translated.inputLabels.lbl_price}" value="${itemSum}" @change=${() => updateResponseJson(item[0], "articleSum", this)} @keyup=${e => closeMobileKeyboard(e, this, "sum" + item[0])}></vaadin-text-field>
+                      
+                      <paper-icon-button class="addButton" id="addArticleButton${item[0]}" icon="add-circle" @click=${() => openCopyDialog(item[0], this)}></paper-icon-button>
+                      <paper-icon-button class="deleteButton" id="deleteArticleButton${item[0]}" icon="delete" @click=${() => deleteItem(item[0], this)}></paper-icon-button>
               </div>`;
           })}
           <div class="foundArticles">${translated.texts.lbl_articleCount}: ${this.responseJson.receiptItems.length}</div>
@@ -391,6 +385,19 @@ checkValidAndSave(e)
 
   updated() {
     scanPage = this;
+
+    if (this.responseJson && this.categoriesJson)
+    {
+      customElements.whenDefined('vaadin-combo-box').then(function() 
+      {
+        const combos = scanPage.shadowRoot.querySelectorAll('vaadin-combo-box');
+        combos.forEach(function(comboBox) {
+          comboBox.items = scanPage.categoriesJson["values"].map(function(item) {return item.name });
+          comboBox.style.setProperty('--vaadin-combo-box-overlay-width', '40%');
+        });
+      })
+    }
+
   }
 
   constructor() {
@@ -439,12 +446,6 @@ checkValidAndSave(e)
           margin-top: 1px;
         }
 
-        .itemListArticle
-        {
-          width: calc(100% - 10px);
-          padding-left: 8px;
-        }
-
         .foundArticles
         {
           font-family: Roboto;
@@ -454,7 +455,7 @@ checkValidAndSave(e)
         }
 
         .addButton{
-          margin-top: 20px;
+          margin-top: 35px;
         }
 
         .deleteButton {
@@ -464,7 +465,6 @@ checkValidAndSave(e)
 
         .itemListSum
         {
-          display: inline-block;
           width: 60px;
         }
 
