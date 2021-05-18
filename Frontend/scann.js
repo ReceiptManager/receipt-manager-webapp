@@ -319,7 +319,7 @@ checkValidAndSave(e)
 
             return html `
             <div class="itemsListContainer">
-                      <vaadin-combo-box required id="category${item[0]}" class="itemListCategory" placeholder="${translated.inputLabels.lbl_category}" value="${item[3]}" label="${translated.inputLabels.lbl_category}" @change=${() => updateResponseJson(item[0], "category", this)} @keyup=${e => closeMobileKeyboard(e, this, "category" + item[0])}></vaadin-combo-box>
+                      <vaadin-combo-box required auto-open-disabled clear-button-visible id="category${item[0]}" class="itemListCategory" placeholder="${translated.inputLabels.lbl_category}" value="${item[3]}" label="${translated.inputLabels.lbl_category}" @change=${() => updateResponseJson(item[0], "category", this)} @keyup=${e => closeMobileKeyboard(e, this, "category" + item[0])}></vaadin-combo-box>
                       <vaadin-text-field required id="article${item[0]}" class="itemListArticle" label="${translated.inputLabels.lbl_article}" value="${item[1]}" @change=${() => updateResponseJson(item[0], "article", this)} @keyup=${e => closeMobileKeyboard(e, this, "article" + item[0])}></vaadin-text-field>
                       <vaadin-text-field required id="sum${item[0]}" class="itemListSum" pattern="((\-|)[0-9]|[0-9]{2})\.[0-9]{2}"  label="${translated.inputLabels.lbl_price}" value="${itemSum}" @change=${() => updateResponseJson(item[0], "articleSum", this)} @keyup=${e => closeMobileKeyboard(e, this, "sum" + item[0])}></vaadin-text-field>
                       
@@ -436,14 +436,13 @@ checkValidAndSave(e)
           width: 98%;
           display: inline-grid;
           grid-auto-flow: column;
-          grid-template-columns: 115px calc(100% - 225px) auto auto;
-          column-gap: 6px;
+          grid-template-columns: 135px calc(100% - 232px) auto auto;
+          column-gap: 2px;
         }
 
         .itemListCategories
         {
-          width: 120px;
-          margin-top: 1px;
+          width: 135px;
         }
 
         .foundArticles
@@ -460,7 +459,7 @@ checkValidAndSave(e)
 
         .deleteButton {
           display: none;
-          margin-top: 20px;
+          margin-top: 35px;
         }
 
         .itemListSum
@@ -472,18 +471,18 @@ checkValidAndSave(e)
         {
           font-family: Roboto;
           font-size: small;
-          margin-left: calc(100% - 89px);
+          margin-left: calc(100% - 84px);
           color: red;
         }
-
+    
         .differenceGrey
         {
           font-family: Roboto;
           font-size: small;
-          margin-left: calc(100% - 95px);
+          margin-left: calc(100% - 82px);
           color: lightgrey;
         }
-
+    
         .uploadToast {
           --paper-toast-background-color: green;
         }
@@ -514,7 +513,7 @@ checkValidAndSave(e)
 
         .assumeArticleSum {
           display: inline-block;
-          margin-left: calc(100% - 232px);
+          margin-left: calc(100% - 228px);
           padding-right: 0px;
           padding-top: 1px;
         }

@@ -317,7 +317,7 @@ class MainElement extends LitElement {
                return html `
                   <div class="itemsListContainer">
 
-                      <vaadin-combo-box required id="category${item[0]}" class="itemListCategory" placeholder="${translated.inputLabels.lbl_category}" value="${item[3]}" label="${translated.inputLabels.lbl_category}" @change=${() => updateResponseJson(item[0], "category", this)} @keyup=${e => closeMobileKeyboard(e, this, "category" + item[0])}></vaadin-combo-box>
+                      <vaadin-combo-box required auto-open-disabled clear-button-visible id="category${item[0]}" class="itemListCategory" placeholder="${translated.inputLabels.lbl_category}" value="${item[3]}" label="${translated.inputLabels.lbl_category}" @change=${() => updateResponseJson(item[0], "category", this)} @keyup=${e => closeMobileKeyboard(e, this, "category" + item[0])}></vaadin-combo-box>
                       <vaadin-text-field required id="article${item[0]}" class="itemListArticle" label="${translated.inputLabels.lbl_article}" value="${item[1]}" @change=${() => updateResponseJson(item[0], "article", this)} @keyup=${e => closeMobileKeyboard(e, this, "article" + item[0])}></vaadin-text-field>
                       <vaadin-text-field required id="sum${item[0]}" class="itemListSum" pattern="((\-|)[0-9]|[0-9]{2})\.[0-9]{2}"  label="${translated.inputLabels.lbl_price}" value="${itemSum}" @change=${() => updateResponseJson(item[0], "articleSum", this)} @keyup=${e => closeMobileKeyboard(e, this, "sum" + item[0])}></vaadin-text-field>
                       
@@ -429,8 +429,8 @@ class MainElement extends LitElement {
       width: 98%;
       display: inline-grid;
       grid-auto-flow: column;
-      grid-template-columns: 115px calc(100% - 225px) auto auto;
-      column-gap: 6px;
+      grid-template-columns: 129px calc(100% - 225px) auto auto;
+      column-gap: 0px;
     }
 
     .foundArticles
@@ -448,7 +448,7 @@ class MainElement extends LitElement {
 
     .itemListCategory
     {
-      width: 120px;
+      width: 135px;
     }
 
     .itemListArticle
@@ -469,7 +469,7 @@ class MainElement extends LitElement {
 
     .assumeArticleSum {
       display: inline-block;
-      margin-left: calc(100% - 190px);
+      margin-left: calc(100% - 185px);
       padding-right: 0px;
       padding-top: 1px;
     }
@@ -478,7 +478,7 @@ class MainElement extends LitElement {
     {
       font-family: Roboto;
       font-size: small;
-      margin-left: calc(100% - 89px);
+      margin-left: calc(100% - 84px);
       color: red;
     }
 
@@ -486,13 +486,13 @@ class MainElement extends LitElement {
     {
       font-family: Roboto;
       font-size: small;
-      margin-left: calc(100% - 95px);
+      margin-left: calc(100% - 82px);
       color: lightgrey;
     }
 
     .deleteButton {
       display: none;
-      margin-top: 20px;
+      margin-top: 35px;
     }
 
     .purchase
