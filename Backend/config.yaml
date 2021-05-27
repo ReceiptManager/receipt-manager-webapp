@@ -1,15 +1,13 @@
+backendHostname: receiptManager.home.local
+backendIP: 192.168.50.59
+backendLanguage: de-DE
+backendPort: 5558
+dbMode: mssql
+parserIP: 192.168.50.6
+parserPort: 8721
+parserToken: dEkYyxgqVHRqV
+sqlDatabase: receiptData
+sqlPassword: receiptParser2021!
+sqlServerIP: 192.168.50.6
+sqlUsername: receiptParser
 useSSL: false
-backendHostname: receiptManager.home.local #Hostname
-backendIP: 192.168.50.59 #Server IP
-backendPort: 5558        #Server Port
-backendLanguage: de-DE   #Language
-
-parserIP: 192.168.50.6   #Receipt parser IP
-parserPort: 8721         #Receipt parser Port
-parserToken: dEkYyxgqVHRqV #Receipt parser Token
-
-dbMode: mssql #mssql or mysql
-sqlServerIP: 192.168.50.6  #SQL IP
-sqlDatabase: receiptData    #SQL Database
-sqlUsername: receiptParser #SQL Username
-sqlPassword: receiptParser2021! #SQL User Password

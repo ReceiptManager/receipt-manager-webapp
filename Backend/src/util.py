@@ -4,6 +4,7 @@ import uuid
 import json
 import yaml
 import os
+import sys
 from mysql.connector import connect, Error
 from datetime import datetime, timedelta
 import ipaddress
@@ -122,15 +123,32 @@ def create_ssl_cert(
         open(key_file, "wb").write(key_pem)
         open(cert_file, "wb").write(cert_pem)
 
+def restart_program():
+    python = sys.executable
+    os.execl(python, python, * sys.argv)
+
+def update_server_config(settings):
+    config_file = open('../config.yaml', 'w')
+
+    yaml.dump(settings, config_file)
 
 def create_web_config():
     web_json = "../webroot/settings/settings.json"
     web_cfg = {
         "useSSL": cfg["useSSL"],
+        "backendHostname": cfg["backendHostname"],
         "backendIP": cfg["backendIP"],
         "backendPort": cfg["backendPort"],
         "backendToken": api_token,
         "language": cfg["backendLanguage"],
+        "parserIP": cfg["parserIP"],
+        "parserPort": cfg["parserPort"],
+        "parserToken": cfg["parserToken"],
+        "dbMode": cfg["dbMode"],
+        "sqlServerIP": cfg["sqlServerIP"],
+        "sqlDatabase": cfg["sqlDatabase"],
+        "sqlUsername": cfg["sqlUsername"],
+        "sqlPassword": cfg["sqlPassword"]
     }
     f = open(web_json, "w")
     f.write(json.dumps(web_cfg))

@@ -12,7 +12,7 @@ import './node_modules/@polymer/paper-icon-button/paper-icon-button.js';
 import './node_modules/@polymer/iron-icon/iron-icon.js';
 import './node_modules/@polymer/iron-icons/iron-icons.js';
 import {showReceipt, openDialog, deleteItem, activateDeleteMode, validateCategories, validateStore, validateDate, validateTotal, validateArticles, updateResponseJson, calcDifference, assumeArticleSum, 
-        formatDate, backendIP, backendPort, openSpinner, closeSpinner, getSelectedCategoryId, closeMobileKeyboard, loadSettings, openCopyDialog, resetForm, manualInput, translated, backendToken, webPrefix, europeCountries, language} from './functions.js';
+        formatDate, backendIP, backendPort, openSpinner, closeSpinner, closeMobileKeyboard, loadSettings, openCopyDialog, resetForm, manualInput, translated, backendToken, webPrefix, europeCountries, language} from './functions.js';
 
 class ScanElement extends LitElement {
   static get properties() {

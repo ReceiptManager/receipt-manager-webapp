@@ -16,7 +16,9 @@ from util import (
     get_store_id,
     load_conf,
     load_db_conn,
-    delete_receipt
+    delete_receipt,
+    update_server_config,
+    restart_program
 )
 
 app = Flask(
@@ -54,6 +56,14 @@ def before_request():
 def index():
     return send_from_directory(app.static_folder, "index.html")
 
+@app.route("/api/updateConfig", methods=["POST", "OPTIONS"])
+@cross_origin(origin="*", headers=["Content-Type"])
+def updateConfig():
+    post_string = json.dumps(request.get_json())
+    post_json = json.loads(post_string)
+
+    update_server_config(post_json)
+    restart_program()
 
 @app.route("/api/upload", methods=["POST", "OPTIONS"])
 @cross_origin(origin="*", headers=["Content-Type"])

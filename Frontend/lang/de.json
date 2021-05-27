@@ -10,9 +10,10 @@
         "lbl_invalidToken": "Token ungültig oder abgelaufen. Versuche den Cache des Browsers zu leeren!", "lbl_invalidDate": "Datum fehlerhaft, bitte überprüfen!",
         "lbl_invalidCategory": "Kategorie fehlerhaft, bitte überprüfen!", "lbl_invalidStore": "Supermarkt fehlerhaft, bitte überprüfen!",
         "lbl_categorySaved": "Kategorie gespeichert!", "lbl_categoryDeleted": "Kategorie gelöscht!", "lbl_storeSaved": "Supermarkt gespeichert!", "lbl_storeDeleted": "Supermarkt gelöscht!",
-        "lbl_newVersion": "Neue Version verfügbar!", "lbl_receiptDeleted": "Kassenbon gelöscht!", "lbl_receiptDeletionFailed": "Fehler beim löschen des Kassenbons!"},
+        "lbl_newVersion": "Neue Version verfügbar!", "lbl_receiptDeleted": "Kassenbon gelöscht!", "lbl_receiptDeletionFailed": "Fehler beim löschen des Kassenbons!", "lbl_settingsChanged": "Einstellungen verändert!"},
     "inputLabels":
-        {"lbl_uploadFile": "Datei hochladen", "lbl_store": "Supermarkt", "lbl_date": "Datum", "lbl_category": "Kategorie", "lbl_article": "Artikel", "lbl_price": "Preis", "lbl_articleSum": "Summe", "lbl_totalPrice": "Gesamtsumme", "lbl_newStore": "Neuer Supermarkt"},
+        {"lbl_uploadFile": "Datei hochladen", "lbl_store": "Supermarkt", "lbl_date": "Datum", "lbl_category": "Kategorie", "lbl_article": "Artikel", "lbl_price": "Preis", "lbl_articleSum": "Summe", "lbl_totalPrice": "Gesamtsumme", "lbl_newStore": "Neuer Supermarkt", "lbl_language": "Sprache"},
     "texts":
-        {"lbl_articleCount": "Artikelanzahl", "lbl_certDownload": "CA Zertifikat installieren", "lbl_clearCache": "Cache leeren", "lbl_copyLine": "Makierte Zeile kopieren ?", "lbl_deleteReceipt": "Kassenbon löschen?"}
+        {"lbl_articleCount": "Artikelanzahl", "lbl_certDownload": "CA Zertifikat installieren", "lbl_clearCache": "Cache leeren", "lbl_copyLine": "Makierte Zeile kopieren ?", "lbl_deleteReceipt": "Kassenbon löschen?", "lbl_useSSL": "SSL Benutzen", "lbl_actions": "Aktionen",
+        "lbl_database": "Datenbank"}
 }

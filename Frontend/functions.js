@@ -7,6 +7,7 @@ var settingsLoaded
 var menuIcon
 var openPage
 var translated
+var settings
 var europeCountries = []
 
 function loadSettings(t, origin) 
@@ -20,7 +21,7 @@ function loadSettings(t, origin)
       {
         if (this.status >= 200 && this.status < 300) 
         {
-          var settings = JSON.parse(xhr.response);
+          settings = JSON.parse(xhr.response);
           backendIP = settings['backendIP']
           backendPort = settings['backendPort']
           backendToken = settings['backendToken']
@@ -679,4 +680,4 @@ function formatDate(date) {
 }
 
 export {showReceipt, responseChanged, storesChanged, addItem, addStoreFromScan, updateItemIDs, deleteItem, activateDeleteMode, validateCategories, validateStore, validateDate, validateTotal, validateArticles, updateResponseJson, closeDrawer, openDrawer, calcDifference, assumeArticleSum, openSpinner, closeSpinner, setMenuIcon, chooseAddMode, setOpenPage, 
-        deleteReceipt, formatDate, openDialog, showBackground, openCopyDialog, addCategory, addStore,getSelectedCategoryId, manualInput, loadTranslations, resetForm, closeMobileKeyboard, loadSettings, menuIcon, language,backendIP, backendPort, translated, backendToken, webPrefix, europeCountries}
+        deleteReceipt, formatDate, openDialog, showBackground, openCopyDialog, addCategory, addStore,getSelectedCategoryId, manualInput, loadTranslations, resetForm, closeMobileKeyboard, loadSettings, settings, menuIcon, language,backendIP, backendPort, translated, backendToken, webPrefix, europeCountries}
