@@ -21,6 +21,11 @@ class MainElement extends LitElement {
     {
       let toggleButtonState = t.shadowRoot.getElementById('useSSL').active
       
+      if (typeof settings['useSSL'] == 'string')
+      {
+        toggleButtonState = toggleButtonState.toString()
+      }
+
       if (toggleButtonState != settings['useSSL'])
       {
         t.shadowRoot.getElementById('updateToast').open()
@@ -196,6 +201,9 @@ class MainElement extends LitElement {
       .yellow-button {
         text-transform: none;
         color: #eeff41;
+        margin-right: 0px;
+        padding-left: 0px;
+        padding-right: 0px;
       }
 
       paper-toast {
