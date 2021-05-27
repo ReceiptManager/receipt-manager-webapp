@@ -125,7 +125,7 @@ def create_ssl_cert(
 def update_server_config(settings):
 
     update_config_yaml(settings)
-    load_conf(True, True)
+    load_conf(True)
     create_web_config()
 
 def update_config_yaml(settings):
@@ -134,8 +134,10 @@ def update_config_yaml(settings):
     config_file.close()
 
 def create_web_config():
+    run_in_docker = os.environ.get("RUN_IN_DOCKER", False)
     web_json = "../webroot/settings/settings.json"
     web_cfg = {
+        "runInDocker": run_in_docker,
         "useSSL": cfg["useSSL"],
         "backendHostname": cfg["backendHostname"],
         "backendIP": cfg["backendIP"],
@@ -181,27 +183,29 @@ def create_token():
     f.close()
 
 
-def load_conf(update_conf=False, force_load_yaml=False):
+def load_conf(update_conf=False):
     global cfg
     run_in_docker = os.environ.get("RUN_IN_DOCKER", False)
     if not cfg or update_conf:
-        if not run_in_docker or force_load_yaml:
+        if not run_in_docker:
+            print("Running in normal mode!")
             with open("../config.yaml", "r") as ymlfile:
                 cfg = yaml.load(ymlfile, Loader=yaml.FullLoader)
         else:
-            use_ssl = False
+            print("Running in docker mode!")
+            use_ssl = os.environ.get("useSSL")
+            backend_hostname = os.environ.get("backendHostname", "")
             backend_ip = os.environ.get("backendIP", "")
             backend_port = os.environ.get("backendPort", "")
-            backend_hostname = ""
-            backend_language = ""
-            parser_ip = ""
-            parser_port = ""
-            parser_token = ""
-            db_mode = ""
-            sql_server_ip = ""
-            sql_database = ""
-            sql_username = ""
-            sql_password = ""
+            backend_language = os.environ.get("backendLanguage", "")
+            parser_ip = os.environ.get("parserIP", "")
+            parser_port = os.environ.get("parserPort", "")
+            parser_token = os.environ.get("parserToken", "")
+            db_mode = os.environ.get("dbMode", "")
+            sql_server_ip = os.environ.get("sqlServerIP", "")
+            sql_database = os.environ.get("sqlDatabase", "")
+            sql_username = os.environ.get("sqlUsername", "")
+            sql_password = os.environ.get("sqlPassword", "")
 
             temp_config = {
                 "useSSL": use_ssl,
@@ -221,7 +225,6 @@ def load_conf(update_conf=False, force_load_yaml=False):
 
             config = json.dumps(temp_config)
             cfg = json.loads(config)
-            update_config_yaml(cfg)
 
     return cfg
 

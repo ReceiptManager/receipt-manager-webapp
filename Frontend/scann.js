@@ -45,10 +45,6 @@ class ScanElement extends LitElement {
         {
           instance.categoriesJson = JSON.parse(xhr.response)
         }
-        else if(xhr.status == 505)
-        {
-          instance.shadowRoot.getElementById("noDBSet").open()
-        }
         else
         {
           instance.shadowRoot.getElementById("invalidToken").open()
@@ -61,10 +57,6 @@ class ScanElement extends LitElement {
         if (xhr.status == 200)
         {
             instance.storesJson = JSON.parse(xhr.response)
-        }
-        else if(xhr.status == 505)
-        {
-          instance.shadowRoot.getElementById("noDBSet").open()
         }
         else
         {
@@ -386,8 +378,7 @@ checkValidAndSave(e)
     <paper-toast class= "invalidSums fit-bottom" id="invalidDate" duration="2000" text="${translated.toasts.lbl_invalidDate}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="invalidCategory" duration="2000" text="${translated.toasts.lbl_invalidCategory}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="invalidStore" duration="2000" text="${translated.toasts.lbl_invalidStore}"></paper-toast>
-    <paper-toast class= "invalidSums fit-bottom" id="invalidToken" duration="6000" text="${translated.toasts.lbl_invalidToken}"></paper-toast>
-    <paper-toast class= "fit-bottom" id="noDBSet" duration="6000" text="${translated.toasts.lbl_noDBSet}"></paper-toast>
+    <paper-toast class= "invalidSums fit-bottom" id="invalidToken" duration="5000" text="${translated.toasts.lbl_invalidToken}"></paper-toast>
     </div>
     `;
   }
