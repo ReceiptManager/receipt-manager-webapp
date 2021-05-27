@@ -123,15 +123,21 @@ def create_ssl_cert(
         open(cert_file, "wb").write(cert_pem)
 
 def update_server_config(settings):
-    config_file = open('../config.yaml', 'w')
-    yaml.dump(settings, config_file)
 
+    update_config_yaml(settings)
     load_conf(True)
     create_web_config()
 
+def update_config_yaml(settings):
+    config_file = open('../config.yaml', 'w')
+    yaml.dump(settings, config_file)
+    config_file.close()
+
 def create_web_config():
+    run_in_docker = os.environ.get("RUN_IN_DOCKER", False)
     web_json = "../webroot/settings/settings.json"
     web_cfg = {
+        "runInDocker": run_in_docker,
         "useSSL": cfg["useSSL"],
         "backendHostname": cfg["backendHostname"],
         "backendIP": cfg["backendIP"],

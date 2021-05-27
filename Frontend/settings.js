@@ -149,12 +149,31 @@ class MainElement extends LitElement {
           <paper-button id="updateButton" class="yellow-button" @click=${() => this.updateConfig(this)}>${translated.buttons.lbl_save}</paper-button>
           <paper-button id="cancelButton" class="yellow-button" @click=${() => this.shadowRoot.getElementById('updateToast').close()}>${translated.buttons.lbl_abort}</paper-button>
     </paper-toast>
+
+    <paper-toast class="fit-bottom" id="dockerModeToast" duration="5000" text="${translated.toasts.lbl_dockerMode}"></paper-toast>
       `
   }
 
   updated ()
   {
     settingsPage = this
+
+    if (settings["runInDocker"] || settings["runInDocker"] == "true")
+    {
+      this.shadowRoot.getElementById('useSSL').disabled = true
+      this.shadowRoot.getElementById('backendHostname').disabled = true
+      this.shadowRoot.getElementById('language').disabled = true
+      this.shadowRoot.getElementById('parserIP').disabled = true
+      this.shadowRoot.getElementById('parserPort').disabled = true
+      this.shadowRoot.getElementById('parserToken').disabled = true
+      this.shadowRoot.getElementById('dbMode').disabled = true
+      this.shadowRoot.getElementById('sqlServerIP').disabled = true
+      this.shadowRoot.getElementById('sqlServerDatabase').disabled = true
+      this.shadowRoot.getElementById('sqlServerUsername').disabled = true
+      this.shadowRoot.getElementById('sqlServerPassword').disabled = true
+
+      this.shadowRoot.getElementById('dockerModeToast').open()
+    }
   }
 
   constructor() {
