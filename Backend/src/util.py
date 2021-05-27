@@ -1,4 +1,3 @@
-from cryptography.x509 import ExtendedKeyUsage, ExtendedKeyUsageOID, oid
 import pyodbc
 import uuid
 import json
@@ -123,14 +122,12 @@ def create_ssl_cert(
         open(key_file, "wb").write(key_pem)
         open(cert_file, "wb").write(cert_pem)
 
-def restart_program():
-    python = sys.executable
-    os.execl(python, python, * sys.argv)
-
 def update_server_config(settings):
     config_file = open('../config.yaml', 'w')
-
     yaml.dump(settings, config_file)
+
+    load_conf(True)
+    create_web_config()
 
 def create_web_config():
     web_json = "../webroot/settings/settings.json"
@@ -180,10 +177,10 @@ def create_token():
     f.close()
 
 
-def load_conf():
+def load_conf(update_conf=False):
     global cfg
     run_in_docker = os.environ.get("RUN_IN_DOCKER", False)
-    if not cfg:
+    if not cfg or update_conf:
         if not run_in_docker:
             print("Running in normal mode!")
             with open("../config.yaml", "r") as ymlfile:

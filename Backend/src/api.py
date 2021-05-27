@@ -17,8 +17,7 @@ from util import (
     load_conf,
     load_db_conn,
     delete_receipt,
-    update_server_config,
-    restart_program
+    update_server_config
 )
 
 app = Flask(
@@ -63,7 +62,8 @@ def updateConfig():
     post_json = json.loads(post_string)
 
     update_server_config(post_json)
-    restart_program()
+
+    return "Config updated", 200
 
 @app.route("/api/upload", methods=["POST", "OPTIONS"])
 @cross_origin(origin="*", headers=["Content-Type"])

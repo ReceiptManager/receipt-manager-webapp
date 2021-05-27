@@ -1,6 +1,6 @@
 backendHostname: receiptManager.home.local
 backendIP: 192.168.50.59
-backendLanguage: en-GB
+backendLanguage: de-DE
 backendPort: 5558
 dbMode: mssql
 parserIP: 192.168.50.6

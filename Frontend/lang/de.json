@@ -14,6 +14,6 @@
     "inputLabels":
         {"lbl_uploadFile": "Datei hochladen", "lbl_store": "Supermarkt", "lbl_date": "Datum", "lbl_category": "Kategorie", "lbl_article": "Artikel", "lbl_price": "Preis", "lbl_articleSum": "Summe", "lbl_totalPrice": "Gesamtsumme", "lbl_newStore": "Neuer Supermarkt", "lbl_language": "Sprache"},
     "texts":
-        {"lbl_articleCount": "Artikelanzahl", "lbl_certDownload": "CA Zertifikat installieren", "lbl_clearCache": "Cache leeren", "lbl_copyLine": "Makierte Zeile kopieren ?", "lbl_deleteReceipt": "Kassenbon löschen?", "lbl_useSSL": "SSL Benutzen", "lbl_actions": "Aktionen",
+        {"lbl_articleCount": "Artikelanzahl", "lbl_certDownload": "CA Zertifikat installieren", "lbl_clearCache": "Cache leeren", "lbl_copyLine": "Makierte Zeile kopieren ?", "lbl_deleteReceipt": "Kassenbon löschen?", "lbl_useSSL": "SSL Benutzen (Manueller neustart nötig)", "lbl_actions": "Aktionen",
         "lbl_database": "Datenbank"}
 }
