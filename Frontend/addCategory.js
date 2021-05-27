@@ -25,6 +25,10 @@ class MainElement extends LitElement {
       {
         instance.categoriesJson = JSON.parse(xhr.response)
       }
+      else if(xhr.status == 505)
+      {
+        instance.shadowRoot.getElementById("noDBSet").open()
+      }
       else
       {
         instance.shadowRoot.getElementById("invalidToken").open()
@@ -80,6 +84,7 @@ class MainElement extends LitElement {
       <paper-toast class= "uploadToast fit-bottom" id="uploadToastDone" duration="2500" text="${translated.toasts.lbl_categorySaved}"></paper-toast>
       <paper-toast class= "uploadToast fit-bottom" id="deleteToastDone" duration="2500" text="${translated.toasts.lbl_categoryDeleted}"></paper-toast>
       <paper-toast class= "invalid fit-bottom" id="invalidToken" duration="5000" text="${translated.toasts.lbl_invalidToken}"></paper-toast>
+      <paper-toast class= "invalidSums fit-bottom" id="noDBSet" duration="6000" text="${translated.toasts.lbl_noDBSet}"></paper-toast>
       `
   }
 

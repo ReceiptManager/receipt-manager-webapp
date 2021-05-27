@@ -17,10 +17,11 @@ def main():
         create_ssl_cert([cfg["backendIP"]])
 
     print("Using " + cfg["dbMode"] + " DB")
-    conn = load_db_conn()[0]
     if cfg["dbMode"] == "mssql":
+        conn = load_db_conn()[0]
         init_mssql_db(conn)
     elif cfg["dbMode"] == "mysql":
+        conn = load_db_conn()[0]
         init_mysql_db(conn)
     else:
         print("Error! No valid db mode found. Please use mssql or mysql")

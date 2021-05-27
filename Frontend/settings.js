@@ -57,7 +57,17 @@ class MainElement extends LitElement {
     xhr.open("POST", webPrefix + backendIP + ":" + backendPort + "/api/updateConfig?token=" + backendToken)
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
 
-    var post_json = {"useSSL": nuseSSL, "backendHostname": nbackendHostname, "backendIP": nbackendIP, "backendPort": parseInt(nbackendPort), "backendLanguage": nlanguage, "parserIP": nparserIP, "parserPort": parseInt(nparserPort), 
+    if (nbackendPort && typeof nbackendPort == "string")
+    {
+      nbackendPort = parseInt(nbackendPort)
+    }
+
+    if (nparserPort && typeof nparserPort == "string")
+    {
+      nparserPort = parseInt(nparserPort)
+    }
+
+    var post_json = {"useSSL": nuseSSL, "backendHostname": nbackendHostname, "backendIP": nbackendIP, "backendPort": nbackendPort, "backendLanguage": nlanguage, "parserIP": nparserIP, "parserPort": nparserPort, 
                      "parserToken": nparserToken, "dbMode": ndbMode,"sqlServerIP": nsqlServerIP, "sqlDatabase": nsqlServerDatabase, "sqlUsername": nsqlServerUsername, "sqlPassword": nsqlServerPassword} 
     
     xhr.send(JSON.stringify(post_json));
@@ -149,31 +159,12 @@ class MainElement extends LitElement {
           <paper-button id="updateButton" class="yellow-button" @click=${() => this.updateConfig(this)}>${translated.buttons.lbl_save}</paper-button>
           <paper-button id="cancelButton" class="yellow-button" @click=${() => this.shadowRoot.getElementById('updateToast').close()}>${translated.buttons.lbl_abort}</paper-button>
     </paper-toast>
-
-    <paper-toast class="fit-bottom" id="dockerModeToast" duration="5000" text="${translated.toasts.lbl_dockerMode}"></paper-toast>
       `
   }
 
   updated ()
   {
     settingsPage = this
-
-    if (settings["runInDocker"] || settings["runInDocker"] == "true")
-    {
-      this.shadowRoot.getElementById('useSSL').disabled = true
-      this.shadowRoot.getElementById('backendHostname').disabled = true
-      this.shadowRoot.getElementById('language').disabled = true
-      this.shadowRoot.getElementById('parserIP').disabled = true
-      this.shadowRoot.getElementById('parserPort').disabled = true
-      this.shadowRoot.getElementById('parserToken').disabled = true
-      this.shadowRoot.getElementById('dbMode').disabled = true
-      this.shadowRoot.getElementById('sqlServerIP').disabled = true
-      this.shadowRoot.getElementById('sqlServerDatabase').disabled = true
-      this.shadowRoot.getElementById('sqlServerUsername').disabled = true
-      this.shadowRoot.getElementById('sqlServerPassword').disabled = true
-
-      this.shadowRoot.getElementById('dockerModeToast').open()
-    }
   }
 
   constructor() {
