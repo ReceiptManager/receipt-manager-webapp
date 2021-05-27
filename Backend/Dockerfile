@@ -25,7 +25,7 @@ COPY src/ ./src
 COPY config.yaml .
 
 # clone repo
-RUN git clone https://github.com/ReceiptManager/receipt-manager-webapp.git
+RUN git clone -b dev https://github.com/ReceiptManager/receipt-manager-webapp.git
 
 # compile frontend with polymer
 RUN curl -sL https://deb.nodesource.com/setup_16.x | bash
