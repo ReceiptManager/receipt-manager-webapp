@@ -32,5 +32,9 @@ def server():
         )
 
     print("API Token: " + api_token)
-    print("Parser IP set to: " + str(cfg["parserIP"]) + ":" + str(cfg["parserPort"]))
+    if cfg['parserIP']:
+        print("Parser IP set to: " + str(cfg["parserIP"]) + ":" + str(cfg["parserPort"]))
+    else:
+        print("No parser IP set.")
+
     http_server.serve_forever()

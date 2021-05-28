@@ -1,5 +1,5 @@
-backendHostname: receiptManager.home.local
-backendIP: 192.168.50.59
+backendHostname: ''
+backendIP: 192.168.60.2
 backendLanguage: de-DE
 backendPort: 5558
 dbMode: mssql
@@ -10,4 +10,4 @@ sqlDatabase: receiptData
 sqlPassword: receiptParser2021!
 sqlServerIP: 192.168.50.6
 sqlUsername: receiptParser
-useSSL: true
+useSSL: false

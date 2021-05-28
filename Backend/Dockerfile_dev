@@ -22,7 +22,6 @@ RUN pip install -r requirements.txt
 
 # copy the content of the local src directory to the working directory
 COPY src/ ./src
-COPY config.yaml .
 
 # clone repo
 RUN git clone -b dev https://github.com/ReceiptManager/receipt-manager-webapp.git
