@@ -128,7 +128,7 @@ def update_server_config(settings):
     create_web_config()
 
 def update_config_yaml(settings):
-    config_file = open('../config.yaml', 'w')
+    config_file = open('../config/config.yaml', 'w')
     yaml.dump(settings, config_file)
     config_file.close()
 
@@ -218,11 +218,11 @@ def create_initial_config():
 def load_conf(force_reload=False):
     global cfg
 
-    if not os.path.isfile("../config.yaml"):
+    if not os.path.isfile("../config/config.yaml"):
         create_initial_config()
 
     if not cfg or force_reload:
-        with open("../config.yaml", "r") as ymlfile:
+        with open("../config/config.yaml", "r") as ymlfile:
             cfg = yaml.load(ymlfile, Loader=yaml.FullLoader)
 
     return cfg

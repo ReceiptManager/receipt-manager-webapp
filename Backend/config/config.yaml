@@ -1,0 +1,13 @@
+backendHostname: ''
+backendIP: 192.168.60.2
+backendLanguage: ''
+backendPort: 5558
+dbMode: ''
+parserIP: ''
+parserPort: ''
+parserToken: ''
+sqlDatabase: ''
+sqlPassword: ''
+sqlServerIP: ''
+sqlUsername: ''
+useSSL: false
