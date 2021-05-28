@@ -3,10 +3,10 @@ import uuid
 import json
 import yaml
 import os
-import sys
 from mysql.connector import connect, Error
 from datetime import datetime, timedelta
 import ipaddress
+import socket
 
 from cryptography import x509
 from cryptography.x509.oid import NameOID
@@ -123,21 +123,18 @@ def create_ssl_cert(
         open(cert_file, "wb").write(cert_pem)
 
 def update_server_config(settings):
-
     update_config_yaml(settings)
     load_conf(True)
     create_web_config()
 
 def update_config_yaml(settings):
-    config_file = open('../config.yaml', 'w')
+    config_file = open('../config/config.yaml', 'w')
     yaml.dump(settings, config_file)
     config_file.close()
 
 def create_web_config():
-    run_in_docker = os.environ.get("RUN_IN_DOCKER", False)
     web_json = "../webroot/settings/settings.json"
     web_cfg = {
-        "runInDocker": run_in_docker,
         "useSSL": cfg["useSSL"],
         "backendHostname": cfg["backendHostname"],
         "backendIP": cfg["backendIP"],
@@ -182,49 +179,57 @@ def create_token():
     api_token = new_token
     f.close()
 
+def create_initial_config():
+    use_ssl = os.environ.get("useSSL", False)
 
-def load_conf(update_conf=False):
-    global cfg
-    run_in_docker = os.environ.get("RUN_IN_DOCKER", False)
-    if not cfg or update_conf:
-        if not run_in_docker:
-            print("Running in normal mode!")
-            with open("../config.yaml", "r") as ymlfile:
-                cfg = yaml.load(ymlfile, Loader=yaml.FullLoader)
+    if isinstance(use_ssl, str):
+        if use_ssl.lower() == 'true':
+            use_ssl = True
         else:
-            print("Running in docker mode!")
-            use_ssl = os.environ.get("useSSL")
-            backend_hostname = os.environ.get("backendHostname", "")
-            backend_ip = os.environ.get("backendIP", "")
-            backend_port = os.environ.get("backendPort", "")
-            backend_language = os.environ.get("backendLanguage", "")
-            parser_ip = os.environ.get("parserIP", "")
-            parser_port = os.environ.get("parserPort", "")
-            parser_token = os.environ.get("parserToken", "")
-            db_mode = os.environ.get("dbMode", "")
-            sql_server_ip = os.environ.get("sqlServerIP", "")
-            sql_database = os.environ.get("sqlDatabase", "")
-            sql_username = os.environ.get("sqlUsername", "")
-            sql_password = os.environ.get("sqlPassword", "")
+            use_ssl = False
 
-            temp_config = {
-                "useSSL": use_ssl,
-                "backendHostname": backend_hostname,
-                "backendIP": backend_ip,
-                "backendPort": backend_port,
-                "backendLanguage": backend_language,
-                "parserIP": parser_ip,
-                "parserPort": parser_port,
-                "parserToken": parser_token,
-                "dbMode": db_mode,
-                "sqlServerIP": sql_server_ip,
-                "sqlDatabase": sql_database,
-                "sqlUsername": sql_username,
-                "sqlPassword": sql_password,
-            }
+    run_in_docker = os.environ.get("RUN_IN_DOCKER", False)
+    if not run_in_docker:
+        backend_ip = socket.gethostbyname(socket.gethostname())
+    else:
+        backend_ip = os.environ.get("backendIP", None)
+        if not backend_ip:
+            stream = os.popen(r"ip -4 addr show eth0 | grep -Po 'inet \K[\d.]+'")
+            backend_ip = stream.read().rstrip()
+    
+    backend_port = os.environ.get("backendPort", 5558)
 
-            config = json.dumps(temp_config)
-            cfg = json.loads(config)
+    print("Initial config created.")
+
+    temp_config = {
+        "useSSL": use_ssl,
+        "backendHostname": "",
+        "backendIP": backend_ip,
+        "backendPort": backend_port,
+        "backendLanguage": "",
+        "parserIP": "",
+        "parserPort": "",
+        "parserToken": "",
+        "dbMode": "",
+        "sqlServerIP": "",
+        "sqlDatabase": "",
+        "sqlUsername": "",
+        "sqlPassword": "",
+        }
+
+    config = json.dumps(temp_config)
+    cfg = json.loads(config)
+    update_config_yaml(cfg)
+
+def load_conf(force_reload=False):
+    global cfg
+
+    if not os.path.isfile("../config/config.yaml"):
+        create_initial_config()
+
+    if not cfg or force_reload:
+        with open("../config/config.yaml", "r") as ymlfile:
+            cfg = yaml.load(ymlfile, Loader=yaml.FullLoader)
 
     return cfg
 
