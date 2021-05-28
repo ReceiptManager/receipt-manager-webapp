@@ -189,9 +189,8 @@ def create_initial_config():
     else:
         backend_ip = os.environ.get("backendIP", None)
         if not backend_ip:
-            client = docker.DockerClient()
-            container = client.containers.get("magical_meitner")
-            backend_ip = container.attrs['NetworkSettings']['IPAddress']
+            stream = os.popen(r"ip -4 addr show eth0 | grep -Po 'inet \K[\d.]+'")
+            backend_ip = stream.read().rstrip()
     
     backend_port = os.environ.get("backendPort", 5558)
 
