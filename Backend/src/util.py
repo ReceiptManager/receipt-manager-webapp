@@ -6,7 +6,6 @@ import os
 from mysql.connector import connect, Error
 from datetime import datetime, timedelta
 import ipaddress
-import socket
 
 from cryptography import x509
 from cryptography.x509.oid import NameOID
@@ -181,7 +180,7 @@ def create_token():
 
 def create_initial_config():
     use_ssl = os.environ.get("useSSL", False)
-    backend_ip = os.environ.get("backendIP", socket.gethostbyname(socket.gethostname()))
+    backend_ip = os.environ.get("backendIP", "0.0.0.0")
     backend_port = os.environ.get("backendPort", 5558)
 
     print("Initial config created.")
