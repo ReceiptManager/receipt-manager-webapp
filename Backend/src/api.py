@@ -51,7 +51,13 @@ def before_request():
         return "Unauthorized", 401
 
     cfg = load_conf()
-    if not cfg["dbMode"] and request.endpoint != 'updateConfig':
+    if (not cfg["dbMode"] 
+        or not cfg["sqlDatabase"] 
+        or not cfg["sqlPassword"] 
+        or not cfg["sqlServerIP"] 
+        or not cfg["sqlUsername"] 
+        or not request.endpoint != 'updateConfig'
+        ):
         return "No DB Mode set!", 512
 
 @app.route("/", methods=["GET"])
