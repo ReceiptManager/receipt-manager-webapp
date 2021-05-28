@@ -7,7 +7,6 @@ from mysql.connector import connect, Error
 from datetime import datetime, timedelta
 import ipaddress
 import socket
-import docker
 
 from cryptography import x509
 from cryptography.x509.oid import NameOID
