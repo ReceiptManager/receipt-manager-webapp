@@ -16,7 +16,7 @@ def main():
     if cfg["useSSL"]:
         create_ssl_cert([cfg["backendIP"]])
 
-    if cfg["dbMode"]:
+    if cfg["dbMode"] and cfg["sqlDatabase"] and cfg["sqlPassword"] and cfg["sqlServerIP"] and cfg["sqlUsername"]:
         print("Using " + cfg["dbMode"] + " DB")
         conn = load_db_conn()[0]
         if cfg["dbMode"] == "mssql":

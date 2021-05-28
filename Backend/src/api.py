@@ -50,6 +50,9 @@ def before_request():
     if api_token != request.args["token"]:
         return "Unauthorized", 401
 
+    cfg = load_conf()
+    if not cfg["dbMode"] and request.endpoint != 'updateConfig':
+        return "No DB Mode set!", 512
 
 @app.route("/", methods=["GET"])
 def index():

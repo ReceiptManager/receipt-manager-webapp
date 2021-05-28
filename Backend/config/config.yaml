@@ -2,7 +2,7 @@ backendHostname: ''
 backendIP: 192.168.60.2
 backendLanguage: ''
 backendPort: 5558
-dbMode: ''
+dbMode: mssql
 parserIP: ''
 parserPort: ''
 parserToken: ''
