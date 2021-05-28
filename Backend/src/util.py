@@ -6,6 +6,8 @@ import os
 from mysql.connector import connect, Error
 from datetime import datetime, timedelta
 import ipaddress
+import socket
+import docker
 
 from cryptography import x509
 from cryptography.x509.oid import NameOID
@@ -180,7 +182,17 @@ def create_token():
 
 def create_initial_config():
     use_ssl = os.environ.get("useSSL", False)
-    backend_ip = os.environ.get("backendIP", "0.0.0.0")
+
+    run_in_docker = os.environ.get("RUN_IN_DOCKER", False)
+    if not run_in_docker:
+        backend_ip = socket.gethostbyname(socket.gethostname())
+    else:
+        backend_ip = os.environ.get("backendIP", None)
+        if not backend_ip:
+            client = docker.DockerClient()
+            container = client.containers.get("magical_meitner")
+            backend_ip = container.attrs['NetworkSettings']['IPAddress']
+    
     backend_port = os.environ.get("backendPort", 5558)
 
     print("Initial config created.")
