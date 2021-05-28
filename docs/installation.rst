@@ -5,7 +5,7 @@ The installation is very simple. First pull the image from Docker hub.
 
 .. code-block:: bash
 
-    docker pull docker pull dielee/receipt-manager-webapp:latest
+    docker pull dielee/receipt-manager-webapp:latest
 
 After, you need to start the MYSQL container.
 
