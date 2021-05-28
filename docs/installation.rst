@@ -5,7 +5,7 @@ The installation is very simple. First pull the image from Docker hub.
 
 .. code-block:: bash
 
-    docker pull docker pull dielee/receipt-manager-webapp:latest
+    docker pull dielee/receipt-manager-webapp:latest
 
 After, you need to start the MYSQL container.
 
@@ -17,7 +17,7 @@ Finally, you can start the receipt-parser-webapp.
 
 .. code-block:: bash
 
-    docker run -d --network host --name "receipt-manager-webapp" -v /your/path/onDockerHost/ssl:/app/webroot/ssl -v /your/path/onDockerHost/config:/app/config -e backendIP="backendIP" -e backendPort="5558" -e useSSL="false" dielee/receipt-manager-webapp:latest
+docker run -d --network host --name "receipt-manager-webapp" -v /your/path/onDockerHost/ssl:/app/webroot/ssl -v /your/path/onDockerHost/config:/app/config -e backendIP="backendIP" -e backendPort="5558" -e useSSL="false" dielee/receipt-manager-webapp:latest
 
 After the docker container is running, open the website, go to settings, and configure all open settings.
 
