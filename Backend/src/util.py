@@ -182,7 +182,6 @@ def create_token():
 def create_initial_config():
     use_ssl = os.environ.get("useSSL", False)
 
-    use_ssl = "false"
     if isinstance(use_ssl, str):
         if use_ssl.lower() == 'true':
             use_ssl = True
