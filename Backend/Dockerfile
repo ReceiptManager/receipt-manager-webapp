@@ -23,6 +23,9 @@ RUN pip install -r requirements.txt
 # copy the content of the local src directory to the working directory
 COPY src/ ./src
 
+# create config folder
+RUN mkdir -p /app/config
+
 # clone repo
 RUN git clone https://github.com/ReceiptManager/receipt-manager-webapp.git
 
