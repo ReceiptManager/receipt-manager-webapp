@@ -50,6 +50,7 @@ def before_request():
     if api_token != request.args["token"]:
         return "Unauthorized", 401
 
+    global cfg
     cfg = load_conf()
     if ((
         not cfg["dbMode"] 
