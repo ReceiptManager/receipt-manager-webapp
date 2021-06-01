@@ -315,7 +315,7 @@ def crypt_config(settings):
                     settings[c] = decrypted
                 except Exception as e:
                     if "Non-hexadecimal digit found" in str(e):
-                        print("Decription failed. Please set encryption flag in config yaml to False")
+                        print("Decryption failed. Set encryption flag in config yaml to False!")
                     else:
                         print(e)
 
