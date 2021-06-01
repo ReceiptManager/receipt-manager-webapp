@@ -3,11 +3,14 @@ import uuid
 import json
 import yaml
 import os
-from mysql.connector import connect, Error
-from datetime import datetime, timedelta
 import ipaddress
 import socket
+from mysql.connector import connect, Error
+from datetime import datetime, timedelta 
 
+from Crypto.Cipher import AES
+from cryptography.fernet import Fernet
+from binascii import b2a_hex, a2b_hex
 from cryptography import x509
 from cryptography.x509.oid import NameOID
 from cryptography.hazmat.primitives import hashes
@@ -17,6 +20,40 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 
 cfg = None
 api_token = None
+key = None
+BLOCK_SIZE = 16
+SEGMENT_SIZE = 128
+
+def encrypt(plaintext):
+    key = check_existing_key()
+    key = key.encode('utf-8')
+    iv = key
+
+    aes = AES.new(key, AES.MODE_CFB, iv, segment_size=SEGMENT_SIZE)
+    plaintext = _pad_string(plaintext)
+    encrypted_text = aes.encrypt(plaintext.encode())
+    return b2a_hex(encrypted_text).rstrip().decode()
+
+def decrypt(encrypted_text):
+    key = check_existing_key()
+    key = key.encode('utf-8')[:16]
+    iv = key
+
+    aes = AES.new(key, AES.MODE_CFB, iv, segment_size=SEGMENT_SIZE)
+    encrypted_text_bytes = a2b_hex(encrypted_text)
+    decrypted_text = aes.decrypt(encrypted_text_bytes)
+    decrypted_text = _unpad_string(decrypted_text.decode())
+    return decrypted_text
+
+def _pad_string(value):
+    length = len(value)
+    pad_size = BLOCK_SIZE - (length % BLOCK_SIZE)
+    return value.ljust(length + pad_size, '\x00')
+
+def _unpad_string(value):
+    while value[-1] == '\x00':
+        value = value[:-1]
+    return value
 
 def create_ssl_cert(
     ip_addresses=None,
@@ -123,7 +160,7 @@ def create_ssl_cert(
         open(cert_file, "wb").write(cert_pem)
 
 def update_server_config(settings):
-    update_config_yaml(settings)
+    crypt_config(settings)
     load_conf(True)
     create_web_config()
 
@@ -135,6 +172,7 @@ def update_config_yaml(settings):
 def create_web_config():
     web_json = "../webroot/settings/settings.json"
     web_cfg = {
+        "encrypted": cfg["encrypted"],
         "useSSL": cfg["useSSL"],
         "backendHostname": cfg["backendHostname"],
         "backendIP": cfg["backendIP"],
@@ -154,6 +192,27 @@ def create_web_config():
     f.write(json.dumps(web_cfg))
     f.close()
 
+def check_existing_key():
+    if not os.path.isfile(r"../config/.key"):
+        create_key()
+    else:
+        read_key()
+
+    return key
+
+def read_key():
+    global key
+    if not key:
+        with open(r"../config/.key") as f:
+            key = f.readline()
+
+def create_key():
+    global key
+    new_key = Fernet.generate_key().decode('utf-8')[:16]
+    f = open("../config/.key", "w")
+    f.write(new_key)
+    key = new_key
+    f.close()
 
 def check_existing_token():
     if not os.path.isfile(r".api_token"):
@@ -162,7 +221,6 @@ def check_existing_token():
         read_token()
 
     return api_token
-
 
 def read_token():
     global api_token
@@ -231,8 +289,42 @@ def load_conf(force_reload=False):
         with open("../config/config.yaml", "r") as ymlfile:
             cfg = yaml.load(ymlfile, Loader=yaml.FullLoader)
 
+        cfg = crypt_config(cfg)
+
     return cfg
 
+def crypt_config(settings):
+    rewrite_config = False
+    encrypted_cfg = settings.copy()
+    
+    if 'encrypted' in settings:
+        is_encrypted = settings['encrypted']
+    else:
+        is_encrypted = False
+
+    for c, v in settings.items():
+        if v and ("Token" in c or "Password" in c):
+            if not is_encrypted:
+                rewrite_config = True
+
+                encrypted = encrypt(str(v))
+                encrypted_cfg[c] = encrypted
+            else:
+                try:
+                    decrypted = decrypt(str(v))
+                    settings[c] = decrypted
+                except Exception as e:
+                    if "Non-hexadecimal digit found" in str(e):
+                        print("Decription failed. Please set encryption flag in config yaml to False")
+                    else:
+                        print(e)
+
+    if rewrite_config:
+        settings['encrypted'] = True
+        encrypted_cfg['encrypted'] = True
+        update_config_yaml(encrypted_cfg)
+
+    return settings
 
 def delete_from_db(table_name, id):
     conn, cur = load_db_conn()

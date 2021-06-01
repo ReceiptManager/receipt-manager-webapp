@@ -260,3 +260,6 @@ modules.xml
 # End of https://www.toptal.com/developers/gitignore/api/intellij+all
 /docs/_build/
 .idea
+Backend/src/.key
+Backend/src/.vscode/settings.json
+Backend/config/.key

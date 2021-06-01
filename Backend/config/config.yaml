@@ -3,11 +3,12 @@ backendIP: 192.168.60.2
 backendLanguage: de-DE
 backendPort: 5558
 dbMode: mssql
+encrypted: true
 parserIP: ''
 parserPort: ''
-parserToken: ''
+parserToken: 86dd5f2745b84e0bf742c7637f840dc6
 sqlDatabase: ''
-sqlPassword: Test
+sqlPassword: c38a1f67558a7a0bf742c7637f840dc6
 sqlServerIP: ''
 sqlUsername: ''
 useSSL: false

@@ -9,7 +9,6 @@ from util import (
     load_db_conn,
 )
 
-
 def main():
     cfg = load_conf()
 

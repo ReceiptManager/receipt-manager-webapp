@@ -69,7 +69,7 @@ class MainElement extends LitElement {
       nparserPort = parseInt(nparserPort)
     }
 
-    var post_json = {"useSSL": nuseSSL, "backendHostname": nbackendHostname, "backendIP": nbackendIP, "backendPort": nbackendPort, "backendLanguage": nlanguage, "parserIP": nparserIP, "parserPort": nparserPort, 
+    var post_json = {"encrypted": false, "useSSL": nuseSSL, "backendHostname": nbackendHostname, "backendIP": nbackendIP, "backendPort": nbackendPort, "backendLanguage": nlanguage, "parserIP": nparserIP, "parserPort": nparserPort, 
                      "parserToken": nparserToken, "dbMode": ndbMode,"sqlServerIP": nsqlServerIP, "sqlDatabase": nsqlServerDatabase, "sqlUsername": nsqlServerUsername, "sqlPassword": nsqlServerPassword} 
     
     xhr.send(JSON.stringify(post_json));
