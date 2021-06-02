@@ -8,6 +8,7 @@ var menuIcon
 var openPage
 var translated
 var settings
+var backendSettings
 var europeCountries = []
 
 function loadSettings(t, origin) 
@@ -38,7 +39,7 @@ function loadSettings(t, origin)
           }
 
           settingsLoaded = true
-    
+          loadBackendSettings()
           loadPageData(t, origin)
         } 
       }
@@ -50,6 +51,23 @@ function loadSettings(t, origin)
     loadPageData(t, origin)
   }
 }
+
+function loadBackendSettings()
+{
+  let xhr = new XMLHttpRequest();
+  xhr.open("GET", webPrefix + backendIP + ":" + backendPort + "/api/getBackendConfig?token=" + backendToken);
+
+  xhr.onload = function () 
+  {
+    if (this.status >= 200 && this.status < 300) 
+    {
+      backendSettings = JSON.parse(xhr.response)
+    }
+  }
+
+  xhr.send()
+}
+
 
 function loadPageData(t, origin) 
 {
@@ -680,4 +698,4 @@ function formatDate(date) {
 }
 
 export {showReceipt, responseChanged, storesChanged, addItem, addStoreFromScan, updateItemIDs, deleteItem, activateDeleteMode, validateCategories, validateStore, validateDate, validateTotal, validateArticles, updateResponseJson, closeDrawer, openDrawer, calcDifference, assumeArticleSum, openSpinner, closeSpinner, setMenuIcon, chooseAddMode, setOpenPage, 
-        deleteReceipt, formatDate, openDialog, showBackground, openCopyDialog, addCategory, addStore,getSelectedCategoryId, manualInput, loadTranslations, resetForm, closeMobileKeyboard, loadSettings, settings, menuIcon, language,backendIP, backendPort, translated, backendToken, webPrefix, europeCountries}
+        deleteReceipt, formatDate, openDialog, showBackground, openCopyDialog, addCategory, addStore,getSelectedCategoryId, manualInput, loadTranslations, resetForm, closeMobileKeyboard, loadSettings, loadBackendSettings, backendSettings, settings, menuIcon, language,backendIP, backendPort, translated, backendToken, webPrefix, europeCountries}
