@@ -60,6 +60,7 @@ def before_request():
         or not cfg["sqlUsername"]
         )
         and request.endpoint != 'updateConfig'
+        and request.endpoint != 'getBackendConfig'
         ):
         return "Settings incomplete!", 512
 
