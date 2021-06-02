@@ -172,21 +172,11 @@ def update_config_yaml(settings):
 def create_web_config():
     web_json = "../webroot/settings/settings.json"
     web_cfg = {
-        "encrypted": cfg["encrypted"],
         "useSSL": cfg["useSSL"],
-        "backendHostname": cfg["backendHostname"],
         "backendIP": cfg["backendIP"],
         "backendPort": cfg["backendPort"],
         "backendToken": api_token,
-        "language": cfg["backendLanguage"],
-        "parserIP": cfg["parserIP"],
-        "parserPort": cfg["parserPort"],
-        "parserToken": cfg["parserToken"],
-        "dbMode": cfg["dbMode"],
-        "sqlServerIP": cfg["sqlServerIP"],
-        "sqlDatabase": cfg["sqlDatabase"],
-        "sqlUsername": cfg["sqlUsername"],
-        "sqlPassword": cfg["sqlPassword"]
+        "language": cfg["backendLanguage"]
     }
     f = open(web_json, "w")
     f.write(json.dumps(web_cfg))

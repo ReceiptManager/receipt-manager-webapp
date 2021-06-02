@@ -8,7 +8,7 @@ import './node_modules/@polymer/paper-dialog/paper-dialog.js';
 import './node_modules/@polymer/paper-toast/paper-toast.js';
 import './node_modules/@polymer/paper-toggle-button/paper-toggle-button.js';
 import './node_modules/@vaadin/vaadin-accordion/vaadin-accordion.js'
-import {loadSettings, translated, settings, webPrefix, backendToken, backendIP, backendPort, openSpinner, closeMobileKeyboard}  from './functions.js';
+import {loadSettings, translated, settings, backendSettings, webPrefix, backendToken, backendIP, backendPort, openSpinner, closeMobileKeyboard}  from './functions.js';
 
 class MainElement extends LitElement {
   static get properties() {
@@ -115,29 +115,29 @@ class MainElement extends LitElement {
               `
             }
             
-            <vaadin-text-field class="inputFields" id="backendHostname" label="Backend Hostname" @change=${e => this.triggerUpdate(e, this)} value="${settings['backendHostname']}" @keyup=${e => closeMobileKeyboard(e, this, "backendHostname")}></vaadin-text-field>
-            <vaadin-text-field disabled class="inputFields" id="backendIP" label="Backend IP" @change=${e => this.triggerUpdate(e, this)} value="${settings['backendIP']}" @keyup=${e => closeMobileKeyboard(e, this, "backendIP")}></vaadin-text-field>
-            <vaadin-text-field disabled class="inputFields" id="backendPort" label="Backend Port" @change=${e => this.triggerUpdate(e, this)} value="${settings['backendPort']}" @keyup=${e => closeMobileKeyboard(e, this, "backendPort")}></vaadin-text-field>
-            <vaadin-password-field disabled class="inputFields" id="backendToken" label="Backend Token" @change=${e => this.triggerUpdate(e, this)} value="${settings['backendToken']}" @keyup=${e => closeMobileKeyboard(e, this, "backendToken")}></vaadin-password-field>
-            <vaadin-combo-box class="inputFields" auto-open-disabled clear-button-visible id="language" label="${translated.inputLabels.lbl_language}" @change=${e => this.triggerUpdate(e, this)} value="${settings['language']}"></vaadin-combo-box>
+            <vaadin-text-field class="inputFields" id="backendHostname" label="Backend Hostname" @change=${e => this.triggerUpdate(e, this)} value="${backendSettings['backendHostname']}" @keyup=${e => closeMobileKeyboard(e, this, "backendHostname")}></vaadin-text-field>
+            <vaadin-text-field disabled class="inputFields" id="backendIP" label="Backend IP" @change=${e => this.triggerUpdate(e, this)} value="${backendSettings['backendIP']}" @keyup=${e => closeMobileKeyboard(e, this, "backendIP")}></vaadin-text-field>
+            <vaadin-text-field disabled class="inputFields" id="backendPort" label="Backend Port" @change=${e => this.triggerUpdate(e, this)} value="${backendSettings['backendPort']}" @keyup=${e => closeMobileKeyboard(e, this, "backendPort")}></vaadin-text-field>
+            <vaadin-password-field disabled class="inputFields" id="backendToken" label="Backend Token" @change=${e => this.triggerUpdate(e, this)} value="${backendSettings['backendToken']}" @keyup=${e => closeMobileKeyboard(e, this, "backendToken")}></vaadin-password-field>
+            <vaadin-combo-box class="inputFields" auto-open-disabled clear-button-visible id="language" label="${translated.inputLabels.lbl_language}" @change=${e => this.triggerUpdate(e, this)} value="${backendSettings['backendLanguage']}"></vaadin-combo-box>
 
         </vaadin-accordion-panel>
         <vaadin-accordion-panel theme="reverse">
 
             <div slot="summary" class="accordionText">Parser</div>
-            <vaadin-text-field class="inputFields" label="Parser IP" auto-validate id="parserIP" pattern="^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$" @change=${e => this.triggerUpdate(e, this)} value="${settings['parserIP']}" @keyup=${e => closeMobileKeyboard(e, this, "parserIP")}></vaadin-text-field>
-            <vaadin-text-field class="inputFields" type="number" label="Parser Port" id="parserPort" @change=${e => this.triggerUpdate(e, this)} value="${settings['parserPort']}" @keyup=${e => closeMobileKeyboard(e, this, "parserPort")}></vaadin-text-field>
-            <vaadin-password-field class="inputFields" label="Parser Token" id="parserToken" @change=${e => this.triggerUpdate(e, this)} value="${settings['parserToken']}" @keyup=${e => closeMobileKeyboard(e, this, "parserToken")}></vaadin-password-field>
+            <vaadin-text-field class="inputFields" label="Parser IP" auto-validate id="parserIP" pattern="^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$" @change=${e => this.triggerUpdate(e, this)} value="${backendSettings['parserIP']}" @keyup=${e => closeMobileKeyboard(e, this, "parserIP")}></vaadin-text-field>
+            <vaadin-text-field class="inputFields" type="number" label="Parser Port" id="parserPort" @change=${e => this.triggerUpdate(e, this)} value="${backendSettings['parserPort']}" @keyup=${e => closeMobileKeyboard(e, this, "parserPort")}></vaadin-text-field>
+            <vaadin-password-field class="inputFields" label="Parser Token" id="parserToken" @change=${e => this.triggerUpdate(e, this)} value="${backendSettings['parserToken']}" @keyup=${e => closeMobileKeyboard(e, this, "parserToken")}></vaadin-password-field>
 
         </vaadin-accordion-panel>
         <vaadin-accordion-panel theme="reverse">
 
             <div slot="summary" class="accordionText">${translated.texts.lbl_database}</div>
-              <vaadin-combo-box class="inputFields" auto-open-disabled clear-button-visible id="dbMode" label="${translated.texts.lbl_database}" @change=${e => this.triggerUpdate(e, this)} value="${settings['dbMode']}"></vaadin-combo-box>
-              <vaadin-text-field class="inputFields" auto-validate id="sqlServerIP" label="SQL Server IP" pattern="^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$" @change=${e => this.triggerUpdate(e, this)} value="${settings['sqlServerIP']}" @keyup=${e => closeMobileKeyboard(e, this, "sqlServerIP")}></vaadin-text-field>
-              <vaadin-text-field class="inputFields" id="sqlServerDatabase" label="SQL Database" @change=${e => this.triggerUpdate(e, this)} value="${settings['sqlDatabase']}" @keyup=${e => closeMobileKeyboard(e, this, "sqlServerDatabase")}></vaadin-text-field>
-              <vaadin-text-field class="inputFields" id="sqlServerUsername" label="SQL Username" @change=${e => this.triggerUpdate(e, this)} value="${settings['sqlUsername']}" @keyup=${e => closeMobileKeyboard(e, this, "sqlServerUsername")}></vaadin-text-field>
-              <vaadin-password-field class="inputFields" id="sqlServerPassword" type="password" label="SQL Password" @change=${e => this.triggerUpdate(e, this)} value="${settings['sqlPassword']}" @keyup=${e => closeMobileKeyboard(e, this, "sqlServerPassword")}></vaadin-password-field>
+              <vaadin-combo-box class="inputFields" auto-open-disabled clear-button-visible id="dbMode" label="${translated.texts.lbl_database}" @change=${e => this.triggerUpdate(e, this)} value="${backendSettings['dbMode']}"></vaadin-combo-box>
+              <vaadin-text-field class="inputFields" auto-validate id="sqlServerIP" label="SQL Server IP" pattern="^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$" @change=${e => this.triggerUpdate(e, this)} value="${backendSettings['sqlServerIP']}" @keyup=${e => closeMobileKeyboard(e, this, "sqlServerIP")}></vaadin-text-field>
+              <vaadin-text-field class="inputFields" id="sqlServerDatabase" label="SQL Database" @change=${e => this.triggerUpdate(e, this)} value="${backendSettings['sqlDatabase']}" @keyup=${e => closeMobileKeyboard(e, this, "sqlServerDatabase")}></vaadin-text-field>
+              <vaadin-text-field class="inputFields" id="sqlServerUsername" label="SQL Username" @change=${e => this.triggerUpdate(e, this)} value="${backendSettings['sqlUsername']}" @keyup=${e => closeMobileKeyboard(e, this, "sqlServerUsername")}></vaadin-text-field>
+              <vaadin-password-field class="inputFields" id="sqlServerPassword" type="password" label="SQL Password" @change=${e => this.triggerUpdate(e, this)} value="${backendSettings['sqlPassword']}" @keyup=${e => closeMobileKeyboard(e, this, "sqlServerPassword")}></vaadin-password-field>
         </vaadin-accordion-panel>
       </vaadin-accordion>
     

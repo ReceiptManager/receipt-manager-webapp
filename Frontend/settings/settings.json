@@ -1,1 +1,1 @@
-{"runInDocker": false, "useSSL": false, "backendHostname": "receiptManager.home.local", "backendIP": "192.168.50.59", "backendPort": 5558, "backendToken": "a9429289", "language": "en-GB", "parserIP": "192.168.50.6", "parserPort": 8721, "parserToken": "dEkYyxgqVHRqV", "dbMode": "mssql", "sqlServerIP": "192.168.50.6", "sqlDatabase": "receiptData", "sqlUsername": "receiptParser", "sqlPassword": "receiptParser2021!"}
+{"useSSL": false, "backendIP": "192.168.60.2", "backendPort": 5558, "backendToken": "a9429289", "language": "de-DE"}

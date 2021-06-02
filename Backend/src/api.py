@@ -61,11 +61,16 @@ def before_request():
         )
         and request.endpoint != 'updateConfig'
         ):
-        return "No DB Mode set!", 512
+        return "Settings incomplete!", 512
 
 @app.route("/", methods=["GET"])
 def index():
     return send_from_directory(app.static_folder, "index.html")
+
+@app.route("/api/getBackendConfig", methods=["GET", "OPTIONS"])
+@cross_origin(origin="*", headers=["Content-Type"])
+def getBackendConfig():
+    return json.dumps(cfg)
 
 @app.route("/api/updateConfig", methods=["POST", "OPTIONS"])
 @cross_origin(origin="*", headers=["Content-Type"])
