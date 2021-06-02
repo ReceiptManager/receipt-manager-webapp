@@ -291,6 +291,9 @@ def crypt_config(settings):
         is_encrypted = settings['encrypted']
     else:
         is_encrypted = False
+    
+    if not is_encrypted:
+        rewrite_config = True
 
     for c, v in settings.items():
         if v and ("Token" in c or "Password" in c):

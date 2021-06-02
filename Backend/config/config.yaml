@@ -6,9 +6,9 @@ dbMode: mssql
 encrypted: true
 parserIP: 192.168.50.6
 parserPort: 8721
-parserToken: 96fd470a0df21d7aa10a951229840dc6
+parserToken: ddaef4c4d80c548ff5d29e529fa08fc3
 sqlDatabase: receiptData
-sqlPassword: 80dd4f361dfa0e5b9630b4060db63df4819919f13ccad93e4b9b6282c7f14c70
+sqlPassword: cbadf3c7d51a20df94a0ed37ed92bff16a75fdaa35d1f53e78f99ebe0179f89e
 sqlServerIP: 192.168.50.6
 sqlUsername: receiptParser
 useSSL: false
