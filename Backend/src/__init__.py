@@ -17,13 +17,17 @@ def main():
 
     if cfg["dbMode"] and cfg["sqlDatabase"] and cfg["sqlPassword"] and cfg["sqlServerIP"] and cfg["sqlUsername"]:
         print("Using " + cfg["dbMode"] + " DB")
-        conn = load_db_conn()[0]
-        if cfg["dbMode"] == "mssql":
-            init_mssql_db(conn)
-        elif cfg["dbMode"] == "mysql":
-            init_mysql_db(conn)
-        else:
-            print("Error! No valid db mode found. Please use mssql or mysql")
+        
+        try:
+            conn = load_db_conn()[0]
+            if cfg["dbMode"] == "mssql":
+                init_mssql_db(conn)
+            elif cfg["dbMode"] == "mysql":
+                init_mysql_db(conn)
+            else:
+                print("Error! No valid db mode found. Please use mssql or mysql")
+        except Exception as e:
+            print(e)
     else:
         print("No db mode set.")
 

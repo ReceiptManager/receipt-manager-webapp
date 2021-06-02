@@ -394,6 +394,9 @@ def load_db_conn():
     elif cfg["dbMode"] == "mysql":
         conn, cur = create_mysql_db_conn()
     else:
+        conn = None
+        cur = None
+        
         print("Error! No valid db mode found. Please use mssql or mysql")
 
     return conn, cur
