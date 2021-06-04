@@ -12,7 +12,7 @@ import './node_modules/@polymer/paper-toast/paper-toast.js';
 import './node_modules/@polymer/paper-icon-button/paper-icon-button.js';
 import './node_modules/@polymer/iron-icon/iron-icon.js';
 import './node_modules/@polymer/iron-icons/iron-icons.js';
-import {updateResponseJson, deleteItem, activateDeleteMode, calcDifference, validateStore, validateDate, validateArticles, validateCategories, validateTotal, backendIP, backendPort, responseChanged, assumeArticleSum, openSpinner, closeSpinner, setMenuIcon, 
+import {updateResponseJson, triggerSelectedAction, calcDifference, validateStore, validateDate, validateArticles, validateCategories, validateTotal, backendIP, backendPort, responseChanged, assumeArticleSum, openSpinner, closeSpinner, setMenuIcon, 
         openDialog, formatDate, closeMobileKeyboard, loadSettings,language, translated, backendToken, webPrefix, europeCountries, openCopyDialog}  from './functions.js';
 
 class MainElement extends LitElement {
@@ -155,6 +155,7 @@ class MainElement extends LitElement {
     xhr.open("GET", webPrefix + backendIP + ":"+ backendPort + "/api/getHistoryDetails?token=" + backendToken + "&purchaseID=" + purchaseId + "&storeName=" + location + "&receiptTotal=" + totalSum + "&receiptDate=" + date , true);
     
     xhr.onload = function () {
+        mainPage.inputMode = true
         var purchaseDetails = JSON.parse(xhr.response)
 
         // Add id to items
@@ -315,22 +316,20 @@ class MainElement extends LitElement {
                 }
                   
                return html `
-                  <div class="itemsListContainer">
+                  <div class="itemsListContainer" id="itemListContainer${item[0]}">
 
                       <vaadin-combo-box required auto-open-disabled clear-button-visible id="category${item[0]}" class="itemListCategory" placeholder="${translated.inputLabels.lbl_category}" value="${item[3]}" label="${translated.inputLabels.lbl_category}" @change=${() => updateResponseJson(item[0], "category", this)} @keyup=${e => closeMobileKeyboard(e, this, "category" + item[0])}></vaadin-combo-box>
                       <vaadin-text-field required id="article${item[0]}" class="itemListArticle" label="${translated.inputLabels.lbl_article}" value="${item[1]}" @change=${() => updateResponseJson(item[0], "article", this)} @keyup=${e => closeMobileKeyboard(e, this, "article" + item[0])}></vaadin-text-field>
                       <vaadin-text-field required id="sum${item[0]}" class="itemListSum" pattern="((\-|)[0-9]|[0-9]{2})\.[0-9]{2}"  label="${translated.inputLabels.lbl_price}" value="${itemSum}" @change=${() => updateResponseJson(item[0], "articleSum", this)} @keyup=${e => closeMobileKeyboard(e, this, "sum" + item[0])}></vaadin-text-field>
                       
-                      <paper-icon-button class="addButton" id="addArticleButton${item[0]}" icon="add-circle" @click=${() => openCopyDialog(item[0], this)}></paper-icon-button>
-                      <paper-icon-button class="deleteButton" id="deleteArticleButton${item[0]}" icon="delete" @click=${() => deleteItem(item[0], this)}></paper-icon-button>
-                      </div>
+                      <paper-icon-button class="articleButton" id="articleButton" icon="chevron-left" @click=${() => triggerSelectedAction(item[0], this)}></paper-icon-button>
+                  </div>
                   `
               })
             } 
           
           <div class="foundArticles">${translated.texts.lbl_articleCount}: ${this.responseJson.receiptItems.length}</div>
           
-          <paper-icon-button icon="create" class="extraButtons" @click=${() => activateDeleteMode(this)}></paper-icon-button>
           <paper-icon-button class="assumeArticleSum extraButtons" icon="play-for-work" @click=${() => assumeArticleSum(this)}></paper-icon-button>
           <paper-input type="text" class="articleSum" class="extraButtons" required="true" auto-validate pattern="([0-9]|[0-9]{2}|[0-9]{3})\.[0-9]{2}" id="articleSum" label="${translated.inputLabels.lbl_articleSum}" value="${this.articleSum}" @keyup=${e => closeMobileKeyboard(e, this, "articleSum")}>
             <div slot="suffix">€</div>
@@ -405,7 +404,7 @@ class MainElement extends LitElement {
     .mainContainerDetails
     {
       padding-left: 10px;
-      padding-bottom: 10px;
+      padding-bottom: 60px;
       margin-top: 70px;
       position: absolute;
       z-index: -1;
@@ -431,6 +430,7 @@ class MainElement extends LitElement {
       grid-auto-flow: column;
       grid-template-columns: 129px calc(100% - 225px) auto auto;
       column-gap: 0px;
+      margin-bottom: 2px;
     }
 
     .foundArticles
@@ -457,7 +457,7 @@ class MainElement extends LitElement {
       padding-left: 8px;
     }
 
-    .addButton{
+    .articleButton{
       margin-top: 35px;
     }
 
@@ -469,7 +469,7 @@ class MainElement extends LitElement {
 
     .assumeArticleSum {
       display: inline-block;
-      margin-left: calc(100% - 185px);
+      margin-left: calc(100% - 140px);
       padding-right: 0px;
       padding-top: 1px;
     }

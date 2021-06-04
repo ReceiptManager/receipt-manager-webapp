@@ -194,6 +194,40 @@ function openCopyDialog (itemId, t)
     mainPage.copyID = itemId
 }
 
+function checkLineItem (itemId, t)
+{
+  var lineItem = t.shadowRoot.getElementById("itemListContainer" + itemId)
+
+  console.log(lineItem.style.background)
+
+  if (lineItem.style.background == "rgb(160, 231, 160)")
+  {
+    lineItem.style = "background: unset; border-radius: unset;"
+  }
+  else
+  {
+    lineItem.style = "background: #a0e7a0; border-radius: 10px;"
+  }
+}
+
+function triggerSelectedAction (itemId, t)
+{
+  let selectedTab = parseInt(mainPage.shadowRoot.getElementById('menuTabs').selected)
+  
+  switch (selectedTab)
+  {
+    case 0:
+      checkLineItem(itemId, t)
+      break;
+    case 1:
+      openCopyDialog(itemId, t)
+      break;
+    case 2:
+      deleteItem(itemId, t)
+      break;
+  }
+}
+
 function hideBackground()
 {
   let bodyContainer = mainPage.shadowRoot.getElementById("bodyContainer")
@@ -373,33 +407,6 @@ function deleteItem(itemId, t)
   t.responseJson = updateItemIDs(t)
   
   responseChanged(t)
-}
-
-function activateDeleteMode (t)
-{
-  var addButton
-  var delButton
-
-  var itemCnt = t.responseJson["receiptItems"].length
-  var i
-
-  // Check article sums
-  for (i = 0; i < itemCnt; i++)
-  {
-    addButton = t.shadowRoot.getElementById("addArticleButton" +i)
-    delButton = t.shadowRoot.getElementById("deleteArticleButton" +i)
-  
-    if (!addButton.style.display)
-    {
-      addButton.style.display = "none"
-      delButton.style.display = "inline-block"
-    }
-    else
-    {
-      addButton.style.display = null
-      delButton.style.display = "none"
-    }
-  }
 }
 
 function validateCategories(t)
@@ -610,6 +617,7 @@ function openDrawer(t)
     window.scrollTo(0,0)
 
     setMenuIcon("menu")
+    mainPage.inputMode = false
     mainPage.requestUpdate()
   }
 }
@@ -664,6 +672,7 @@ function manualInput (t)
   var emptyRespose = '{"storeName":"","receiptTotal":"","receiptDate":"","receiptCategory":"","receiptItems":[[0, "", "", ""]]}'
   t.responseJson = JSON.parse(emptyRespose)
   t.manualInput = true
+  mainPage.inputMode = true
   t.requestUpdate()
 }
 
@@ -673,6 +682,7 @@ function resetForm (t)
   t.manualInput = null
   t.storedFile = null
   t.differenceSum = null
+  mainPage.inputMode = false
 }
 
 function closeMobileKeyboard (event, t, id)
@@ -697,5 +707,5 @@ function formatDate(date) {
   return [year, month, day].join('-');
 }
 
-export {showReceipt, responseChanged, storesChanged, addItem, addStoreFromScan, updateItemIDs, deleteItem, activateDeleteMode, validateCategories, validateStore, validateDate, validateTotal, validateArticles, updateResponseJson, closeDrawer, openDrawer, calcDifference, assumeArticleSum, openSpinner, closeSpinner, setMenuIcon, chooseAddMode, setOpenPage, 
-        deleteReceipt, formatDate, openDialog, showBackground, openCopyDialog, addCategory, addStore,getSelectedCategoryId, manualInput, loadTranslations, resetForm, closeMobileKeyboard, loadSettings, loadBackendSettings, backendSettings, settings, menuIcon, language,backendIP, backendPort, translated, backendToken, webPrefix, europeCountries}
+export {showReceipt, responseChanged, storesChanged, addItem, addStoreFromScan, updateItemIDs, deleteItem, validateCategories, validateStore, validateDate, validateTotal, validateArticles, updateResponseJson, closeDrawer, openDrawer, calcDifference, assumeArticleSum, openSpinner, closeSpinner, setMenuIcon, chooseAddMode, setOpenPage, 
+        deleteReceipt, formatDate, openDialog, showBackground, openCopyDialog, addCategory, addStore,getSelectedCategoryId, manualInput, loadTranslations, resetForm, closeMobileKeyboard, loadSettings, loadBackendSettings, triggerSelectedAction, backendSettings, settings, menuIcon, language,backendIP, backendPort, translated, backendToken, webPrefix, europeCountries}

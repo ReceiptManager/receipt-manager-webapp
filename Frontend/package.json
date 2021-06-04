@@ -19,6 +19,7 @@
     "@polymer/paper-listbox": "^3.0.1",
     "@polymer/paper-menu-button": "^3.1.0",
     "@polymer/paper-spinner": "^3.0.2",
+    "@polymer/paper-tabs": "^3.1.0",
     "@polymer/paper-toast": "^3.0.1",
     "@polymer/paper-toggle-button": "^3.0.1",
     "@vaadin/vaadin-accordion": "^1.2.0",
