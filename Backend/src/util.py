@@ -221,7 +221,7 @@ def read_token():
 
 def create_token():
     global api_token
-    new_token = str(uuid.uuid4())[:8]
+    new_token = str(uuid.uuid4())
     f = open(".api_token", "w")
     f.write(new_token)
     api_token = new_token
@@ -396,7 +396,7 @@ def load_db_conn():
     else:
         conn = None
         cur = None
-        
+
         print("Error! No valid db mode found. Please use mssql or mysql")
 
     return conn, cur
@@ -407,13 +407,18 @@ def create_ms_db_conn():
     if not cfg:
         cfg = load_conf()
 
-    conn = pyodbc.connect(
-        Driver="{ODBC Driver 17 for SQL Server}",
-        Server=cfg["sqlServerIP"],
-        Database=cfg["sqlDatabase"],
-        user=cfg["sqlUsername"],
-        password=cfg["sqlPassword"],
-    )
+    try:
+        conn = pyodbc.connect(
+            Driver="{ODBC Driver 17 for SQL Server}",
+            Server=cfg["sqlServerIP"],
+            Database=cfg["sqlDatabase"],
+            user=cfg["sqlUsername"],
+            password=cfg["sqlPassword"],
+        )
+    except Error as e:
+        
+        print(e)
+
     cur = conn.cursor()
 
     return conn, cur

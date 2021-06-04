@@ -11,8 +11,8 @@ import './node_modules/@polymer/paper-toast/paper-toast.js';
 import './node_modules/@polymer/paper-icon-button/paper-icon-button.js';
 import './node_modules/@polymer/iron-icon/iron-icon.js';
 import './node_modules/@polymer/iron-icons/iron-icons.js';
-import {showReceipt, openDialog, deleteItem, activateDeleteMode, validateCategories, validateStore, validateDate, validateTotal, validateArticles, updateResponseJson, calcDifference, assumeArticleSum, 
-        formatDate, backendIP, backendPort, openSpinner, closeSpinner, closeMobileKeyboard, loadSettings, openCopyDialog, resetForm, manualInput, translated, backendToken, webPrefix, europeCountries, language} from './functions.js';
+import {showReceipt, openDialog, validateCategories, validateStore, validateDate, validateTotal, validateArticles, updateResponseJson, calcDifference, assumeArticleSum, 
+        triggerSelectedAction, formatDate, backendIP, backendPort, openSpinner, closeSpinner, closeMobileKeyboard, loadSettings, resetForm, manualInput, translated, backendToken, webPrefix, europeCountries, language} from './functions.js';
 
 class ScanElement extends LitElement {
   static get properties() {
@@ -144,7 +144,6 @@ checkValidAndSave(e)
 
     var uploadField = this.shadowRoot.getElementById("uploadedFile")
     this.uploadedFile = uploadField.inputElement.inputElement.files[0];
-
     var file = this.uploadedFile
 
     if (!file)
@@ -171,8 +170,8 @@ checkValidAndSave(e)
 
       if (xhr.status == 200) {
         console.log("upload done");
-        var receiptJson = JSON.parse(xhr.response)
-
+        mainPage.inputMode = true
+        var receiptJson = JSON.parse(xhr.response) 
 
         // Add id to items
         let arrayCnt = 0
@@ -318,18 +317,15 @@ checkValidAndSave(e)
             }
 
             return html `
-            <div class="itemsListContainer">
+            <div class="itemsListContainer" id="itemListContainer${item[0]}">
                       <vaadin-combo-box required auto-open-disabled clear-button-visible id="category${item[0]}" class="itemListCategory" placeholder="${translated.inputLabels.lbl_category}" value="${item[3]}" label="${translated.inputLabels.lbl_category}" @change=${() => updateResponseJson(item[0], "category", this)} @keyup=${e => closeMobileKeyboard(e, this, "category" + item[0])}></vaadin-combo-box>
                       <vaadin-text-field required id="article${item[0]}" class="itemListArticle" label="${translated.inputLabels.lbl_article}" value="${item[1]}" @change=${() => updateResponseJson(item[0], "article", this)} @keyup=${e => closeMobileKeyboard(e, this, "article" + item[0])}></vaadin-text-field>
                       <vaadin-text-field required id="sum${item[0]}" class="itemListSum" pattern="((\-|)[0-9]|[0-9]{2})\.[0-9]{2}"  label="${translated.inputLabels.lbl_price}" value="${itemSum}" @change=${() => updateResponseJson(item[0], "articleSum", this)} @keyup=${e => closeMobileKeyboard(e, this, "sum" + item[0])}></vaadin-text-field>
                       
-                      <paper-icon-button class="addButton" id="addArticleButton${item[0]}" icon="add-circle" @click=${() => openCopyDialog(item[0], this)}></paper-icon-button>
-                      <paper-icon-button class="deleteButton" id="deleteArticleButton${item[0]}" icon="delete" @click=${() => deleteItem(item[0], this)}></paper-icon-button>
+                      <paper-icon-button class="articleButton" id="articleButton" icon="chevron-left" @click=${() => triggerSelectedAction(item[0], this)}></paper-icon-button>
               </div>`;
           })}
           <div class="foundArticles">${translated.texts.lbl_articleCount}: ${this.responseJson.receiptItems.length}</div>
-
-          <paper-icon-button icon="create" class="extraButtons" @click=${() => activateDeleteMode(this)}></paper-icon-button>
           
           <paper-icon-button icon="arrow-drop-down" class="extraButtons showReceipt" id="showReceiptButton" @click=${() => showReceipt(this)} style=${this.manualInput ? css `visibility: hidden;`: css ``}></paper-icon-button>
           <paper-icon-button class="assumeArticleSum extraButtons" icon="play-for-work" @click=${() => assumeArticleSum(this)}></paper-icon-button>
@@ -424,7 +420,7 @@ checkValidAndSave(e)
         {
           width: calc(100% - 20px);
           padding-left: 10px;
-          padding-bottom: 10px;
+          padding-bottom: 60px;
           margin-top: 70px;
           position: absolute;
           z-index: -1;
@@ -438,6 +434,7 @@ checkValidAndSave(e)
           grid-auto-flow: column;
           grid-template-columns: 135px calc(100% - 232px) auto auto;
           column-gap: 2px;
+          margin-bottom: 2px;
         }
 
         .itemListCategories
@@ -453,12 +450,7 @@ checkValidAndSave(e)
           color: dimgrey;
         }
 
-        .addButton{
-          margin-top: 35px;
-        }
-
-        .deleteButton {
-          display: none;
+        .articleButton{
           margin-top: 35px;
         }
 
@@ -513,7 +505,7 @@ checkValidAndSave(e)
 
         .assumeArticleSum {
           display: inline-block;
-          margin-left: calc(100% - 228px);
+          margin-left: calc(100% - 182px);
           padding-right: 0px;
           padding-top: 1px;
         }

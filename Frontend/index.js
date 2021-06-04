@@ -10,6 +10,8 @@ import './node_modules/@polymer/iron-icon/iron-icon.js';
 import './node_modules/@polymer/iron-icons/iron-icons.js';
 import './node_modules/@polymer/iron-icons/maps-icons.js';
 import './node_modules/@polymer/app-layout/app-layout.js';
+import './node_modules/@polymer/paper-tabs/paper-tabs.js';
+import './node_modules/@polymer/paper-tabs/paper-tab.js';
 import { closeDrawer, openDrawer, setMenuIcon, menuIcon, chooseAddMode, setOpenPage, loadTranslations, translated, showBackground, addItem, addStoreFromScan, deleteReceipt } from './functions.js';
 import './scann.js';
 import './history.js';
@@ -23,10 +25,12 @@ class MainElement extends LitElement {
       menuMode: String,
       selectedMenu: String,
       copyID: Number,
+      inputMode: Boolean,
     };
   }
 
   openSelectedWindow(mode) {
+    this.inputMode = false
     this.shadowRoot.getElementById("drawer").close();
     this.menuMode = mode;
     setOpenPage(mode);
@@ -99,9 +103,9 @@ class MainElement extends LitElement {
             </paper-listbox>
           </app-drawer>
           
-          ${this.menuMode == "scan" || !this.menuMode ? html`<scan-element id="mainElement"></scan-element>` : html``}
+          ${this.menuMode == "scan" || !this.menuMode ? html`<scan-element id="mainElement"></scan-element>`: html``}
           
-          ${this.menuMode == "history" ? html`<history-element id="mainElement"></history-element>` : html``}
+          ${this.menuMode == "history" ? html`<history-element id="mainElement"></history-element>`: html``}
 
           ${this.menuMode == "addCategory" ? html`<addcategory-element id="mainElement"></addcategory-element>` : html``}
           
@@ -109,6 +113,17 @@ class MainElement extends LitElement {
 
           ${this.menuMode == "settings" ? html`<settings-element id="mainElement"></settings-element>` : html``}
 
+          ${this.inputMode ?
+            html `
+              <app-header class="appMenu" id="appMenu" fixed>
+                <paper-tabs selected="0" id="menuTabs" style="background-color: white">
+                  <paper-tab><iron-icon icon="icons:done"></iron-icon></paper-tab>
+                  <paper-tab><iron-icon icon="icons:add-circle"></iron-icon></paper-tab>
+                  <paper-tab><iron-icon icon="icons:delete"></iron-icon></paper-tab>
+                </paper-tabs>
+              </app-header>
+            `: html ``
+            }
         </div>
 
         <!-- On event elements -->
@@ -160,6 +175,15 @@ class MainElement extends LitElement {
 
   static get styles() {
     return css`
+        .appMenu {
+          --paper-tabs-selection-bar-color: #333366;
+          --paper-tab-ink: #333366;
+          bottom: 28px;
+          top: unset;
+          height: 20px;
+          z-index: -1;
+        }
+
         .loadingSpinner {
           position: absolute;
           top: 50%;
