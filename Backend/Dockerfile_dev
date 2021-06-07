@@ -14,8 +14,11 @@ COPY requirements.txt .
 RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
     curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list
 
-RUN apt-get update && apt-get install -y unzip unixodbc-dev git nano
+RUN apt-get update && apt-get install -y unzip unixodbc-dev git nano ghostscript
 RUN ACCEPT_EULA=Y apt-get install -y msodbcsql17
+
+# allow ghostscript PDF conversion
+RUN sed 's/rights="none" pattern="PDF"/rights="read | write" pattern="PDF"/g' /etc/ImageMagick-6/policy.xml -i
 
 # install dependencies
 RUN pip install -r requirements.txt

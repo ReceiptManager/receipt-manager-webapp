@@ -346,7 +346,7 @@ checkValidAndSave(e)
 
     ${(!this.manualInput && !this.storedFile)
     ? html `
-      <paper-input id="uploadedFile" label="${translated.inputLabels.lbl_uploadFile}" type="file" accept="image/jpeg, image/png">
+      <paper-input id="uploadedFile" label="${translated.inputLabels.lbl_uploadFile}" type="file" accept=".jpeg, .png, .jpg, .pdf">
         <iron-icon icon="find-in-page" slot="suffix"></iron-icon>  
       </paper-input>
       <paper-button raised class="buttons" id="uploadButton" @click=${this.uploadFile}><iron-icon icon="file-upload"></iron-icon>${translated.buttons.lbl_upload}</paper-button>

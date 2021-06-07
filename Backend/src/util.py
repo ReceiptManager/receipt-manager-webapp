@@ -7,6 +7,8 @@ import ipaddress
 import socket
 from mysql.connector import connect, Error
 from datetime import datetime, timedelta 
+from wand.image import Image
+from wand.color import Color
 
 from Crypto.Cipher import AES
 from cryptography.fernet import Fernet
@@ -23,6 +25,28 @@ api_token = None
 key = None
 BLOCK_SIZE = 16
 SEGMENT_SIZE = 128
+
+def convert_pdf_to_png(pdf_file):
+    try:
+        with Image(blob=pdf_file, resolution=200) as pdf:    
+            first_page = pdf.sequence[0]
+            with Image(first_page) as i:
+                i.format = 'png'
+                i.compression_quality = 99
+                i.background_color = Color('white')
+                i.alpha_channel = 'remove'
+                binary_png = i.make_blob("png")
+                return binary_png
+    except Exception as e:
+        if hasattr(e, 'wand_error_code'):
+            if e.wand_error_code == 415:
+                print("ERROR ! Please install ghostscript to convert PDF to PNG from https://www.ghostscript.com/download/gsdnld.html or on linux with 'apt-get install ghostscript'. \n" +
+                      "If you are using Linux, have a look at here: https://stackoverflow.com/questions/57208396/imagemagick-ghostscript-delegate-security-policy-blocking-conversion")
+            else:
+                print("ERROR ! " + e)
+        else:
+            print("ERROR ! " + e)
+        return None 
 
 def encrypt(plaintext):
     key = check_existing_key()
