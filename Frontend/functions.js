@@ -473,12 +473,7 @@ function validateDate(t)
   var isInValid = dateField.invalid
   var regEx = /^((\d{4}-\d{2}-\d{2})|(\d{2}\.\d{2}\.\d{4}))$/
 
-  if (isInValid && !dateField.value.match(regEx))
-  {
-    dateValid = false
-    dateField.invalid = true
-  }
-  else if (!dateField.value.match(regEx))
+  if (isInValid || !dateField.value.match(regEx))
   {
     dateValid = false
     dateField.invalid = true
@@ -489,6 +484,25 @@ function validateDate(t)
   }
 
   return dateValid
+}
+
+function validateTotalSum(t)
+{
+  var totalSumValid = true
+  var sumField = t.shadowRoot.getElementById("receiptTotal")
+  var isInValid = sumField.invalid
+
+  if (isInValid || !sumField.value)
+  {
+    totalSumValid = false
+    sumField.invalid = true
+  }
+  else
+  {
+    sumField.invalid = false
+  }
+
+  return totalSumValid
 }
 
 function validateTotal(t)
@@ -706,4 +720,4 @@ function formatDate(date) {
 }
 
 export {showReceipt, responseChanged, storesChanged, addItem, addStoreFromScan, updateItemIDs, deleteItem, validateCategories, validateStore, validateDate, validateTotal, validateArticles, updateResponseJson, closeDrawer, openDrawer, calcDifference, assumeArticleSum, openSpinner, closeSpinner, setMenuIcon, chooseAddMode, setOpenPage, 
-        deleteReceipt, formatDate, openDialog, showBackground, openCopyDialog, addCategory, addStore,getSelectedCategoryId, manualInput, loadTranslations, resetForm, closeMobileKeyboard, loadSettings, loadBackendSettings, triggerSelectedAction, backendSettings, settings, menuIcon, language,backendIP, backendPort, translated, backendToken, webPrefix, europeCountries}
+        validateTotalSum, deleteReceipt, formatDate, openDialog, showBackground, openCopyDialog, addCategory, addStore,getSelectedCategoryId, manualInput, loadTranslations, resetForm, closeMobileKeyboard, loadSettings, loadBackendSettings, triggerSelectedAction, backendSettings, settings, menuIcon, language,backendIP, backendPort, translated, backendToken, webPrefix, europeCountries}

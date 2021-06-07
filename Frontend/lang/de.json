@@ -10,7 +10,8 @@
         "lbl_invalidToken": "Backend Token nicht gesetzt, ungültig oder abgelaufen. Überprüfe die Einstellungen oder versuche den Cache des Browsers zu leeren!", "lbl_invalidDate": "Datum fehlerhaft, bitte überprüfen!",
         "lbl_invalidCategory": "Kategorie fehlerhaft, bitte überprüfen!", "lbl_invalidStore": "Supermarkt fehlerhaft, bitte überprüfen!",
         "lbl_categorySaved": "Kategorie gespeichert!", "lbl_categoryDeleted": "Kategorie gelöscht!", "lbl_storeSaved": "Supermarkt gespeichert!", "lbl_storeDeleted": "Supermarkt gelöscht!",
-        "lbl_newVersion": "Neue Version verfügbar!", "lbl_receiptDeleted": "Kassenbon gelöscht!", "lbl_receiptDeletionFailed": "Fehler beim löschen des Kassenbons!", "lbl_settingsChanged": "Einstellungen verändert!", "lbl_dockerMode": "Anwendung läuft im Docker Modus, Einstellungen nicht änderbar. Bitte die ENVs des Containers nutzen."},
+        "lbl_newVersion": "Neue Version verfügbar!", "lbl_receiptDeleted": "Kassenbon gelöscht!", "lbl_receiptDeletionFailed": "Fehler beim löschen des Kassenbons!", "lbl_settingsChanged": "Einstellungen verändert!",
+        "lbl_invalidSumTotal": "Kassenbon Summe ungültig!"},
     "inputLabels":
         {"lbl_uploadFile": "Datei hochladen", "lbl_store": "Supermarkt", "lbl_date": "Datum", "lbl_category": "Kategorie", "lbl_article": "Artikel", "lbl_price": "Preis", "lbl_articleSum": "Summe", "lbl_totalPrice": "Gesamtsumme", "lbl_newStore": "Neuer Supermarkt", "lbl_language": "Sprache"},
     "texts":

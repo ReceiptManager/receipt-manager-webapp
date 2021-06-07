@@ -13,7 +13,7 @@ import './node_modules/@polymer/paper-icon-button/paper-icon-button.js';
 import './node_modules/@polymer/iron-icon/iron-icon.js';
 import './node_modules/@polymer/iron-icons/iron-icons.js';
 import {updateResponseJson, triggerSelectedAction, calcDifference, validateStore, validateDate, validateArticles, validateCategories, validateTotal, backendIP, backendPort, responseChanged, assumeArticleSum, openSpinner, closeSpinner, setMenuIcon, 
-        openDialog, formatDate, closeMobileKeyboard, loadSettings,language, translated, backendToken, webPrefix, europeCountries}  from './functions.js';
+        validateTotalSum, openDialog, formatDate, closeMobileKeyboard, loadSettings,language, translated, backendToken, webPrefix, europeCountries}  from './functions.js';
 
 class MainElement extends LitElement {
   static get properties() {
@@ -116,6 +116,13 @@ class MainElement extends LitElement {
     {
         // Artikel summe und Bon Summe unterscheiden sich!
       this.shadowRoot.getElementById("differentSums").open()
+      return
+    }
+
+    var totalSumValid = validateTotalSum(this)
+    if (!totalSumValid)
+    {
+      this.shadowRoot.getElementById("invalidSumTotal").open()
       return
     }
 
@@ -359,6 +366,7 @@ class MainElement extends LitElement {
     <paper-toast class= "invalidSums fit-bottom" id="invalidStore" duration="2000" text="${translated.toasts.lbl_invalidStore}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="invalidToken" duration="5000" text="${translated.toasts.lbl_invalidToken}"></paper-toast>
     <paper-toast class= "uploadToast fit-bottom" id="receiptDeleted" duration="2000" text="${translated.toasts.lbl_receiptDeleted}"></paper-toast>
+    <paper-toast class= "invalidSums fit-bottom" id="invalidSumTotal" duration="2000" text="${translated.toasts.lbl_invalidSumTotal}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="receiptDeletionError" duration="2000" text="${translated.toasts.lbl_receiptDeletionFailed}"></paper-toast>
     `;
   }
@@ -390,10 +398,6 @@ class MainElement extends LitElement {
 
   static get styles() {
     return css`
-
-    paper-toast {
-      bottom: calc(100% - 95px);
-    }
 
     .mainContainer
     {

@@ -12,7 +12,7 @@ import './node_modules/@polymer/paper-icon-button/paper-icon-button.js';
 import './node_modules/@polymer/iron-icon/iron-icon.js';
 import './node_modules/@polymer/iron-icons/iron-icons.js';
 import {showReceipt, openDialog, validateCategories, validateStore, validateDate, validateTotal, validateArticles, updateResponseJson, calcDifference, assumeArticleSum, 
-        triggerSelectedAction, formatDate, backendIP, backendPort, openSpinner, closeSpinner, closeMobileKeyboard, loadSettings, resetForm, manualInput, translated, backendToken, webPrefix, europeCountries, language} from './functions.js';
+        validateTotalSum, triggerSelectedAction, formatDate, backendIP, backendPort, openSpinner, closeSpinner, closeMobileKeyboard, loadSettings, resetForm, manualInput, translated, backendToken, webPrefix, europeCountries, language} from './functions.js';
 
 class ScanElement extends LitElement {
   static get properties() {
@@ -103,6 +103,13 @@ checkValidAndSave(e)
     {
         // Artikel summe und Bon Summe unterscheiden sich!
       this.shadowRoot.getElementById("differentSums").open()
+      return
+    }
+
+    var totalSumValid = validateTotalSum(this)
+    if (!totalSumValid)
+    {
+      this.shadowRoot.getElementById("invalidSumTotal").open()
       return
     }
 
@@ -374,6 +381,7 @@ checkValidAndSave(e)
     <paper-toast class= "invalidSums fit-bottom" id="invalidDate" duration="2000" text="${translated.toasts.lbl_invalidDate}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="invalidCategory" duration="2000" text="${translated.toasts.lbl_invalidCategory}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="invalidStore" duration="2000" text="${translated.toasts.lbl_invalidStore}"></paper-toast>
+    <paper-toast class= "invalidSums fit-bottom" id="invalidSumTotal" duration="2000" text="${translated.toasts.lbl_invalidSumTotal}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="invalidToken" duration="5000" text="${translated.toasts.lbl_invalidToken}"></paper-toast>
     </div>
     `;
@@ -404,10 +412,6 @@ checkValidAndSave(e)
 
   static get styles() {
     return css`
-
-        paper-toast {
-          bottom: calc(100% - 95px);
-        }
 
         .storeDropdown {
           width: calc(100% - 44.3px);

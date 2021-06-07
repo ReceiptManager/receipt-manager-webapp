@@ -181,7 +181,7 @@ class MainElement extends LitElement {
           bottom: 28px;
           top: unset;
           height: 20px;
-          z-index: -1;
+          z-index: -2;
         }
 
         .loadingSpinner {
