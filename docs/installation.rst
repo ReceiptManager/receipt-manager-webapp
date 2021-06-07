@@ -27,11 +27,19 @@ Manual installation guide
 1. Download the latest `release <https://github.com/ReceiptManager/receipt-manager-webapp/releases>`_
 2. Unzip release and fill in settings into config.yml
 
-If you use linux, install unixODBC:
+On linux, install unixODBC and ghostscript:
 
 .. code-block:: bash
 
-    sudo apt-get install unixodbc-dev
+    sudo apt-get install unixodbc-dev ghostscript
+
+After installing ghostscript, run this to allow PDF conversion (more infos here: https://stackoverflow.com/questions/57208396/imagemagick-ghostscript-delegate-security-policy-blocking-conversion):
+
+.. code-block:: bash
+
+    sed 's/rights="none" pattern="PDF"/rights="read | write" pattern="PDF"/g' /etc/ImageMagick-6/policy.xml -i
+
+On Windows, install ghostscript to enable PDF conversion from https://www.ghostscript.com/download/gsdnld.html.
 
 Install python dependencies with:
 

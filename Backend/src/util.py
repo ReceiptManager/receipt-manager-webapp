@@ -5,7 +5,6 @@ import yaml
 import os
 import ipaddress
 import socket
-import platform
 from mysql.connector import connect, Error
 from datetime import datetime, timedelta 
 from wand.image import Image
@@ -41,11 +40,12 @@ def convert_pdf_to_png(pdf_file):
     except Exception as e:
         if hasattr(e, 'wand_error_code'):
             if e.wand_error_code == 415:
-                print("ERROR ! Please install ghostscript to convert PDF to PNG from https://www.ghostscript.com/download/gsdnld.html")
+                print("ERROR ! Please install ghostscript to convert PDF to PNG from https://www.ghostscript.com/download/gsdnld.html or on linux with 'apt-get install ghostscript'. \n" +
+                      "If you are using Linux, have a look at here: https://stackoverflow.com/questions/57208396/imagemagick-ghostscript-delegate-security-policy-blocking-conversion")
             else:
-                print(e)
+                print("ERROR ! " + e)
         else:
-            print(e)
+            print("ERROR ! " + e)
         return None 
 
 def encrypt(plaintext):
