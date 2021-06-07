@@ -391,6 +391,10 @@ class MainElement extends LitElement {
   static get styles() {
     return css`
 
+    paper-toast {
+      bottom: calc(100% - 95px);
+    }
+
     .mainContainer
     {
       width: calc(100% - 25px);

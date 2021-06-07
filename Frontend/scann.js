@@ -405,6 +405,10 @@ checkValidAndSave(e)
   static get styles() {
     return css`
 
+        paper-toast {
+          bottom: calc(100% - 95px);
+        }
+
         .storeDropdown {
           width: calc(100% - 44.3px);
         }
