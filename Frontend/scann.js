@@ -368,7 +368,7 @@ checkValidAndSave(e)
         <paper-button raised class="buttons" @click=${() => resetForm(this)}><iron-icon icon="clear"></iron-icon>${translated.buttons.lbl_abort}</paper-button>
       `: html ``
     }
-
+    </div>
     
 
     <!-- On event elements -->
@@ -383,7 +383,7 @@ checkValidAndSave(e)
     <paper-toast class= "invalidSums fit-bottom" id="invalidStore" duration="2000" text="${translated.toasts.lbl_invalidStore}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="invalidSumTotal" duration="2000" text="${translated.toasts.lbl_invalidSumTotal}"></paper-toast>
     <paper-toast class= "invalidSums fit-bottom" id="invalidToken" duration="5000" text="${translated.toasts.lbl_invalidToken}"></paper-toast>
-    </div>
+    
     `;
   }
 
