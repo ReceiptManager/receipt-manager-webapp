@@ -198,8 +198,6 @@ function checkLineItem (itemId, t)
 {
   var lineItem = t.shadowRoot.getElementById("itemListContainer" + itemId)
 
-  console.log(lineItem.style.background)
-
   if (lineItem.style.background == "rgb(160, 231, 160)")
   {
     lineItem.style = "background: unset; border-radius: unset;"

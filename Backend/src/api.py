@@ -17,7 +17,8 @@ from util import (
     load_conf,
     load_db_conn,
     delete_receipt,
-    update_server_config
+    update_server_config,
+    convert_pdf_to_png
 )
 
 app = Flask(
@@ -88,6 +89,15 @@ def updateConfig():
 def upload():
     file = request.files["file"]
     file_name = file.filename
+    gaussian_blur = True
+    
+    if file.content_type == "application/pdf":
+        file = convert_pdf_to_png(file.read())
+        file_name = file_name.split(".")[0] + ".png"
+        gaussian_blur = False
+
+    if not file:
+        return "No valid file found", 500
 
     url = (
             "http://"
@@ -99,7 +109,7 @@ def upload():
             + "&legacy_parser=True"
             + "&grayscale_image=True"
             + "&rotate_image=True"
-            + "&gaussian_blur=True"
+            + "&gaussian_blur=" + str(gaussian_blur)
             + "&median_blur=True"
     )
 
