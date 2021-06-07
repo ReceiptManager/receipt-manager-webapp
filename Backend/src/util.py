@@ -1,4 +1,3 @@
-from ctypes import resize
 import pyodbc
 import uuid
 import json
@@ -6,6 +5,7 @@ import yaml
 import os
 import ipaddress
 import socket
+import platform
 from mysql.connector import connect, Error
 from datetime import datetime, timedelta 
 from wand.image import Image
