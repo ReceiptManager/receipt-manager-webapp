@@ -126,6 +126,7 @@ checkValidAndSave(e)
         instance.responseJson = null
         instance.manualInput = null
         instance.storedFile = null
+        mainPage.inputMode = false
       }
       else
       {

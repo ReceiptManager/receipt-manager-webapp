@@ -135,6 +135,7 @@ class MainElement extends LitElement {
     xhr.onload = function () {
       instance.shadowRoot.getElementById("saveToDB").open()
       instance.responseJson = null
+      mainPage.inputMode = false
       setMenuIcon("menu")
       instance.getHistoryPurchases()
       responseChanged(instance)
