@@ -432,7 +432,6 @@ checkValidAndSave(e)
           padding-bottom: 60px;
           margin-top: 70px;
           position: absolute;
-          z-index: -1;
         }
 
         .itemsListContainer

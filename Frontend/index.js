@@ -86,7 +86,7 @@ class MainElement extends LitElement {
       
           <paper-spinner id="loadingSpinner" class="loadingSpinner"></paper-spinner>
           <div class="bodyContainer" id="bodyContainer" style="opacity: 100%">
-            <app-header reveals>
+          <app-header reveals id="appHeader">
             <app-toolbar class="appToolbar">
               <paper-icon-button icon="${menuIcon}" id="menuButton" @click="${() => openDrawer(this)}"></paper-icon-button>
               <div main-title>${translated.title}</div>
@@ -181,7 +181,7 @@ class MainElement extends LitElement {
           bottom: 28px;
           top: unset;
           height: 20px;
-          z-index: -1;
+          z-index: 3;
         }
 
         .loadingSpinner {
@@ -209,6 +209,7 @@ class MainElement extends LitElement {
           left: 0;
           width: 100%;
           height: 100px;
+          z-index: 1;
         }
 
         .bodyContainer {
@@ -216,7 +217,7 @@ class MainElement extends LitElement {
           width: 100%;
           position: absolute;
           background-color: rgba(255,255,255,200);
-          z-index: 2;
+          z-index: 5;
           opacity: 20%;
         }
 

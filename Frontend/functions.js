@@ -602,35 +602,40 @@ function updateResponseJson (itemId, mode, t)
   responseChanged(t)
 }
 
-function closeDrawer(t)
-{
-    var drawer = t.shadowRoot.getElementById("drawer")
-    var mainContent = t.shadowRoot.getElementById("mainElement")
+function closeDrawer(t) {
+  var drawer = t.shadowRoot.getElementById("drawer");
+  var mainContent = t.shadowRoot.getElementById("mainElement");
 
-    if (!drawer.opened)
+  if (!drawer.opened) {
+    mainContent.style.visibility = null;
+    t.shadowRoot.getElementById("appHeader").style.zIndex = 1
+    var appMenu = t.shadowRoot.getElementById("appMenu")
+    if (appMenu)
     {
-      mainContent.style.visibility = null
+      appMenu.style.visibility = "unset";
     }
+  }
 }
 
-function openDrawer(t)
-{
-  if (menuIcon != "arrow-back")
-  {
-    t.shadowRoot.getElementById("drawer").open()
-    t.shadowRoot.getElementById("mainElement").style.visibility = "hidden"
-  }
-  else
-  {
-    historyPage.shadowRoot.getElementById("mainContainerHistory").style.display = null
-    historyPage.shadowRoot.getElementById("mainContainerDetails").style.display = "none"
-    historyPage.responseJson = null
-
-    window.scrollTo(0,0)
-
-    setMenuIcon("menu")
-    mainPage.inputMode = false
-    mainPage.requestUpdate()
+function openDrawer(t) {
+  if (menuIcon != "arrow-back") {
+    t.shadowRoot.getElementById("drawer").open();
+    t.shadowRoot.getElementById("mainElement").style.visibility = "hidden";
+    var appMenu = t.shadowRoot.getElementById("appMenu")
+    if (appMenu)
+    {
+      appMenu.style.visibility = "hidden";
+    }
+    
+    t.shadowRoot.getElementById("appHeader").style.zIndex = -5
+  } else {
+    historyPage.shadowRoot.getElementById("mainContainerHistory").style.display = null;
+    historyPage.shadowRoot.getElementById("mainContainerDetails").style.display = "none";
+    historyPage.responseJson = null;
+    window.scrollTo(0, 0);
+    setMenuIcon("menu");
+    mainPage.inputMode = false;
+    mainPage.requestUpdate();
   }
 }
 
