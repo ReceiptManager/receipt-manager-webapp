@@ -36,4 +36,12 @@ jobs:
         with:
           context: Backend
           push: true
-          tags: dielee/receipt-manager-webapp:latest,dielee/receipt-manager-webapp:${{ steps.previoustag.outputs.tag }}
+          tags: dielee/receipt-manager-webapp:latest
+          
+      - if: ${{ steps.previoustag.outputs.tag != '1.0.0' }}
+        name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: Backend
+          push: true
+          tags: dielee/receipt-manager-webapp:${{ steps.previoustag.outputs.tag }}
