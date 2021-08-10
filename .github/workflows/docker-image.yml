@@ -32,7 +32,7 @@ jobs:
           fallback: 1.0.0
       
       - if: ${{ steps.previoustag.outputs.tag == '1.0.0' }}
-        name: Build and push
+        name: Build and push only latest
         uses: docker/build-push-action@v2
         with:
           context: Backend
@@ -40,7 +40,7 @@ jobs:
           tags: dielee/receipt-manager-webapp:latest
           
       - if: ${{ steps.previoustag.outputs.tag != '1.0.0' }}
-        name: Build and push
+        name: Build and push latest and version
         uses: docker/build-push-action@v2
         with:
           context: Backend
