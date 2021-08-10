@@ -30,3 +30,4 @@ jobs:
         with:
           context: Backend
           push: true
+          tags: dielee/receipt-manager-webapp:latest
