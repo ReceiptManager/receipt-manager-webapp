@@ -7,5 +7,5 @@ requests==2.26.0
 uuid==1.30
 mysql-connector-python==8.0.27
 cryptography==3.4.8
-pycryptodome==3.10.4
+pycryptodome==3.11.0
 Wand==0.6.6
