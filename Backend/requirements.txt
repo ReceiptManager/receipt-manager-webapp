@@ -3,7 +3,7 @@ PyYAML==6.0
 gevent==21.12.0
 Flask-Cors==3.0.10
 pyodbc==4.0.32
-requests==2.26.0
+requests==2.27.1
 uuid==1.30
 mysql-connector-python==8.0.27
 cryptography==36.0.1
