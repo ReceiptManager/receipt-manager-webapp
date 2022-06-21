@@ -6,6 +6,6 @@ pyodbc==4.0.32
 requests==2.27.1
 uuid==1.30
 mysql-connector-python==8.0.27
-cryptography==37.0.1
+cryptography==37.0.3
 pycryptodome==3.11.0
 Wand==0.6.7
