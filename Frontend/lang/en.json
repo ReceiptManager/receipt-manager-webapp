@@ -1,0 +1,20 @@
+{
+    "title": "Receipt Scanner",
+    "menu": 
+        {"lbl_scan": "Scan", "lbl_history": "History", "lbl_categories": "Categories", "lbl_stores": "Supermarkets", "lbl_settings": "Settings"},
+    "buttons": 
+        {"lbl_upload": "upload", "lbl_save": "Save", "lbl_manual": "Manual", "lbl_close": "Close", "lbl_abort": "abort", "lbl_yes": "Yes", "lbl_no": "No", "lbl_delete": "Delete"},
+    "toasts":
+        {"lbl_startUpload": "Upload Receipt...", "lbl_uploadDone": "Upload Done!", "lbl_saveSuccess": "Transfer to database successful!", "lbl_saveError": "Transfer to database failed!", "lbl_invalidSums": "Totals incorrect, please check!",
+        "lbl_diffrentSums1": "Article sums", "lbl_diffrentSums2": "and sum of the receipt", "lbl_diffrentSums3": "do not match.", "lbl_errorOnUpload": "Upload failed with error: ",
+        "lbl_invalidToken": "Backend token not set, invalid or expired. Check the settings or try to clear the browser cache!", "lbl_invalidDate": "Date incorrect, please check!",
+        "lbl_invalidCategory": "Category incorrect, please check!", "lbl_invalidStore": "Supermarket incorrect, please check!",
+        "lbl_categorySaved": "Category saved!", "lbl_categoryDeleted": "Category deleted!", "lbl_storeSaved": "Supermarket saved!", "lbl_storeDeleted": "Supermarket deleted!",
+        "lbl_newVersion": "New version available!", "lbl_receiptDeleted": "Receipt deleted!", "lbl_receiptDeletionFailed": "Error while deleting the receipt!", "lbl_settingsChanged": "Settings changed!",
+        "lbl_invalidSumTotal": "Receipt sum invalid!"},
+    "inputLabels":
+        {"lbl_uploadFile": "Upload file", "lbl_store": "Supermarket", "lbl_date": "Date", "lbl_category": "Category", "lbl_article": "Article", "lbl_price": "Price", "lbl_articleSum": "Total", "lbl_totalPrice": "Total", "lbl_newStore": "New supermarket", "lbl_language": "Language"},
+    "texts":
+        {"lbl_articleCount": "Number of articles", "lbl_certDownload": "Install CA certificate", "lbl_clearCache": "Clear cache", "lbl_copyLine": "Copy line ?", "lbl_deleteReceipt": "Delete receipt?", "lbl_useSSL": "Use SSL (manual restart required)", "lbl_actions": "Actions",
+        "lbl_database": "Database"}
+}
