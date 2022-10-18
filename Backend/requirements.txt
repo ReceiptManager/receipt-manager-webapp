@@ -1,6 +1,6 @@
 flask==2.0.1
 PyYAML==5.4.1
-gevent==21.1.2
+gevent==22.10.1
 Flask-Cors==3.0.10
 pyodbc==4.0.30
 requests==2.25.1
