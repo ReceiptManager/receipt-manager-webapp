@@ -17,7 +17,7 @@ import sphinx_rtd_theme
 
 # -- Project information -----------------------------------------------------
 
-project = 'Receipt parser server'
+project = 'Receipt Manager Web App'
 copyright = '2021, Monolidth'
 author = 'Monolidth'
 
