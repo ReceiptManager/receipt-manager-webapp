@@ -8,4 +8,4 @@ uuid==1.30
 mysql-connector-python==8.0.25
 cryptography==3.4.7
 pycryptodome==3.10.1
-Wand==0.6.6
+Wand==0.6.12
